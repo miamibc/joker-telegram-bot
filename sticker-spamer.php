@@ -41,14 +41,21 @@ fclose($log);
 $stickers = array_unique($stickers);
 
 echo "\nCollected ".count($stickers)." stickers, last id $id\n";
-echo "Starting up "; sleep(1); echo "."; sleep(1); echo "."; sleep(1); echo "."; sleep(1);
+echo "Starting up "; sleep(1); echo "."; sleep(1); echo "."; sleep(1); echo "."; sleep(1);echo "\n";
 
 $log = fopen(dirname(__FILE__) . '/log/log.json' , 'a');
 
 do
 {
 
-  foreach ($bot->getUpdates( $id+1 ) as $update)
+  try {
+    $updates = $bot->getUpdates($id + 1);
+  }
+  catch (TelegramBot\Api\HttpException $exception) {
+    $updates = [];
+  }
+
+  foreach ($updates as $update)
   {
 
     $json = $update->toJson();
@@ -68,12 +75,54 @@ do
     $author_id = $message->getFrom()->getId();
     $chat_id = $message->getChat()->getId();
 
-    if ($message->getSticker())
+
+    if($text = $message->getText())
+    {
+      $params = preg_split('@\s+@', $text);
+      $command = trim( strtolower( preg_replace("@[^!\w]@", "", $params[0]) ));
+      if (strlen($command) && $command[0] === '!' && file_exists($file  = "jokes/$command.txt"))
+      {
+        $file = file($file);
+        if (!isset($params[1]))
+        {
+          // random
+          $rand = mt_rand(0, $count = count($file)-1);
+        }
+        elseif (isset($params[1]) && $params[1][0] === '#'){
+          // number
+          $rand = substr( $params[1], 1 )*1-1;
+        }
+        else {
+          // exact match
+          $found = array_filter( $file, function ($value){
+            global  $params;
+            return preg_match('#\b'.preg_quote( $params[1] ).'\b#iu', $value);
+          });
+          // relaxed match
+          if (!count($found))
+          {
+            $found = array_filter( $file, function ($value){
+              global  $params;
+              return preg_match('#'.preg_quote( $params[1] ).'#iu', $value);
+            });
+          }
+          $rand = array_rand( $found );
+          unset($found);
+        }
+        $joke_id = $rand+1;
+        if (isset($file[$rand]))
+          $bot->sendMessage($chat_id, "$command #{$joke_id}: {$file[$rand]}");
+        else
+          $bot->sendMessage($chat_id, "$command: Joke not found :-(");
+        unset($file);
+      }
+    }
+    elseif ($message->getSticker())
     {
       $stickers[] = $message->getSticker()->getFileId();
       $stickers = array_unique( $stickers );
       shuffle( $stickers );
-      $files = array_slice( $stickers, 0, rand(0, 3));
+      $files = array_slice( $stickers, 0, mt_rand(0, 3));
       if (count($files))
       {
         foreach ( $files as $file_id)
