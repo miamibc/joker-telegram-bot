@@ -88,8 +88,12 @@ do
           // random
           $rand = mt_rand(0, $count = count($file)-1);
         }
-        elseif (isset($params[1]) && $params[1][0] === '#'){
+        elseif (isset($params[1]) && is_numeric( $params[1] )){
           // number
+          $rand = $params[1]*1-1;
+        }
+        elseif (isset($params[1]) && $params[1][0] === '#' ){
+          // number with #
           $rand = substr( $params[1], 1 )*1-1;
         }
         else {
@@ -125,8 +129,8 @@ do
       $files = array_slice( $stickers, 0, mt_rand(0, 3));
       if (count($files))
       {
-        foreach ( $files as $file_id)
-          $bot->sendSticker($chat_id,$file_id,null,null,true);
+        // foreach ( $files as $file_id)
+        //  $bot->sendSticker($chat_id,$file_id,null,null,true);
 
         $author = trim($message->getFrom()->getFirstName().' '.$message->getFrom()->getLastName());
         $answers = [
@@ -135,7 +139,7 @@ do
           "Lololololo stickers is my love, $author :*",
           "Wow nice, $author. Mo stickers, morrrr",
         ];
-        $bot->sendMessage($chat_id,$answers[ array_rand( $answers )]);
+        // $bot->sendMessage($chat_id,$answers[ array_rand( $answers )]);
       }
     }
 

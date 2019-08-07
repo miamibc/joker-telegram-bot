@@ -14,5 +14,10 @@
     "telegram-bot/api": "^2.3",
     "predis/predis": "^1.1",
     "vlucas/phpdotenv": "^3.4"
+  },
+  "autoload": {
+    "psr-4": {
+      "Joker\\": "src"
+    }
   }
 }
