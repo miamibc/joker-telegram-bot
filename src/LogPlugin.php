@@ -10,17 +10,15 @@ namespace Joker;
 class LogPlugin extends Plugin
 {
   protected $defaults = [
-    'empty_dots'=>true,
-    'screen'=>true,
-    'file'=>false,
-    'file_buffersize' => 1,
+    'empty'=> false, // empty event symbol, for example .
+    'screen'=>true,  // show log in screen
+    'file'=>false,   // log to file
   ];
-
-  private $buffer = [];
 
   public function onEmpty( Event $update )
   {
-    if ($this->options['empty_dots']) echo ".";
+    if ($this->getOption('empty'))
+      echo $this->getOption('empty');
   }
 
   public function onMessage(Event $update)
@@ -28,19 +26,14 @@ class LogPlugin extends Plugin
 
     $json = $update->toJson();
 
-    if ($this->options['screen'])
+    if ($this->getOption('screen'))
     {
-      echo PHP_EOL.$json.PHP_EOL;
+      echo PHP_EOL . "LogPlugin: " . $json . PHP_EOL;
     }
 
-    if ($this->options['file'])
+    if ($this->getOption('file'))
     {
-      $this->buffer[] = $json;
-      if (count($this->buffer) >= $this->options['file_buffersize'])
-      {
-        file_put_contents($this->options['file'],implode(PHP_EOL,$this->buffer).PHP_EOL,FILE_APPEND);
-        $this->buffer = [];
-      }
+      file_put_contents( $this->getOption('file'), $json.PHP_EOL, FILE_APPEND );
     }
 
   }

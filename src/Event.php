@@ -43,11 +43,13 @@ class Event
    * Get all characteristics of update with true/false values
    * @return array
    */
-  public function getParameters()
+  public function getTags()
   {
     return [
-      'private' => $private = (isset($this->data['message']['chat']['type'])
-                               && $this->data['message']['chat']['type'] == 'private'),
+      'private' => $private = (
+        isset($this->data['message']['chat']['type']) && in_array( $this->data['message']['chat']['type'], ['private'])
+      ),
+      'group'   => isset($this->data['message']['chat']['type']) && in_array( $this->data['message']['chat']['type'], ['group', 'supergroup', 'channel']),
       'public'  => !$private,
       'sticker' => isset($this->data['message']['sticker']),
       'text'    => isset($this->data['message']['text']),
@@ -58,7 +60,7 @@ class Event
 
   public function getMessageText()
   {
-    return $this->data['message']['text'];
+    return trim($this->data['message']['text']);
   }
 
   public function getMessageFrom()

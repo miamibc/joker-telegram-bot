@@ -16,4 +16,14 @@ abstract class Plugin
   {
     $this->options = array_merge($this->defaults, $options);
   }
+
+  public function getOption( $name, $default = null)
+  {
+    return isset($this->options[$name]) ? $this->options[$name] : $default;
+  }
+
+  public function getOptions()
+  {
+    return $this->options;
+  }
 }

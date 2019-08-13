@@ -127,7 +127,7 @@ class Bot
   private function processEvent(Event $event )
   {
     // get message parameters
-    $tags = $event->getParameters();
+    $tags = $event->getTags();
 
     $this->log(['tags'=>$tags]);
 

@@ -13,7 +13,7 @@ class HelloPlugin extends Plugin
   public function onPrivateText( Event $event )
   {
 
-    // if (!preg_match('@$(hi|hello|moin)\b@i', $update->getMessageText())) return;
+    if (!preg_match('@^(hi|hello|moin|yo|wa\wa\w*)\b@ui', $event->getMessageText())) return;
 
     $name = $event->getMessageFrom();
 
