@@ -10,9 +10,9 @@ namespace Joker;
 class LogPlugin extends Plugin
 {
   protected $options = [
-    'empty'=> false, // empty event symbol, for example .
-    'screen'=>true,  // show log in screen
-    'file'=>false,   // log to file
+    'empty'  => false, // empty event symbol, for example .
+    'screen' => false, // show log in screen
+    'file'   => false, // log to file
   ];
 
   public function onEmpty( Event $update )
