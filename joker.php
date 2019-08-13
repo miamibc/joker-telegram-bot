@@ -22,7 +22,7 @@ $bot = new Joker\Bot( $token );
 $bot->plug([
   new Joker\HelloPlugin(),
   new Joker\LogPlugin(['file'=>'log/log.json']),
-  // new Joker\QuotePlugin(),
+  new Joker\QuotePlugin(['dir'=>'jokes']),
   $stickerplugin = new Joker\StickerPlugin(),
 ]);
 
