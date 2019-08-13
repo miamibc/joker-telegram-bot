@@ -7,10 +7,13 @@
 
 namespace Joker;
 
-use TelegramBot\Api\Types\Update;
-use TelegramBot\Api\Client;
-
 abstract class Plugin
 {
-  public function processUpdate( Update $update, Client $client ){}
+
+  protected $defaults = [], $options = [];
+
+  public function __construct( $options = [] )
+  {
+    $this->options = array_merge($this->defaults, $options);
+  }
 }

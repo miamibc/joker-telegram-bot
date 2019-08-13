@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Joker the Telegram bot
  *
@@ -9,72 +10,172 @@
  * @package joker-telegram-bot
  * @author Sergei Miami <miami@blackcrystal.net>
  *
- * @property  \TelegramBot\Api\BotApi|\TelegramBot\Api\Client $client
- * @property  \Joker\Plugin $plugin
+ * @property  Plugin $plugin
  */
 
 namespace Joker;
 
-use TelegramBot\Api\Client;
-use TelegramBot\Api\Types\Update;
-
 class Bot
 {
 
-  const EVENT_BREAK = 100500;
+  const PLUGIN_NEXT   = 100500;
+  const PLUGIN_BREAK  = 100501;
 
   private
-    $client = null,
-    $input_buffer = [],
-    $last_update_id = 0;
+    $debug = false,
+    $ch = null,
+    $client  = null,
+    $token = null,
+    $buffer = [],
+    $last_update_id = 0,
+    $plugins = [];
 
-  public function __construct( $token )
+  public function __construct( $token, $debug = false )
   {
-    $this->client = new Client( $token );
+    $this->token = $token;
+    $this->debug = $debug;
+    $this->ch = curl_init();
+  }
+
+  /**
+   * @param $method
+   * @param $data
+   *
+   * @return bool
+   * @throws Exception
+   */
+  private function _request($method,$data = [])
+  {
+    curl_setopt_array($this->ch, [
+      CURLOPT_URL => $url = "https://api.telegram.org/bot{$this->token}/{$method}",
+      CURLOPT_RETURNTRANSFER => true,         // return web page
+      CURLOPT_HEADER         => false,        // don't return headers
+      CURLOPT_FOLLOWLOCATION => true,         // follow redirects
+      CURLOPT_USERAGENT      => "joker_the_bot",     // who am i
+      CURLOPT_AUTOREFERER    => true,         // set referer on redirect
+      CURLOPT_CONNECTTIMEOUT => 120,          // timeout on connect
+      CURLOPT_TIMEOUT        => 120,          // timeout on response
+      CURLOPT_MAXREDIRS      => 10,           // stop after 10 redirects
+      CURLOPT_POST           => true,         // i am sending post data
+      CURLOPT_POSTFIELDS     => $plain_request = json_encode($data),    // this are my post vars
+      CURLOPT_HTTPHEADER     => [
+        'Content-Type: application/json',
+        'Connection: Keep-Alive',
+      ],
+      // CURLOPT_SSL_VERIFYHOST => false,      // don't verify ssl
+      // CURLOPT_SSL_VERIFYPEER => false,      //
+      // CURLOPT_VERBOSE        => 1           //
+    ]);
+
+    $plain_response = curl_exec($this->ch);
+    $result = json_decode( $plain_response, true);
+    $this->log( $method . ' '. $plain_request . ' => ' . $plain_response );
+
+    if (!isset($result['ok']) || !$result['ok'])
+      throw new Exception("Something went wrong");
+
+    return isset($result['result']) ? $result['result'] : false;
   }
 
   public function loop()
   {
-    $this->getUpdates();
 
-    $update = array_shift( $this->input_buffer );
-    if (!$update) $update = new Update();
+    // request new updates
+    try { $this->requestUpdates(); }
+    catch ( Exception $exception){ $this->log($exception); }
 
+    $event = new Event( $this, array_shift($this->buffer) );
+    try { $this->processEvent( $event ); }
+    catch ( Exception $exception)   { $this->log($exception); }
+
+    $event = null;
+    unset($event);
+
+    // sleep a bit
+    $time = count($this->buffer) ? 2 : 4;
+    sleep($time);
+  }
+
+  /**
+   * @throws Exception
+   */
+  private function requestUpdates()
+  {
+    foreach ($this->_request("getUpdates", ['offset' =>$this->last_update_id]) as $item)
+    {
+      $this->buffer[] = $item;
+      $this->last_update_id = $item['update_id']+1;
+    }
+  }
+
+  public function sendMessage( $chat_id, $text)
+  {
+    $this->_request("sendMessage", ["chat_id" =>$chat_id,"text" =>$text] );
+  }
+
+  public function sendSticker( $chat_id, $file_id)
+  {
+    $this->_request("sendSticker", ["chat_id" =>$chat_id,"sticker" =>$file_id] );
+  }
+
+  public function deleteMessage( $chat_id, $message_id)
+  {
+    $this->_request("deleteMessage", ["chat_id" =>$chat_id,"message_id" =>$message_id] );
+  }
+
+
+  private function processEvent(Event $event )
+  {
+    // get message parameters
+    $tags = $event->getParameters();
+
+    $this->log(['tags'=>$tags]);
+
+    // checks to perform for each plugin
+    $checks = [
+      'onPublicSticker'  => $tags['public']  && $tags['sticker'],
+      'onPrivateSticker' => $tags['private'] && $tags['sticker'],
+      'onPublicText'     => $tags['public']  && $tags['text'],
+      'onPrivateText'    => $tags['private'] && $tags['text'],
+      'onMessage'        => $tags['message'],
+      'onEmpty'          => $tags['empty'],
+      'onTimer'          => true,
+      'onAnything'       => true,
+    ];
+    $result = null;
     foreach ( $this->plugins as $plugin )
     {
-      try {
-        $result = $plugin->processUpdate($update, $this->client);
-        if ($result === Bot::EVENT_BREAK) { break; }
-        elseif ( $result === false) { break; }
-      }
-      catch ( Joker\Exception $exception)
+      foreach ( $checks as $method => $check )
       {
-        $this->debug($exception);
-      }
-      catch ( \Exception $exception )
-      {
-        $this->debug($exception);
+        if ($check && method_exists($plugin,$method))
+          $result = call_user_func( [$plugin,$method], $event );
+
+        if     ($result === Bot::PLUGIN_NEXT)  { break 1; }
+        elseif ($result === Bot::PLUGIN_BREAK) { break 2; }
+        elseif ($result === false) { break 2; }
       }
     }
   }
 
-  private function getUpdates()
+  public function log( $message )
   {
-    foreach ( $this->client->getUpdates( $this->last_update_id ) as $item)
+    if ($this->debug)
     {
-      $this->input_buffer[] = $item;
-      $this->last_update_id = $item->getUpdateId();
+      $timestamp = date("Y-m-d H:i:s");
+      $json = is_string($message) ? $message : json_encode($message);
+      echo "\n[$timestamp] $json";
     }
+    return $message;
   }
 
-  public function debug( $message, $log = 'debug.log' )
+  /**
+   * @param Plugin[] $plugins
+   * @return $this
+   */
+  public function plug( array $plugins )
   {
-    if (!is_string( $message ))
-      $message = json_encode( $message );
-
-    $timestamp = date("Y-m-d H:i:s");
-    file_put_contents( dirname(__FILE__) . '/log/' . $log, "[$timestamp] $message", FILE_APPEND);
+    $this->plugins = $plugins;
+    return $this;
   }
-
 
 }

@@ -27,6 +27,7 @@ $bot = new \TelegramBot\Api\Client( $token );
 $stickers = [];
 
 $log = fopen(dirname(__FILE__) . '/log/log.json' , 'r');
+$id = 0;
 while (($line = fgets( $log )) !== false)
 {
   $line = json_decode( $line , true );
@@ -80,6 +81,8 @@ do
     {
       $params = preg_split('@\s+@', $text);
       $command = trim( strtolower( preg_replace("@[^!\w]@", "", $params[0]) ));
+      if (substr($command, -2) === 'al') $command = '!al';
+
       if (strlen($command) && $command[0] === '!' && file_exists($file  = "jokes/$command.txt"))
       {
         $file = file($file);
@@ -114,10 +117,18 @@ do
           unset($found);
         }
         $joke_id = $rand+1;
+
         if (isset($file[$rand]))
-          $bot->sendMessage($chat_id, "$command #{$joke_id}: {$file[$rand]}");
+        {
+          $joke = strtr($file[$rand], ['\n'=>"\n"]);
+          try {
+            $bot->sendMessage($chat_id,"$command #{$joke_id}: {$joke}");
+          } catch (\TelegramBot\Api\Exception $e){}
+        }
         else
-          $bot->sendMessage($chat_id, "$command: Joke not found :-(");
+        {
+          $bot->sendMessage($chat_id,"$command: Joke not found :-(");
+        }
         unset($file);
       }
     }

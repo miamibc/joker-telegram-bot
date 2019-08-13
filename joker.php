@@ -12,16 +12,20 @@
 
 require 'vendor/autoload.php';
 
-$dotenv = \Dotenv\Dotenv::create(dirname(__FILE__));
+$dotenv = Dotenv\Dotenv::create(dirname(__FILE__));
 $dotenv->load();
 
 $token    = getenv('TELEGRAM_TOKEN');
 $channels = explode(",", getenv("TELEGRAM_CHANNELS"));
 
-$bot = new \Joker\Bot( $token );
-$bot->addPlugins([
-  new Joker\LogPlugin(),
-  new Joker\QuotePlugin(),
-  new Joker\StickerPlugin(),
+$bot = new Joker\Bot( $token );
+$bot->plug([
+  new Joker\HelloPlugin(),
+  new Joker\LogPlugin(['file'=>'log/log.json']),
+  // new Joker\QuotePlugin(),
+  $stickerplugin = new Joker\StickerPlugin(),
 ]);
+
+$stickerplugin->scanLog('log/log.json');
+
 do { $bot->loop(); } while(true);
