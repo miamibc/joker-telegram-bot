@@ -10,11 +10,11 @@ namespace Joker;
 abstract class Plugin
 {
 
-  protected $defaults = [], $options = [];
+  protected $options = [];
 
   public function __construct( $options = [] )
   {
-    $this->options = array_merge($this->defaults, $options);
+    $this->options = array_merge($this->options, $options);
   }
 
   public function getOption( $name, $default = null)

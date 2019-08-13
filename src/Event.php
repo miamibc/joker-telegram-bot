@@ -36,7 +36,12 @@ class Event
   public function answerSticker( $file_id )
   {
     if (isset($this->data['message']['chat']['id']))
-    $this->bot->sendSticker( $this->data['message']['chat']['id'], $file_id );
+      $this->bot->sendSticker( $this->data['message']['chat']['id'], $file_id );
+  }
+
+  public function customRequest( $method, $data = [])
+  {
+    return $this->bot->customRequest($method, $data);
   }
 
   /**

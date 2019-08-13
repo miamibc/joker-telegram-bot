@@ -10,7 +10,8 @@ namespace Joker;
 class StickerPlugin extends Plugin
 {
 
-  protected  $defaults = [
+  protected
+    $options = [
     'time_between' => 60,
     ];
 

@@ -41,7 +41,7 @@ class Bot
    * @param $method
    * @param $data
    *
-   * @return bool
+   * @return array|bool
    * @throws Exception
    */
   private function _request($method,$data = [])
@@ -110,19 +110,26 @@ class Bot
 
   public function sendMessage( $chat_id, $text)
   {
-    $this->_request("sendMessage", ["chat_id" =>$chat_id,"text" =>$text] );
+    $result = $this->_request("sendMessage", ["chat_id" =>$chat_id,"text" =>$text] );
+    return $result;
   }
 
   public function sendSticker( $chat_id, $file_id)
   {
-    $this->_request("sendSticker", ["chat_id" =>$chat_id,"sticker" =>$file_id] );
+    $result = $this->_request("sendSticker", ["chat_id" =>$chat_id,"sticker" =>$file_id] );
+    return $result;
   }
 
   public function deleteMessage( $chat_id, $message_id)
   {
-    $this->_request("deleteMessage", ["chat_id" =>$chat_id,"message_id" =>$message_id] );
+    $result = $this->_request("deleteMessage", ["chat_id" =>$chat_id,"message_id" =>$message_id] );
+    return $result;
   }
 
+  public function customRequest( $method, $data )
+  {
+    return $this->_request( $method, $data );
+  }
 
   private function processEvent(Event $event )
   {

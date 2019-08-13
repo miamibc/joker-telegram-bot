@@ -9,7 +9,7 @@ namespace Joker;
 
 class LogPlugin extends Plugin
 {
-  protected $defaults = [
+  protected $options = [
     'empty'=> false, // empty event symbol, for example .
     'screen'=>true,  // show log in screen
     'file'=>false,   // log to file
