@@ -1,5 +1,6 @@
 <?php
 /**
+ * Joker Log Plugin
  *
  * @package joker-telegram-bot
  * @author Sergei Miami <miami@blackcrystal.net>

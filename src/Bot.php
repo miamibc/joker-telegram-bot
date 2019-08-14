@@ -1,9 +1,9 @@
 <?php
 
 /**
- * Joker the Telegram bot
+ * Joker Bot
  *
- * Born in 2001'th this bot was entertaiment chatbot made in miRCscript,
+ * Born in 2001'th this bot was entertainment chatbot made in miRCscript,
  * joking on channel #blackcrystal in Quakenet. Since that year many things
  * has been changed. Here's third rewrite of Joker on PHP and Telegram API.
  *
@@ -24,7 +24,6 @@ class Bot
   private
     $debug = false,
     $ch = null,
-    $client  = null,
     $token = null,
     $buffer = [],
     $last_update_id = 0,

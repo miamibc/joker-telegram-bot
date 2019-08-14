@@ -1,3 +1,5 @@
 /.env
 /index.php
 /vendor
+/sticker-protector.php
+/sticker-spamer.php

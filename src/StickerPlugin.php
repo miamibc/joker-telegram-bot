@@ -1,5 +1,7 @@
 <?php
 /**
+ * Joker Sticker Plugin
+ * Send sticker to Joker, he answers with random sticker from same pack.
  *
  * @package joker-telegram-bot
  * @author Sergei Miami <miami@blackcrystal.net>
@@ -10,49 +12,26 @@ namespace Joker;
 class StickerPlugin extends Plugin
 {
 
-  protected
-    $options = [
-    'time_between' => 60,
-    ];
-
-  private
-    $last_good_sticker_time = 0,
-    $stickers = [];
-
-  public function scanLog( $filename )
-  {
-    foreach (file($filename) as $line)
-    {
-      $data = json_decode($line, true);
-      if (!isset($data['message']['date'], $data['message']['sticker']['file_id'])) continue;
-
-      $this->last_good_sticker_time = $data['message']['date'];
-      $this->stickers[] = $data['message']['sticker']['file_id'];
-    }
-
-    $this->stickers = array_unique( $this->stickers );
-    shuffle($this->stickers);
-  }
-
-
-  public function onPublicSticker( Event $event)
+  public function onPrivateSticker( Event $event )
   {
     $data = $event->getData();
+    if (!isset($data['message']['sticker']['file_id'])) return;
 
-    if (!isset( $data['message']['date'], $data['message']['sticker']['file_id'])) return;
+    // by default, answer with same sticker
+    $file_id = $data['message']['sticker']['file_id'];
 
-    $this->stickers[] = $data['message']['sticker']['file_id'];
-    $this->stickers = array_unique($this->stickers);
-    shuffle($this->stickers);
-
-    if (!$this->last_good_sticker_time ||
-        $data['message']['date'] > $this->last_good_sticker_time+$this->options['time_between'] )
+    // if possible, load others stickers
+    if (isset($data['message']['sticker']['set_name']))
     {
-      $this->last_good_sticker_time = $data['message']['date'];
+      $stickers = [];
+      $result = $event->customRequest('getStickerSet', ['name'=>$data['message']['sticker']['set_name']]);
+      foreach ($result['stickers'] as $sticker)
+      {
+        $stickers[] = $sticker['file_id'];
+      }
+      shuffle($stickers);
+      $file_id = $stickers[ mt_rand(0, count($stickers)-1) ];
     }
-    else
-    {
-      $event->deleteMessage();
-    }
+    $event->answerSticker( $file_id );
   }
 }

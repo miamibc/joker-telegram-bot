@@ -1,6 +1,6 @@
 <?php
 /**
- * Wrapper of TelegrambotApi/Update, allows to add new functions and
+ * Joker Event
  *
  * @package joker-telegram-bot
  * @author Sergei Miami <miami@blackcrystal.net>

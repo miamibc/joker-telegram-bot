@@ -1,5 +1,7 @@
 <?php
 /**
+ * Joker Plugin
+ *   Base for Joker Telegram bot
  *
  * @package joker-telegram-bot
  * @author Sergei Miami <miami@blackcrystal.net>
