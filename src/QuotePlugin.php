@@ -14,7 +14,7 @@ class QuotePlugin extends Plugin
     'dir' => false,
   ];
 
-  public function onPublicText( Event $event )
+  public function onText( Event $event )
   {
     $text = $event->getMessageText();
 
@@ -73,7 +73,7 @@ class QuotePlugin extends Plugin
 
     $joke = $count && isset( $file[$rand-1] )
             ? strtr($file[$rand-1], ['\n'=>"\n"])
-            : "Oops. Noting found :(";
+            : "Joke not found :(";
 
     return "$prefix: $joke";
   }

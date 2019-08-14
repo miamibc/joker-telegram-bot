@@ -144,6 +144,8 @@ class Bot
       'onPrivateSticker' => $tags['private'] && $tags['sticker'],
       'onPublicText'     => $tags['public']  && $tags['text'],
       'onPrivateText'    => $tags['private'] && $tags['text'],
+      'onSticker'        => $tags['sticker'],
+      'onText'           => $tags['text'],
       'onMessage'        => $tags['message'],
       'onEmpty'          => $tags['empty'],
       'onTimer'          => true,
