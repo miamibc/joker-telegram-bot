@@ -50,7 +50,7 @@ class Bot
       CURLOPT_RETURNTRANSFER => true,         // return web page
       CURLOPT_HEADER         => false,        // don't return headers
       CURLOPT_FOLLOWLOCATION => true,         // follow redirects
-      CURLOPT_USERAGENT      => "joker_the_bot",     // who am i
+      CURLOPT_USERAGENT      => "joker_the_bot (+https://github.com/miamibc/joker-telegram-bot)", // who am i
       CURLOPT_AUTOREFERER    => true,         // set referer on redirect
       CURLOPT_CONNECTTIMEOUT => 120,          // timeout on connect
       CURLOPT_TIMEOUT        => 120,          // timeout on response

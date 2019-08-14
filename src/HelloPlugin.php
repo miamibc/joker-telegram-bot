@@ -29,9 +29,7 @@ class HelloPlugin extends Plugin
     $message = <<<EOF
 Hello, $name. I'm Joker, the Telegram Bot.
 
-Born in 2001, I was entertainment chatbot written in miRCscript.
-Now I'm a bit new: I run PHP on fast virtual server to connect modern geeky 
-Telegram network and joke my random funs.
+Born in 2001, I was entertainment chatbot written in miRCscript. Now I'm a bit new: I run PHP on fast virtual server to connect modern geeky Telegram network and joke my random funs.
 
 Read more: https://github.com/miamibc/joker-telegram-bot
 EOF;
