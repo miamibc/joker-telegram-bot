@@ -30,11 +30,29 @@ class QuotePlugin extends Plugin
     $command = trim( strtolower( preg_replace("@[^!\w]@", "", array_shift($chunk)) ));
     $params  = trim( implode(" ", $chunk) );
 
+    if (in_array( $command, [ '!list', '!help' ]) )
+    {
+      $help = $this->getHelp( $this->getOption("dir"));
+      $event->answerMessage( $help );
+      return;
+    }
+
     $filename =  $this->getOption('dir') . "/$command.txt";
     if (!file_exists($filename)) return;
 
     $joke = $this->getJoke( $command, $params );
     $event->answerMessage( $joke );
+  }
+
+  private  function getHelp( $dir )
+  {
+    $topics = [];
+    foreach ( glob( "$dir/*.txt" ) as $filename)
+    {
+      if (pathinfo($filename, PATHINFO_EXTENSION) !== 'txt') continue;
+      $topics[] = basename( $filename, '.txt');
+    }
+    return "List of " . basename($dir) . ": " . implode(" ", $topics);
   }
 
   private function getJoke( $command, $params )
