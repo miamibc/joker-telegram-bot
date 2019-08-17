@@ -41,7 +41,10 @@ class ModeratePlugin extends Plugin
 
   /**
    * Listen to public sticker and delete it, if counter less than allowed
+   *
    * @param Event $event
+   *
+   * @return int|void
    */
   public function onPublicStickerMessage( Event $event)
   {
@@ -56,8 +59,9 @@ class ModeratePlugin extends Plugin
 
     $chat_id = $data['message']['chat']['id'];
 
-    // skip, if no counter for this chat defined
-    if (!isset($this->counter[ $chat_id ])) return;
+    // if no counter yet, create it with normal number of messages
+    if (!isset( $this->counter[$chat_id]))
+      $this->counter[ $chat_id ] = $this->getOption('messages_between');
 
     if ($this->counter[ $chat_id ] < $this->getOption('messages_between'))
     {
@@ -80,6 +84,7 @@ class ModeratePlugin extends Plugin
       }
       $file_id = $stickers[ mt_rand(0, count($stickers)-1) ];
       $event->answerSticker( $file_id );
+      return Bot::PLUGIN_BREAK;
     }
 
   }
