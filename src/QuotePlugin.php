@@ -19,7 +19,7 @@ class QuotePlugin extends Plugin
     'dir' => false,
   ];
 
-  public function onText( Event $event )
+  public function onPublicText( Event $event )
   {
     $text = $event->getMessageText();
 
@@ -43,6 +43,37 @@ class QuotePlugin extends Plugin
     $joke = $this->getJoke( $command, $params );
     $event->answerMessage( $joke );
   }
+
+  /**
+   * @param Event $event
+   */
+  public function onPrivateText( Event $event )
+  {
+    $text = $event->getMessageText();
+
+    $regexp = '#^(.*), \[([^]]+)\]\n(.*?)$#m';
+
+    if ( preg_match(  $regexp, $text, $matches) )
+    {
+      // multi-line telegram-joker format
+      $text = preg_replace($regexp,'<\1> \3',$text);
+      $text = preg_replace('#\n+#m','\n',$text);
+      $text = '['.$matches[2].']\n'.trim($text);
+    }
+    else
+    {
+      // old-school, IRC-joker format
+      $text = preg_replace('#\s+#m',' ',$text);
+      $text = trim($text);
+    }
+
+    file_put_contents( $this->getOption('dir') . '/!tg.txt', PHP_EOL.$text, FILE_APPEND);
+
+    // return last joke
+    $joke = $this->getJoke( "!tg", "last" );
+    $event->answerMessage( "Added: $joke" );
+  }
+
 
   private  function getHelp( $dir )
   {
@@ -72,6 +103,12 @@ class QuotePlugin extends Plugin
       // number
       $rand   = preg_replace('@[^\d]+@', "", $params)*1;
       $count  = count($file);
+      $prefix = "$command $rand of $count";
+    }
+    elseif ( $params === 'last'){
+      // number
+      $count  = count($file);
+      $rand   = $count;
       $prefix = "$command $rand of $count";
     }
     else {

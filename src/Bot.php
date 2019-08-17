@@ -132,32 +132,35 @@ class Bot
 
   private function processEvent(Event $event )
   {
-    // get message parameters
+    // get event tags
     $tags = $event->getTags();
 
-    $this->log(['tags'=>$tags]);
-
-    // checks to perform for each plugin
-    $checks = [
-      'onPublicSticker'  => $tags['public']  && $tags['sticker'],
-      'onPrivateSticker' => $tags['private'] && $tags['sticker'],
-      'onPublicText'     => $tags['public']  && $tags['text'],
-      'onPrivateText'    => $tags['private'] && $tags['text'],
-      'onSticker'        => $tags['sticker'],
-      'onText'           => $tags['text'],
-      'onMessage'        => $tags['message'],
-      'onEmpty'          => $tags['empty'],
-      'onTimer'          => true,
-      'onAnything'       => true,
-    ];
-    $result = null;
     foreach ( $this->plugins as $plugin )
     {
-      foreach ( $checks as $method => $check )
+      foreach ( get_class_methods($plugin) as $method )
       {
-        if ($check && method_exists($plugin,$method))
-          $result = call_user_func( [$plugin,$method], $event );
+        // make array of pieces, splitted by Uppercase letter
+        // f.e. onSomeMethod => [ on, Some, Method ]
+        $pieces = preg_split('/(?=[A-Z])/',$method);
 
+        // method must start from on, and other parts
+        if (array_shift($pieces) !== 'on' || count($pieces) == 0) continue;
+
+        // count score to know, do we need to execute this method
+        $score = 0;
+        foreach ( $pieces as $piece)
+        {
+          // cleanup and normalize piece
+          $piece = strtolower( trim( $piece, ' _'));
+          if (isset($tags[$piece]) && $tags[$piece]) $score++;
+        }
+        // if score doesnt match number of pieces, we skip this method
+        if ($score !== count($pieces)) continue;
+
+        // at last, execute it
+        $result = call_user_func( [$plugin,$method], $event );
+
+        // check return value to change plugin processing behaviour if needed
         if     ($result === Bot::PLUGIN_NEXT)  { break 1; }
         elseif ($result === Bot::PLUGIN_BREAK) { break 2; }
         elseif ($result === false) { break 2; }
