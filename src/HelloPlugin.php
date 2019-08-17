@@ -36,6 +36,8 @@ EOF;
 
 
     $event->answerMessage( $message );
+
+    return Bot::PLUGIN_BREAK;
   }
 
 }

@@ -18,9 +18,7 @@ $bot->plug([
   new Joker\StickerPlugin(),
   new Joker\LogPlugin(['file'=>'log/log.json']),
   new Joker\QuotePlugin(['dir'=>'jokes']),
-  $moderator = new Joker\ModeratorPlugin(),
+  new Joker\ModeratePlugin(),
 ]);
-
-$moderator->scanLog('log/log.json');
 
 do { $bot->loop(); } while(true);
