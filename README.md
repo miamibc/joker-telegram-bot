@@ -17,11 +17,13 @@ Ensure all required software packages installed
 sudo apt-get install php-cli php-curl php-json git composer
 ```
 
-Download, install, run.
+Download, install, edit .env, run.
+
 ```
 git clone https://github.com/miamibc/joker-telegram-bot.git
 cd joker-telegram-bot
 composer install
+cp .env.sample .env
 php joker.php
 ```
 

@@ -31,6 +31,9 @@ class Bot
 
   public function __construct( $token, $debug = false )
   {
+    if ( strlen($token) < 40)
+      throw new Exception("Please provide Telegram API token. More info https://core.telegram.org/bots#3-how-do-i-create-a-bot");
+
     $this->token = $token;
     $this->debug = $debug;
     $this->ch = curl_init();
