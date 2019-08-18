@@ -65,8 +65,17 @@ class ModeratePlugin extends Plugin
 
     if ($this->counter[ $chat_id ] < $this->getOption('messages_between'))
     {
-      // sticker flood, delete it
+      // sticker flood, modelete it
       $event->deleteMessage();
+
+      // say something
+      $name = $event->getMessageFrom();
+      $answer = [
+        "Can't post this sh#t now, $name, maybe later. S0rry d0g :p",
+        "Too many stickers, $name. Calm down, my friend :p",
+        "Sorry, $name. Need more texts between your stickers!",
+      ];
+      $event->answerMessage( $answer[ array_rand($answer) ]);
       return;
     }
 
