@@ -27,14 +27,14 @@ class QuotePlugin extends Plugin
 
     if ($chunk[0][0] !== '!') return;
 
-    $command = trim( strtolower( preg_replace("@[^!\w]@", "", array_shift($chunk)) ));
+    $command = trim( strtolower( preg_replace("@[^!\w\d]@", "", array_shift($chunk)) ));
     $params  = trim( implode(" ", $chunk) );
 
     if (in_array( $command, [ '!list', '!help' ]) )
     {
-      $help = $this->getHelp( $this->getOption("dir"));
+      $help = $this->getHelp( $this->getOption("dir") );
       $event->answerMessage( $help );
-      return;
+      return Bot::PLUGIN_BREAK;
     }
 
     $filename =  $this->getOption('dir') . "/$command.txt";
@@ -42,9 +42,11 @@ class QuotePlugin extends Plugin
 
     $joke = $this->getJoke( $command, $params );
     $event->answerMessage( $joke );
+    return Bot::PLUGIN_BREAK;
   }
 
   /**
+   * Listen to private message and add joke
    * @param Event $event
    */
   public function onPrivateText( Event $event )
@@ -72,6 +74,7 @@ class QuotePlugin extends Plugin
     // return last joke
     $joke = $this->getJoke( "!tg", "last" );
     $event->answerMessage( "Added: $joke" );
+    return Bot::PLUGIN_BREAK;
   }
 
 
