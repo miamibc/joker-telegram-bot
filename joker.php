@@ -13,11 +13,11 @@ $token    = getenv('TELEGRAM_TOKEN');
 
 $bot = new Joker\Bot( $token );
 $bot->plug([
-  new Joker\HelloPlugin(),
-  new Joker\StickerPlugin(),
   new Joker\LogPlugin(['file'=>'log/log.json']),
   new Joker\QuotePlugin(['dir'=>'jokes']),
   new Joker\ModeratePlugin(),
+  new Joker\HelloPlugin(),
+  new Joker\StickerPlugin(),
 ]);
 
 do { $bot->loop(); } while(true);
