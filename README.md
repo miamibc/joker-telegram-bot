@@ -17,15 +17,25 @@ Ensure all required software packages installed
 sudo apt-get install php-cli php-curl php-json git composer
 ```
 
-Download, install, edit .env, run.
+
+Download, install.
 
 ```
 git clone https://github.com/miamibc/joker-telegram-bot.git
 cd joker-telegram-bot
 composer install
 cp .env.sample .env
+```
+
+To run Telegram bot, you must be [registered in BotFather](https://core.telegram.org/bots#6-botfather) 
+and have working API token. Insert this token into **joker.php**
+or **.env** file before start. Now all is ready to launch.
+
+```
 php joker.php
 ```
+
+Find your bot in Telegram by name and say him **Hi**. 
 
 Project pages
 -------------
