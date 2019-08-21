@@ -14,7 +14,7 @@ class ModeratePlugin extends Plugin
 
   protected
     $options = [
-      'messages_between' => 3,
+      'characters_between' => 555,
     ];
 
   private $counter = [];
@@ -34,9 +34,9 @@ class ModeratePlugin extends Plugin
 
     // if no counter yet, create it with normal number of messages
     if (!isset( $this->counter[$chat_id]))
-      $this->counter[ $chat_id ] = $this->getOption('messages_between');
+      $this->counter[ $chat_id ] = $this->getOption('characters_between');
 
-    $this->counter[ $chat_id ]++;
+    $this->counter[ $chat_id ] += strlen( @$data['message']['text'] );
   }
 
   /**
@@ -61,19 +61,21 @@ class ModeratePlugin extends Plugin
 
     // if no counter yet, create it with normal number of messages
     if (!isset( $this->counter[$chat_id]))
-      $this->counter[ $chat_id ] = $this->getOption('messages_between');
+      $this->counter[ $chat_id ] = $this->getOption('characters_between');
 
-    if ($this->counter[ $chat_id ] < $this->getOption('messages_between'))
+    if ($this->counter[ $chat_id ] < $this->getOption('characters_between'))
     {
       // sticker flood, modelete it
       $event->deleteMessage();
 
+      $need = $this->getOption('characters_between') - $this->counter[ $chat_id ];
+
       // say something
       $name = $event->getMessageFrom();
       $answer = [
-        "Can't post this sh#t now, $name, maybe later. S0rry d0g :p",
-        "Too many stickers, $name. Calm down, my friend :p",
-        "Sorry, $name. Need more texts between your stickers!",
+        "Can't post this sh#t righ now, $name. Need $need more chars to post sticker.",
+        "$name, you're little damn flooder. Need $need more chars to post sticker.",
+        "No sh1t, $name m4n. Need $need more chars to post sticker.",
       ];
       $event->answerMessage( $answer[ array_rand($answer) ]);
       return;
