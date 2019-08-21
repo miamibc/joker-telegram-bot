@@ -14,7 +14,7 @@ class ModeratePlugin extends Plugin
 
   protected
     $options = [
-      'characters_between' => 555,
+      'characters_between' => 255,
     ];
 
   private $counter = [];
@@ -28,15 +28,15 @@ class ModeratePlugin extends Plugin
     $data = $event->getData();
 
     // requirements
-    if (!isset( $data['message']['chat']['id'])) return;
+    if (!isset( $data['message']['from']['id'])) return;
 
-    $chat_id = $data['message']['chat']['id'];
+    $id = $data['message']['from']['id'];
 
     // if no counter yet, create it with normal number of messages
-    if (!isset( $this->counter[$chat_id]))
-      $this->counter[ $chat_id ] = $this->getOption('characters_between');
+    if (!isset( $this->counter[ $id ] ))
+      $this->counter[ $id ] = $this->getOption('characters_between');
 
-    $this->counter[ $chat_id ] += strlen( @$data['message']['text'] );
+    $this->counter[ $id ] += strlen( @$data['message']['text'] );
   }
 
   /**
@@ -53,22 +53,22 @@ class ModeratePlugin extends Plugin
     // check requirements
     if (!isset(
       $data['message']['date'],
-      $data['message']['chat']['id'],
+      $data['message']['from']['id'],
       $data['message']['sticker']['file_id']
     )) return;
 
-    $chat_id = $data['message']['chat']['id'];
+    $id = $data['message']['from']['id'];
 
     // if no counter yet, create it with normal number of messages
-    if (!isset( $this->counter[$chat_id]))
-      $this->counter[ $chat_id ] = $this->getOption('characters_between');
+    if (!isset( $this->counter[ $id ] ))
+      $this->counter[ $id ] = $this->getOption('characters_between');
 
-    if ($this->counter[ $chat_id ] < $this->getOption('characters_between'))
+    if ($this->counter[ $id ] < $this->getOption('characters_between'))
     {
-      // sticker flood, modelete it
+      // sticker flood, delete it
       $event->deleteMessage();
 
-      $need = $this->getOption('characters_between') - $this->counter[ $chat_id ];
+      $need = $this->getOption('characters_between') - $this->counter[ $id ];
 
       // say something
       $name = $event->getMessageFrom();
@@ -82,7 +82,7 @@ class ModeratePlugin extends Plugin
     }
 
     // ok, reset counter
-    $this->counter[ $chat_id ] = 0;
+    $this->counter[ $id ] = 0;
 
     // and (just for fun) answer with random sticker from same set
     if (isset($data['message']['sticker']['set_name']))
