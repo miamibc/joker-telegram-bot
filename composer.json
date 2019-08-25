@@ -12,7 +12,8 @@
   "require": {
     "ext-json": "*",
     "ext-curl": "*",
-    "vlucas/phpdotenv": "^3.4"
+    "ext-mbstring": "*",
+    "vlucas/phpdotenv": "^3.4",
   },
   "autoload": {
     "psr-4": {

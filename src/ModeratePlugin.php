@@ -36,7 +36,13 @@ class ModeratePlugin extends Plugin
     if (!isset( $this->counter[ $id ] ))
       $this->counter[ $id ] = $this->getOption('characters_between');
 
-    $this->counter[ $id ] += strlen( @$data['message']['text'] );
+    $length = mb_strlen( @$data['message']['text'] , 'utf-8' );
+
+    // for cheaters like edson
+    if ($length > $this->getOption('characters_between'))
+      $length = mt_rand(0, round( $this->getOption('characters_between')/3) );
+
+    $this->counter[ $id ] += $length;
   }
 
   /**
@@ -78,25 +84,13 @@ class ModeratePlugin extends Plugin
         "No sh1t, $name m4n. Need $need more chars to post sticker.",
       ];
       $event->answerMessage( $answer[ array_rand($answer) ]);
-      return;
     }
-
-    // ok, reset counter
-    $this->counter[ $id ] = 0;
-
-    // and (just for fun) answer with random sticker from same set
-    if (isset($data['message']['sticker']['set_name']))
+    else
     {
-      $stickers = [];
-      $result = $event->customRequest('getStickerSet', ['name'=>$data['message']['sticker']['set_name']]);
-      foreach ($result['stickers'] as $sticker)
-      {
-        $stickers[] = $sticker['file_id'];
-      }
-      $file_id = $stickers[ mt_rand(0, count($stickers)-1) ];
-      $event->answerSticker( $file_id );
-      return Bot::PLUGIN_BREAK;
+      // ok, reset counter
+      $this->counter[ $id ] = 0;
     }
+
 
   }
 }
