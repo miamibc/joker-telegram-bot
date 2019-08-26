@@ -15,23 +15,31 @@ class StickerPlugin extends Plugin
   public function onPrivateSticker( Event $event )
   {
     $data = $event->getData();
-    if (!isset($data['message']['sticker']['file_id'])) return;
 
-    // by default, answer with same sticker
+    // check requirements
+    if (!isset(
+      $data['message']['sticker']['file_id'],
+      $data['message']['sticker']['set_name']
+    )) return;
+
     $file_id = $data['message']['sticker']['file_id'];
 
-    // if possible, load others stickers
-    if (isset($data['message']['sticker']['set_name']))
-    {
-      $stickers = [];
-      $result = $event->customRequest('getStickerSet', ['name'=>$data['message']['sticker']['set_name']]);
-      foreach ($result['stickers'] as $sticker)
-      {
+    // request stickers in this pack
+    $result = $event->customRequest('getStickerSet', ['name'=>$data['message']['sticker']['set_name']]);
+
+    // error or no stickers in set?
+    if (!isset($result['stickers'])) return;
+
+    // collect stickers from pack but not same sticker
+    $stickers = [];
+    foreach ($result['stickers'] as $sticker)
+      if ($stickers['file_id'] !== $file_id)
         $stickers[] = $sticker['file_id'];
-      }
-      shuffle($stickers);
-      $file_id = $stickers[ mt_rand(0, count($stickers)-1) ];
-    }
-    $event->answerSticker( $file_id );
+
+    // random sticker from collected, or same if nothing there
+    $answer = count($stickers) ? $stickers[ mt_rand(0, count($stickers)-1) ] : $file_id;
+    $event->answerSticker( $answer );
+    return Bot::PLUGIN_BREAK;
+
   }
 }
