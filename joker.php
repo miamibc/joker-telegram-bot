@@ -9,9 +9,7 @@ require 'vendor/autoload.php';
 $dotenv = Dotenv\Dotenv::create(dirname(__FILE__));
 $dotenv->load();
 
-$token    = getenv('TELEGRAM_TOKEN');
-
-$bot = new Joker\Bot( $token );
+$bot = new Joker\Bot( getenv( 'TELEGRAM_TOKEN' ) );
 $bot->plug([
   new Joker\LogPlugin(['file'=>'log/log.json']),
   new Joker\QuotePlugin(['dir'=>'jokes']),
