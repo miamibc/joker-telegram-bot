@@ -1,9 +1,11 @@
 <?php
 /**
- * Joker Hello Plugin
+ * Joker Temp Plugin
  *
- * Say /start or hello to the bot in private chat
- * Send sticker, it answers with random sticker from same sticker pack
+ * Ask current temperature in city, for example:
+ *   !temp moscow
+ * bot will answer:
+ *   !temp: -6.8°C, from -10 to -4.44°С, wind 1 m/s, clouds 100%, pressure 1033 hPa, visibility 10000 m, overcast clouds in Moscow RU
  *
  * @package joker-telegram-bot
  * @author Sergei Miami <miami@blackcrystal.net>
