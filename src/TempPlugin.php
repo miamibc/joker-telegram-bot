@@ -16,10 +16,8 @@ class TempPlugin extends Plugin
 
   const API_URL = 'http://api.openweathermap.org/data/2.5/weather?q={PLACE}&units=metric&APPID={APIKEY}';
 
-  public function onTextMessage( Event $event )
+  public function onPublicText( Event $event )
   {
-
-    if (!preg_match('@^(/temp|!temp)\s+([\w]+)$@ui', $event->getMessageText(), $matches)) return;
 
     if (!$api_key = $this->getOption('api_key'))
     {
@@ -27,8 +25,21 @@ class TempPlugin extends Plugin
       return false;
     }
 
+    $text = $event->getMessageText();
+
+    if (!preg_match('@^(/temp|!temp)\b@ui', $text)) return;
+
+    if (!preg_match('@^(/temp|!temp)\s+(.*)$@ui', $text, $matches))
+    {
+      $place = "Tallinn";
+    }
+    else
+    {
+      $place = trim($matches[2]);
+    }
+
     $url = strtr( self::API_URL, [
-      '{PLACE}'  => urlencode( $matches[2] ),
+      '{PLACE}'  => urlencode( $place ),
       '{APIKEY}' => urlencode( $api_key ),
     ]);
 
