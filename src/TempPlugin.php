@@ -24,11 +24,12 @@ class TempPlugin extends Plugin
     if (!$api_key = $this->getOption('api_key'))
     {
       $event->answerMessage("!temp: Openweather API key is required for this plugin");
+      return false;
     }
 
     $url = strtr( self::API_URL, [
-      '{PLACE}'  => $matches[2],
-      '{APIKEY}' => $api_key,
+      '{PLACE}'  => urlencode( $matches[2] ),
+      '{APIKEY}' => urlencode( $api_key ),
     ]);
 
     if (!$json = @file_get_contents( $url ))
@@ -45,7 +46,7 @@ class TempPlugin extends Plugin
       return false;
     }
 
-    /*
+    /* example
 {
   "coord": { "lon": 139,"lat": 35},
   "weather": [
@@ -87,8 +88,7 @@ class TempPlugin extends Plugin
 }
      */
 
-    $celsius = round( $data['main']['temp'] , 1);
-    $result = [ "{$celsius}°C" ];
+    $result = [ round( $data['main']['temp'] , 1) . "°C" ];
 
     if (isset($data['main']['temp_min'], $data['main']['temp_max']) && $data['main']['temp_min'] !== $data['main']['temp_max'])
       $result[] = "from {$data['main']['temp_min']} to {$data['main']['temp_max']}°С";
