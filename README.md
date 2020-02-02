@@ -40,7 +40,7 @@ Find your bot in Telegram by name and say him **Hi**.
 Plugins
 -------
 
-By default, bot does nothing, plugins are used to extend it's functionality and interact with users.  We made few classic plugins for Joker, like [HelloPlugin](https://github.com/miamibc/joker-telegram-bot/blob/master/src/HelloPlugin.php) and more complex one [TempPlugin](https://github.com/miamibc/joker-telegram-bot/blob/master/src/TempPlugin.php), feel free to use them and add new. 
+By default bot does nothing, plugins are used to extend it's functionality and interact with users.  We made few classic plugins for Joker, like [HelloPlugin](https://github.com/miamibc/joker-telegram-bot/blob/master/src/HelloPlugin.php) and more complex one [TempPlugin](https://github.com/miamibc/joker-telegram-bot/blob/master/src/TempPlugin.php), feel free to use them and add new. 
 
 To add plugin, create new class extending `Joker\Plugin` and connect it with `$joker->plug( array )` command before main loop. Add methods like `on[Action][Action]( Joker\Event $event )`. These methods will be called when all actions is found in request. Actions can be:
 
