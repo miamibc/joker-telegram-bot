@@ -1,11 +1,11 @@
 <?php
 /**
- * Joker Temp Plugin
+ * Randomall API Plugin for Joker
  *
  * Ask current temperature in city, for example:
- *   !temp moscow
+ *   !random mem
  * bot will answer:
- *   !temp: -6.8°C, from -10 to -4.44°С, wind 1 m/s, clouds 100%, pressure 1033 hPa, visibility 10000 m, overcast clouds in Moscow RU
+ *   !random mem: 13 мертвых мышей перемещаются с помощью квантовой энергии Донбасса в глубины своего разума
  *
  * @package joker-telegram-bot
  * @author Sergei Miami <miami@blackcrystal.net>
@@ -24,7 +24,7 @@ class RandomPlugin extends Plugin
     'baba' => 71,
     'fobija' => 126,
     'banda' => 111,
-    'shedevr' => 58,
+    // 'shedevr' => 58,
     'rabota' => 75,
     'mania' => 92,
     // 'hobby' => 113,
@@ -44,7 +44,7 @@ class RandomPlugin extends Plugin
     'lovestory' => 196,
     'currency' => 170,
     'bolezn' => 173,
-    'risunok' => 278,
+    'art' => 278,
     'speech' => 226,
     'flag' => 265,
     'reklama' => 190,
