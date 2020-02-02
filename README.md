@@ -52,9 +52,9 @@ To add plugin, create new class extending `Joker\Plugin` and connect it with `$j
 - `group` - group, supergroup and channel requests
 - `empty` - empty requests
 
-For example, `onPrivateSticker` or `onStickerPrivate` will be called when `sticker` and `private` is found in request.
+For example, `onPrivateSticker` or `onStickerPrivate` will be called when both `sticker` and `private` is found in request.
 
-Parameter of this method can be used get message details and react. For example `$event->answerMessage()` or `$event->answerSticker()` is a shortcut to answer same channel or private user, by message or sticker. 
+Parameter of this method is used get message details and react. For example `$event->answerMessage()` or `$event->answerSticker()` is a shortcut to answer same channel or private user, by message or sticker. 
 
 Return value of plugin method can be:
 
