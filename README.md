@@ -1,11 +1,9 @@
 Joker Telegram Bot 
 =================
 
-Born in 2001'th this bot was entertaiment chatbot 
-written in miRCscript, joking on #blackcrystal Quakenet channel. 
+Born in 2001'th this bot was entertaiment chatbot written in miRCscript, joking on #blackcrystal Quakenet channel. 
 
-Since that time many things has been changed. Here is third rewrite 
-of Joker, made on Telegram to be simple and with PHP to be fun.
+Since that time many things has been changed. Here is third rewrite of Joker, made for Telegram to be modern and simple, with PHP to be fun.
 
 Installation and start
 -------------------------------------------------
