@@ -58,8 +58,8 @@ Parameter of this method can be used get message details and react. For example 
 
 Return value of plugin method can be:
 
-- `\Joker\Bot::PLUGIN_NEXT` or `true` or `null`- (default) process next plugin in chain
-- `\Joker\Bot::PLUGIN_BREAK` or `false` - do not process plugin chain anymore.
+- `Joker\Bot::PLUGIN_NEXT` or `true` or `null`- (default) process next plugin in chain
+- `Joker\Bot::PLUGIN_BREAK` or `false` - do not process plugin chain anymore.
 
 Project pages
 -------------
