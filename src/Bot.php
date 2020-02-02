@@ -166,6 +166,7 @@ class Bot
         // check return value to change plugin processing behaviour if needed
         if     ($result === Bot::PLUGIN_NEXT)  { break 1; }
         elseif ($result === Bot::PLUGIN_BREAK) { break 2; }
+        elseif ($result === true ) { break 1; }
         elseif ($result === false) { break 2; }
       }
     }
