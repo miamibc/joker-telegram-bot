@@ -110,15 +110,15 @@ class Bot
     }
   }
 
-  public function sendMessage( $chat_id, $text)
+  public function sendMessage( $chat_id, $text, $options = [])
   {
-    $result = $this->_request("sendMessage", ["chat_id" =>$chat_id,"text" =>$text] );
+    $result = $this->_request("sendMessage", array_merge(["chat_id" =>$chat_id,"text" =>$text], $options) );
     return $result;
   }
 
-  public function sendSticker( $chat_id, $file_id)
+  public function sendSticker( $chat_id, $file_id, $options = [])
   {
-    $result = $this->_request("sendSticker", ["chat_id" =>$chat_id,"sticker" =>$file_id] );
+    $result = $this->_request("sendSticker", array_merge(["chat_id" =>$chat_id,"sticker" =>$file_id], $options) );
     return $result;
   }
 

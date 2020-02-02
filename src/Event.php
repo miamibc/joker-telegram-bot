@@ -21,10 +21,10 @@ class Event
   }
 
 
-  public function answerMessage( $text )
+  public function answerMessage( $text, $options = [] )
   {
     if (isset($this->data['message']['chat']['id']))
-      $this->bot->sendMessage( $this->data['message']['chat']['id'], $text );
+      $this->bot->sendMessage( $this->data['message']['chat']['id'], $text, $options );
   }
 
   public function deleteMessage()
