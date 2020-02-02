@@ -37,6 +37,30 @@ php joker.php
 
 Find your bot in Telegram by name and say him **Hi**. 
 
+Plugins
+-------
+
+Plugins are used to extend bot functionality.  We made few classic plugins for Joker, feel free to use them and add new. 
+
+To add plugin, create new class extending `Joker\Plugin` and connect it with `$joker->plug( array )` command before main loop. Add methods like `on[Action][Action]( Joker\Event $event )`. These methods will be called when all actions is found in request. Actions can be:
+
+- `message` - requests containing message section
+- `sticker` - stickers or replies with sticker
+- `text` - contains text
+- `public` - public requests
+- `private` - non-public requests
+- `group` - group, supergroup and channel requests
+- `empty` - empty requests
+
+For example, `onPrivateSticker` or `onStickerPrivate` will be called when `sticker` and `private` is found in request.
+
+Parameter of this method can be used get message details and react. For example `$event->answerMessage()` or `$event->answrSticker()` is a shortcut to answer same channel or private user, by message or sticker. 
+
+Return value of plugin method can be:
+
+- `\Joker\Bot::PLUGIN_NEXT` or `true` or `null`- (default) process next plugin in chain
+- `\Joker\Bot::PLUGIN_BREAK` or `false` - do not process plugin chain anymore.
+
 Project pages
 -------------
 
