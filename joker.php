@@ -14,6 +14,7 @@ $bot->plug([
   new Joker\LogPlugin( ['file'=>'log/log.json'] ),
   new Joker\TempPlugin( ['api_key' => getenv( 'OPENWEATHER_API_KEY' )] ),
   new Joker\RandomPlugin(),
+  new Joker\CowsayPlugin(),
   new Joker\HelloPlugin(),
   new Joker\StickerPlugin(),
   new Joker\QuotePlugin( ['dir'=>'jokes'] ),
