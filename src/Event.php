@@ -33,10 +33,10 @@ class Event
       $this->bot->deleteMessage( $this->data['message']['chat']['id'], $this->data['message']['message_id'] );
   }
 
-  public function answerSticker( $file_id )
+  public function answerSticker( $file_id, $options = [] )
   {
     if (isset($this->data['message']['chat']['id']))
-      $this->bot->sendSticker( $this->data['message']['chat']['id'], $file_id );
+      $this->bot->sendSticker( $this->data['message']['chat']['id'], $file_id, $options );
   }
 
   public function customRequest( $method, $data = [])
