@@ -8,6 +8,8 @@
  *
  * Bot will answer with random track from the top of results.
  *
+ * Spotify documentation https://developer.spotify.com/documentation/web-api/reference-beta/#category-search
+ *
  * @package joker-telegram-bot
  * @author Sergei Miami <miami@blackcrystal.net>
  */
