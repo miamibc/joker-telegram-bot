@@ -84,6 +84,11 @@ class Event
     return $this->data;
   }
 
+  public function getBot()
+  {
+    return $this->bot;
+  }
+
   public function toJson()
   {
     return json_encode( $this->data);
