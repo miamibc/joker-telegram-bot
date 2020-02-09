@@ -8,7 +8,13 @@
  *
  * Bot will answer with random track from the top of results.
  *
- * Spotify documentation https://developer.spotify.com/documentation/web-api/reference-beta/#category-search
+ * Documentation:
+ * - Spotify Search API https://developer.spotify.com/documentation/web-api/reference-beta/#category-search
+ * - Spotify Authorization https://developer.spotify.com/documentation/general/guides/authorization-guide/#client-credentials-flow
+ *
+ * TODO:
+ * - Add fade-in/out effect to audio track https://ffmpeg.org/ffmpeg-filters.html#afade-1
+ * - Publish result as audio message
  *
  * @package joker-telegram-bot
  * @author Sergei Miami <miami@blackcrystal.net>
