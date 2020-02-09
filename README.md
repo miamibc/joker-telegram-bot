@@ -28,8 +28,9 @@ cp .env.sample .env
 ```
 
 To run Telegram bot, you must be [registered in BotFather](https://core.telegram.org/bots#6-botfather) 
-and have working API token. Insert this token into **joker.php**
-or **.env** file before start. Now all is ready to launch.
+and have working Telegram API token placed in `.env` configuration file or `joker.php` directly.
+
+Now we are ready to start.
 
 ```
 php joker.php
@@ -62,6 +63,15 @@ Return value of plugin method can be:
 - `Joker\Bot::PLUGIN_BREAK` or `false` - do not process plugin chain anymore.
 
 I'll be glad to see your plugins and help with implementations.
+
+Todo
+-----
+
+- Add onTimer event type, to process events by time
+- Add CommandPlugin base class, to simplify adding new commands
+- Redis and Simplesql implementations
+- Add more cool plugins
+- Audio processing with ffmpeg and sending with sendAudio/sendVoice
 
 Project pages
 -------------
