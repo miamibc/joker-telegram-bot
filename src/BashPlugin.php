@@ -2,10 +2,12 @@
 /**
  * Random joke from Bash.im, plugin for Joker
  *
- * Ask random track or search:
+ * Ask random joke, or search by id or text:
  *   !bash
+ *   !bash 1234
+ *   !bash scuko blya jjosh
  *
- * Bot will answer with random joke
+ * Bot will answer you with joke from bash
  *
  * @package joker-telegram-bot
  * @author Sergei Miami <miami@blackcrystal.net>
