@@ -50,6 +50,11 @@ class BashPlugin extends Plugin
 
   }
 
+  /**
+   * Get one joke from random_jokes pool.
+   * If pool is empty, loads from bash.im
+   * @return string A joke
+   */
   private function getRandomJoke()
   {
     if (!count($this->random_jokes))
@@ -60,6 +65,12 @@ class BashPlugin extends Plugin
     return array_pop($this->random_jokes);
   }
 
+  /**
+   * Performas sarch on bash.im
+   *
+   * @param string $query text or joke id
+   * @return string
+   */
   private function getSearchJoke($query)
   {
     // if query is number, we can search by id. Just ensure we removed # from beginning
@@ -71,6 +82,12 @@ class BashPlugin extends Plugin
     return $jokes[ mt_rand(0, count($jokes)-1)];
   }
 
+  /**
+   * Parse page content for jokes and their IDs
+   * @param $content
+   *
+   * @return array
+   */
   private function parseJokes( $content )
   {
 
