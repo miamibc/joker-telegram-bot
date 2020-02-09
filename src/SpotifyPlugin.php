@@ -19,7 +19,9 @@ namespace Joker;
 class SpotifyPlugin extends Plugin
 {
 
-  const API_URL = 'https://api.spotify.com/v1';
+  const SPOTIFY_API_ENDPOINT  = 'https://api.spotify.com/v1';
+  const SPOTIFY_AUTH_ENDPOINT = 'https://accounts.spotify.com/api/token';
+  private $token, $token_expire_time;
 
   public function onPublicText( Event $event )
   {
@@ -30,52 +32,97 @@ class SpotifyPlugin extends Plugin
 
     $trigger = trim( $matches[1] );
 
-    if (! $q = trim($matches[2]) )
+    // if query is empty, generate random query
+    if (! $query = trim($matches[2]) )
     {
-      $q = $this->randomSearch();
+      $query = $this->randomQuery();
     }
 
-    $result = $this->_get("/search", ['type'=>'track','q'=>$q ]);
+    // if not authorized, do it
+    if ( empty( $this->token) || time() > $this->token_expire_time)
+    {
+      $this->doAuthorize();
+    }
 
+    // perform search
+    $result = $this->doSearch($query);
     if (!isset( $result['tracks']['items']) )
     {
-      $event->answerMessage("Nothing found :(");
+      $event->answerMessage("$trigger: Nothing found :( Let's try again?");
       return false;
     }
 
-    $track = $result['tracks']['items'][ mt_rand(0, count( $result['tracks']['items'] )-1) ];
-
-    $description = $this->getTrackDescription( $track );
-
-    $event->answerMessage( $trigger . ": " . $description );
+    // get random track, extract information and answer
+    $track  = $result['tracks']['items'][ mt_rand(0, count( $result['tracks']['items'] )-1) ];
+    $answer = $this->getTrackInformation( $track );
+    $event->answerMessage( "$trigger: $answer" );
     return false;
 
   }
 
-  private function randomSearch( $length = 2)
+  /**
+   * Build random query for search API, example '%a%b%'
+   * @param int $length number of letters
+   *
+   * @return string
+   */
+  private function randomQuery($length = 2)
   {
     $chars = "abcdefghijklmnopqrstuvwxyz";
     $result = '%';
     for($i=0; $i<$length; $i++)
-      $result .= $chars[mt_rand(0, strlen($chars) - 1)] . '%';
+    {
+      $result .= $chars[mt_rand(0,strlen($chars) - 1)].'%';
+    }
     return $result;
   }
 
-  private function _get( $command, $params )
+  /**
+   * Authorzie in Spotify API, get temporary api token
+   * https://developer.spotify.com/documentation/general/guides/authorization-guide/#client-credentials-flow
+   * @return bool Success status
+   */
+  private function doAuthorize()
   {
-    $token = $this->getOption("token");
+    $authorization  = base64_encode( $this->getOption('client_id') . ':' . $this->getOption('secret'));
+    $result = file_get_contents( self::SPOTIFY_AUTH_ENDPOINT, false, stream_context_create([
+      'http'=> [
+        'method'=>"POST",
+        'content'=> $content = http_build_query(["grant_type"=>"client_credentials"]),
+        'header'=>"Authorization: Basic $authorization\r\n" .
+                  "Content-Type: application/x-www-form-urlencoded\r\n" .
+                  "Content-Length: ".strlen($content)."\r\n" .
+                  "",
+      ]
+    ]));
+    $result = json_decode( $result, true );
+    if (!isset($result['access_token'])) return false;
+    $this->token = $result['access_token'];
+    $this->token_expire_time = time() + $result['expires_in'];
+    return true;
 
-    $query    = http_build_query( $params );
-    $result   = file_get_contents( self::API_URL . $command . '?' . $query, false, stream_context_create([
+  }
+
+  /**
+   * Search Spotify API for track with given query
+   * @param $query
+   *
+   * @return array
+   */
+  private function doSearch( $query )
+  {
+    $query  = http_build_query( ['type'=>'track','q'=>$query ] );
+    $result = file_get_contents(self::SPOTIFY_API_ENDPOINT."/search?$query", false, stream_context_create([
       'http'=> [
         'method'=>"GET",
-        'header'=>"Authorization: Bearer $token\r\n"
+        'header'=>"Authorization: Bearer $this->token\r\n"
       ]
     ]));
     return json_decode($result, true);
   }
 
-  private function getTrackDescription( $element )
+
+  private function getTrackInformation($element )
   {
     $artists = [];
     foreach ($element['artists'] as $artist)
@@ -87,8 +134,8 @@ class SpotifyPlugin extends Plugin
     elseif (isset($element['external_urls']['spotify']))
       $preview_url = $element['external_urls']['spotify'];
     else
-      $preview_url = "Can't find link, search by yourself :p";
+      $preview_url = "No link, search by yourself :p";
 
-    return "Listen to '$element[name]' by $artists → $preview_url";
+    return "Listen to $element[name] by $artists → $preview_url";
   }
 }
