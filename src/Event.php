@@ -68,6 +68,11 @@ class Event
     return trim($this->data['message']['text']);
   }
 
+  public function getMessageFromId()
+  {
+    return isset($this->data['message']['from']['id']) ? $this->data['message']['from']['id'] : null;
+  }
+
   public function getMessageFrom()
   {
     if (isset($this->data['message']['from']['first_name']) && isset($this->data['message']['from']['last_name']))

@@ -12,7 +12,7 @@ $dotenv->load();
 $bot = new Joker\Bot( getenv( 'TELEGRAM_TOKEN' ) );
 $bot->plug([
   new Joker\LogPlugin( ['file'=>'log/log.json'] ),
-  new Joker\TempPlugin( ['api_key' => getenv( 'OPENWEATHER_API_KEY' )] ),
+  new Joker\TempPlugin( ['api_key' => getenv( 'OPENWEATHER_API_KEY' ), 'default' => 'Tallinn'] ),
   new Joker\SpotifyPlugin( ['client_id' => getenv( 'SPOTIFY_CLIENT_ID' ), 'secret'=>getenv( 'SPOTIFY_SECRET' )] ),
   new Joker\BashPlugin(),
   new Joker\RandomPlugin(),
