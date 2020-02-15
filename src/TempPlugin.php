@@ -63,7 +63,7 @@ class TempPlugin extends Plugin
     }
 
     // coordinates,or place name?
-    if ( preg_match('@^([\d.]+)[, ]+([\d.]+)$@', $query, $matches) )
+    if ( preg_match('@^(-?[\d.]+)[, ]+(-?[\d.]+)$@', $query, $matches) )
     {
       $params = [
         'lat'   => $matches[1],
