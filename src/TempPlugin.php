@@ -4,6 +4,7 @@
  *
  * Ask current temperature in city, for example:
  *   !temp moscow
+ *   !temp 59.4525804,24.844022
  * bot will answer:
  *   !temp: -6.8°C, from -10 to -4.44°С, wind 1 m/s, clouds 100%, pressure 1033 hPa, visibility 10000 m, overcast clouds in Moscow RU
  *
@@ -45,23 +46,42 @@ class TempPlugin extends Plugin
              : $this->getOption('default', 'tallinn');
     }
 
-    // process imaginary locations
+    // virtual locations
     $locations = [
-      'королевство' => 'narva', // requested by Overdoze
+      'королевство' => 'narva',                // requested by Overdoze
       'korolevstvo' => 'narva',
       'kingdom'     => 'narva',
+      'tll'         => 'tallinn',              // home town
+      'lasnamae'    => '59.4525804,24.844022', // home district
+      'spb'         => 'sankt-peterburg',      // best town
+      'msk'         => 'moscow',               // big town
+      'nowhere'     => '60.4600098,169.5706892',
     ];
-
     if (isset($locations[$query]))
     {
       $query = $locations[$query];
     }
 
-    $url = self::API_URL . '?' . http_build_query([
-      'q' => $query,
-      'units' => 'metric',
-      'APPID' => $this->getOption('api_key'),
-    ]);
+    // coordinates,or place name?
+    if ( preg_match('@^([\d.]+)[, ]+([\d.]+)$@', $query, $matches) )
+    {
+      $params = [
+        'lat'   => $matches[1],
+        'lon'   => $matches[2],
+        'units' => 'metric',
+        'APPID' => $this->getOption('api_key'),
+      ];
+    }
+    else
+    {
+      $params = [
+        'q'     => $query,
+        'units' => 'metric',
+        'APPID' => $this->getOption('api_key'),
+      ];
+    }
+
+    $url = self::API_URL . '?' . http_build_query( $params );
 
     if (!$json = @file_get_contents( $url ))
     {
@@ -142,7 +162,11 @@ class TempPlugin extends Plugin
     foreach ( $data['weather'] as $w)
       $result[] = $w['description'];
 
-    $message = "$trigger: ". trim( implode(', ', $result) ) . " in {$data['name']} {$data['sys']['country']}";
+    $place = isset($data['name']) && $data['name']
+      ? "{$data['name']}, {$data['sys']['country']}"
+      : "this place";
+
+    $message = "$trigger: ". trim( implode(', ', $result) ) . " in {$place}";
 
     $event->answerMessage( $message );
     return false;
