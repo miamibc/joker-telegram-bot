@@ -14,7 +14,8 @@
     "ext-curl": "*",
     "ext-mbstring": "*",
     "vlucas/phpdotenv": "^3.4",
-    "alrik11es/cowsayphp": "^1.2"
+    "alrik11es/cowsayphp": "^1.2",
+    "league/html-to-markdown": "^4.9"
   },
   "autoload": {
     "psr-4": {
