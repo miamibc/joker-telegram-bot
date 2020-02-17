@@ -57,6 +57,8 @@ class Event
       'group'   => isset($this->data['message']['chat']['type']) && in_array( $this->data['message']['chat']['type'], ['group', 'supergroup', 'channel']),
       'public'  => !$private,
       'sticker' => isset($this->data['message']['sticker']),
+      'photo'   => isset($this->data['message']['photo']),
+      'caption' => isset($this->data['message']['caption']),
       'text'    => isset($this->data['message']['text']),
       'message' => isset($this->data['message']),
       'empty'   => empty($this->data),
@@ -65,7 +67,12 @@ class Event
 
   public function getMessageText()
   {
-    return trim($this->data['message']['text']);
+    $text = "";
+    if ( isset( $this->data['message']['text'] ))
+      $text = $this->data['message']['text'];
+    elseif ( isset( $this->data['message']['caption'] ))
+      $text = $this->data['message']['caption'];
+    return trim($text);
   }
 
   public function getMessageFromId()

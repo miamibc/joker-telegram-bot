@@ -41,4 +41,12 @@ class PastaPlugin extends Plugin
     }
 
   }
+
+  public function onPublicPhotoCaption( Event $event )
+  {
+    return $this->onPublicText($event);
+  }
+
+
+
 }
