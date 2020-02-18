@@ -42,7 +42,7 @@ class BeerPlugin extends Plugin
       "Сколько будет пива - решает пиво.",
     );
 
-    if (preg_match('@\b(пиво|пива|пивас|пивко|пивандрий|пивчанский)\b@ui',$text,$matches))
+    if (preg_match('@\b(пиво|пива|пивк|пивчан)@ui',$text,$matches))
     {
         $rand = mt_rand( 0, count( $beer ) - 1 );
         $answer = $beer[$rand];
