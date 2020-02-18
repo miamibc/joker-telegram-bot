@@ -21,7 +21,7 @@ class PastaPlugin extends Plugin
 
     $text = $event->getMessageText();
 
-    if (time() < $this->last_message + $this->getOption('minimum_time', 15*60)) return; // once in 15 minutes
+    if (time() < $this->last_message + $this->getOption('minimum_time', 15*60)) return; // once in hour
 
     $answer = false;
     if (preg_match('@\b(кофе|кофеёк|кофейный)\b@ui',$text,$matches))

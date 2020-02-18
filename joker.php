@@ -15,7 +15,7 @@ $bot->plug([
   new Joker\TempPlugin( ['api_key' => getenv( 'OPENWEATHER_API_KEY' ), 'default' => 'Tallinn'] ),
   new Joker\SpotifyPlugin( ['client_id' => getenv( 'SPOTIFY_CLIENT_ID' ), 'secret'=>getenv( 'SPOTIFY_SECRET' )] ),
   new Joker\LurkPlugin(),
-  new Joker\PastaPlugin( ['minimum_time'=>15*60] ),
+  new Joker\PastaPlugin( ['minimum_time'=>60*60] ),
   new Joker\BashPlugin(),
   new Joker\RandomPlugin(),
   new Joker\CowsayPlugin(),
