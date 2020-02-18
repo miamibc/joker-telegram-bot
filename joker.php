@@ -22,6 +22,7 @@ $bot->plug([
   new Joker\HelloPlugin(),
   new Joker\StickerPlugin(),
   new Joker\QuotePlugin( ['dir'=>'jokes'] ),
+  new Joker\BeerPlugin( ['minimum_time'=>15*60] ),
 ]);
 
 do { $bot->loop(); } while(true);
