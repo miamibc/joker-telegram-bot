@@ -16,13 +16,13 @@ $bot->plug([
   new Joker\SpotifyPlugin( ['client_id' => getenv( 'SPOTIFY_CLIENT_ID' ), 'secret'=>getenv( 'SPOTIFY_SECRET' )] ),
   new Joker\LurkPlugin(),
   new Joker\PastaPlugin( ['minimum_time'=>15*60] ),
+  new Joker\BeerPlugin( ['minimum_time'=>15*60] ),
   new Joker\BashPlugin(),
   new Joker\RandomPlugin(),
   new Joker\CowsayPlugin(),
   new Joker\HelloPlugin(),
   new Joker\StickerPlugin(),
   new Joker\QuotePlugin( ['dir'=>'jokes'] ),
-  new Joker\BeerPlugin( ['minimum_time'=>15*60] ),
 ]);
 
 do { $bot->loop(); } while(true);

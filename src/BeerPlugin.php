@@ -44,7 +44,8 @@ class BeerPlugin extends Plugin
 
     if (preg_match('@\b(пиво|пива|пивас|пивко|пивандрий|пивчанский)\b@ui',$text,$matches))
     {
-      $answer = $beer[array_rand($beer)];
+        $rand = mt_rand( 0, count( $beer ) - 1 );
+        $answer = $beer[$rand];
     }
 
     if ($answer)
