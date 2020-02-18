@@ -48,6 +48,8 @@ To add plugin, create new class extending `Joker\Plugin` and connect it with `$j
 - `message` - requests containing message section
 - `sticker` - stickers or replies with sticker
 - `text` - contains text
+- `photo` - contains photo
+- `caption` - contains caption, usually on photo
 - `public` - public requests
 - `private` - non-public requests
 - `group` - group, supergroup and channel requests
