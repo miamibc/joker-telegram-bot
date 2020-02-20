@@ -20,7 +20,7 @@ class BeerPlugin extends Plugin
 
     $text = $event->getMessageText();
 
-    if (time() < $this->last_message + $this->getOption('minimum_time', 15*60)) return; // once in 15 minutes
+    if (time() < $this->last_message + $this->getOption('minimum_time', 60*60)) return; // once in 15 minutes
 
     $answer = false;
 
@@ -134,7 +134,7 @@ class BeerPlugin extends Plugin
         "Two beer or not two beer?",
     );
 
-    if (preg_match('@\b(пиво|пива|пивас|пивко|пивандрий|пивчанский)\b@ui',$text,$matches))
+    if (preg_match('@\b(пиво|пива|пивк|пивчан)@ui',$text,$matches))
     {
         $rand = mt_rand( 0, count( $beer ) - 1 );
         $answer = $beer[$rand];
