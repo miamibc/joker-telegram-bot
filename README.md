@@ -14,9 +14,8 @@ Install required software packages
 
 ```
 # (Ubuntu, Debian)
-sudo apt-get install php-cli php-curl php-json git composer
+sudo apt-get install php-cli php-curl php-mbstring php-json git composer
 ```
-
 
 Clone repository and install dependencies.
 
@@ -69,11 +68,16 @@ I'll be glad to see your plugins and help with implementations.
 Todo
 -----
 
+- Reboot counter
 - Add onTimer event type, to process events by time
 - Add CommandPlugin base class, to simplify adding new commands
-- Redis and Simplesql implementations
-- Add more cool plugins
+- Database implementations: Redis, Mysql, Simplesql and nosql
 - Audio processing with ffmpeg and sending with sendAudio/sendVoice
+- CowsayPlugin posting image instead of text
+- Improved admin of jokes
+- More cool plugins
+
+Please send your ideas into the [issues](https://github.com/miamibc/joker-telegram-bot/issues)
 
 Project pages
 -------------
@@ -81,8 +85,8 @@ Project pages
 * https://github.com/miamibc/joker-telegram-bot
 * https://blackcrystal.net/project/joker/
 
-Contact
--------
+Contributors
+------------
 
-* miami at blackcrystal dot net
-* https://blackcrystal.net
+* Sergei Miami <miami@blackcrystal.net>
+* Dm!tro <dima@aseri.net>
