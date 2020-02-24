@@ -73,7 +73,7 @@ Todo
 - Add CommandPlugin base class, to simplify adding new commands
 - Database implementations: Redis, Mysql, Simplesql and nosql
 - Audio processing with ffmpeg and sending with sendAudio/sendVoice
-- CowsayPlugin posting image instead of text
+- ~~CowsayPlugin post image instead of text~~ done
 - Improved admin of jokes
 - More cool plugins
 
