@@ -14,7 +14,7 @@ Install required software packages
 
 ```
 # (Ubuntu, Debian)
-sudo apt-get install php-cli php-curl php-mbstring php-json git composer
+sudo apt-get install php-cli php-gd php-json php-curl php-mbstring git composer ttf-ubuntu-font-family
 ```
 
 Clone repository and install dependencies.

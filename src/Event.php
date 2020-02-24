@@ -23,20 +23,26 @@ class Event
 
   public function answerMessage( $text, $options = [] )
   {
-    if (isset($this->data['message']['chat']['id']))
-      $this->bot->sendMessage( $this->data['message']['chat']['id'], $text, $options );
+    if (!isset($this->data['message']['chat']['id'])) return false;
+    return $this->bot->sendMessage( $this->data['message']['chat']['id'], $text, $options );
   }
 
   public function deleteMessage()
   {
-    if (isset($this->data['message']['chat']['id'], $this->data['message']['message_id']))
-      $this->bot->deleteMessage( $this->data['message']['chat']['id'], $this->data['message']['message_id'] );
+    if (!isset($this->data['message']['chat']['id'], $this->data['message']['message_id'])) return false;
+    return $this->bot->deleteMessage( $this->data['message']['chat']['id'], $this->data['message']['message_id'] );
   }
 
   public function answerSticker( $file_id, $options = [] )
   {
-    if (isset($this->data['message']['chat']['id']))
-      $this->bot->sendSticker( $this->data['message']['chat']['id'], $file_id, $options );
+    if (!isset($this->data['message']['chat']['id'])) return false;
+    return $this->bot->sendSticker( $this->data['message']['chat']['id'], $file_id, $options );
+  }
+
+  public function answerPhoto( $file, $options = [])
+  {
+    if (!isset($this->data['message']['chat']['id'])) return false;
+    return $this->bot->sendPhoto( $this->data['message']['chat']['id'], $file, $options );
   }
 
   public function customRequest( $method, $data = [])
