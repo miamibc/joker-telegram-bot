@@ -64,14 +64,48 @@ class Bot
         'Content-Type: application/json',
         'Connection: Keep-Alive',
       ],
-      // CURLOPT_SSL_VERIFYHOST => false,      // don't verify ssl
-      // CURLOPT_SSL_VERIFYPEER => false,      //
-      // CURLOPT_VERBOSE        => 1           //
     ]);
 
     $plain_response = curl_exec($this->ch);
     $result = json_decode( $plain_response, true);
     $this->log( $method . ' '. $plain_request . ' => ' . $plain_response );
+
+    if (!isset($result['ok']) || !$result['ok'])
+      throw new Exception("Something went wrong");
+
+    return isset($result['result']) ? $result['result'] : false;
+  }
+
+  /**
+   * @param $method
+   * @param $data
+   *
+   * @return array|bool
+   * @throws Exception
+   */
+  private function _requestMultipart($method,$data = [])
+  {
+    curl_setopt_array($this->ch, [
+      CURLOPT_URL => $url = "https://api.telegram.org/bot{$this->token}/{$method}",
+      CURLOPT_RETURNTRANSFER => true,         // return web page
+      CURLOPT_HEADER         => false,        // don't return headers
+      CURLOPT_FOLLOWLOCATION => true,         // follow redirects
+      CURLOPT_USERAGENT      => "joker_the_bot (+https://github.com/miamibc/joker-telegram-bot)", // who am i
+      CURLOPT_AUTOREFERER    => true,         // set referer on redirect
+      CURLOPT_CONNECTTIMEOUT => 120,          // timeout on connect
+      CURLOPT_TIMEOUT        => 120,          // timeout on response
+      CURLOPT_MAXREDIRS      => 10,           // stop after 10 redirects
+      CURLOPT_POST           => true,         // i am sending post data
+      CURLOPT_POSTFIELDS     => $data,        // this are my post vars
+      CURLOPT_HTTPHEADER     => [
+        'Content-Type: multipart/form-data',
+        'Connection: Keep-Alive',
+      ],
+    ]);
+
+    $plain_response = curl_exec($this->ch);
+    $result = json_decode( $plain_response, true);
+    $this->log( $method . ' '. json_encode($data) . ' => ' . $plain_response );
 
     if (!isset($result['ok']) || !$result['ok'])
       throw new Exception("Something went wrong");
@@ -131,6 +165,12 @@ class Bot
   public function customRequest( $method, $data )
   {
     return $this->_request( $method, $data );
+  }
+
+  public function sendPhoto( $chat_id, $file, $options = [] )
+  {
+    if (!file_exists($file)) return false;
+    return $this->_requestMultipart( 'sendPhoto', array_merge( [ 'chat_id'=>$chat_id, 'photo'=>new \CURLFile( $file ) ], $options ));
   }
 
   private function processEvent(Event $event )

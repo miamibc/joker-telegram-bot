@@ -10,6 +10,7 @@
     }
   ],
   "require": {
+    "ext-gd": "*",
     "ext-json": "*",
     "ext-curl": "*",
     "ext-mbstring": "*",

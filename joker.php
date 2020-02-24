@@ -19,7 +19,7 @@ $bot->plug([
   new Joker\BeerPlugin( ['minimum_time'=>15*60] ),
   new Joker\BashPlugin(),
   new Joker\RandomPlugin(),
-  new Joker\CowsayPlugin(),
+  new Joker\CowsayPlugin( [ 'bg_color'=>'#222222', 'text_color'=>'#dadada']),
   new Joker\HelloPlugin(),
   new Joker\StickerPlugin(),
   new Joker\QuotePlugin( ['dir'=>'jokes'] ),
