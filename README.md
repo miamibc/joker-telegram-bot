@@ -75,6 +75,7 @@ Todo
 - Audio processing with ffmpeg and sending with sendAudio/sendVoice
 - ~~CowsayPlugin post image instead of text~~ done
 - Improved admin of jokes
+- Currency rates (thanks ʎǝxǝl∀ for ide∀)
 - More cool plugins
 
 Please send your ideas into the [issues](https://github.com/miamibc/joker-telegram-bot/issues)
