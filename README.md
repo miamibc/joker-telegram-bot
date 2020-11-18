@@ -76,6 +76,7 @@ Todo
 - ~~CowsayPlugin post image instead of text~~ done
 - Improved admin of jokes
 - Currency rates (thanks ʎǝxǝl∀ for ide∀)
+- Corona plugin
 - More cool plugins
 
 Please send your ideas into the [issues](https://github.com/miamibc/joker-telegram-bot/issues)
