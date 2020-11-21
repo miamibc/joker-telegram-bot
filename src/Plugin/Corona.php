@@ -10,7 +10,7 @@
  *   !corona Berlin, Germany
  *
  * Constructor $options
- *   file         - (required) file name where to same last csv from github
+ *   file         - (required) file name where to save last csv file from github
  *   update_hours - (optional, default 3) how often to update information from github
  *
  * @package joker-telegram-bot
