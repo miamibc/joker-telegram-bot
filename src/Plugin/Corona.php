@@ -8,6 +8,10 @@
  *   !corona Estonia
  *   !corona Berlin, Germany
  *
+ * Constructor $options
+ *   file         - (required) file name where to same last csv from github
+ *   update_hours - (optional, default 3) how often to update information from github
+ *
  * @package joker-telegram-bot
  * @author Sergei Miami <miami@blackcrystal.net>
  */
@@ -16,20 +20,11 @@ namespace Joker\Plugin;
 
 use Joker\Plugin;
 use Joker\Event;
-use phpDocumentor\Reflection\Types\False_;
 
 class Corona extends Plugin
 {
 
   const LIST_URL = "https://api.github.com/repos/CSSEGISandData/COVID-19/contents/csse_covid_19_data/csse_covid_19_daily_reports?ref=master";
-
-  /**
-   * Constructor.
-   *
-   * @param array $options
-   *   update_hours - (optional, default 3) how often to update information from github
-   *   data_file    - (required) file name where to same last csv from github
-   */
 
   public function onPublicText( Event $event )
   {
