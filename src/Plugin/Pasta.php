@@ -9,9 +9,12 @@
  * @author Sergei Miami <miami@blackcrystal.net>
  */
 
-namespace Joker;
+namespace Joker\Plugin;
 
-class PastaPlugin extends Plugin
+use Joker\Plugin;
+use Joker\Event;
+
+class Pasta extends Plugin
 {
 
   private $last_message = 0;

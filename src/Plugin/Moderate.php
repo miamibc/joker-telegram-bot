@@ -7,9 +7,12 @@
  * @author Sergei Miami <miami@blackcrystal.net>
  */
 
-namespace Joker;
+namespace Joker\Plugin;
 
-class ModeratePlugin extends Plugin
+use Joker\Plugin;
+use Joker\Event;
+
+class Moderate extends Plugin
 {
 
   protected

@@ -13,9 +13,12 @@
  * @author Sergei Miami <miami@blackcrystal.net>
  */
 
-namespace Joker;
+namespace Joker\Plugin;
 
-class BashPlugin extends Plugin
+use Joker\Plugin;
+use Joker\Event;
+
+class Bash extends Plugin
 {
 
   const RANDOM_ENDPOINT  = 'https://bash.im/random';

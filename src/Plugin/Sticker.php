@@ -7,9 +7,12 @@
  * @author Sergei Miami <miami@blackcrystal.net>
  */
 
-namespace Joker;
+namespace Joker\Plugin;
 
-class StickerPlugin extends Plugin
+use Joker\Plugin;
+use Joker\Event;
+
+class Sticker extends Plugin
 {
 
   public function onPrivateSticker( Event $event )
@@ -39,7 +42,7 @@ class StickerPlugin extends Plugin
     // random sticker from collected, or same if nothing there
     $answer = count($stickers) ? $stickers[ mt_rand(0, count($stickers)-1) ] : $file_id;
     $event->answerSticker( $answer );
-    return Bot::PLUGIN_BREAK;
+    return false;
 
   }
 }

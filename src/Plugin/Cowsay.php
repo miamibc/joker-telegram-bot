@@ -17,14 +17,14 @@
  * @author Sergei Miami <miami@blackcrystal.net>
  */
 
-namespace Joker;
+namespace Joker\Plugin;
 
 use Cowsayphp\Farm;
+use Joker\Plugin;
+use Joker\Event;
 
-class CowsayPlugin extends Plugin
+class Cowsay extends Plugin
 {
-
-  private $cow;
 
   /**
    * CowsayPlugin constructor.
@@ -62,10 +62,14 @@ class CowsayPlugin extends Plugin
       return false;
     }
 
+    // create text version
     $animal = Farm::create( $class );
     $result = $animal->say( $message );
 
+    // create image version
     $image  = $this->createImage( $result );
+
+    // send photo and remove
     if ( $event->answerPhoto( $image ) ) unlink($image);
     return false;
   }
@@ -80,24 +84,28 @@ class CowsayPlugin extends Plugin
     // retrieve image size, needed for our message
     $bounding_box = imagettfbbox( $font_size , 0, $font_file, $text );
 
-    // Determine image width and height, padding is not needed
+    // Determine image width and height
     $image_width = abs($bounding_box[4] - $bounding_box[0]) + $padding*2;
     $image_height = abs($bounding_box[5] - $bounding_box[1]) + $padding*2;
 
     $image = imagecreatetruecolor($image_width, $image_height);
 
+    // draw background
     $rgb = $this->hex2rgb( $this->getOption( 'bg_color', '#000000'));
     $bg_color = imagecolorallocate($image, $rgb[0], $rgb[1], $rgb[2]);
     imagefill($image, 0, 0, $bg_color);
 
+    // draw text
     $rgb = $this->hex2rgb( $this->getOption( 'text_color', '#ffffff'));
     $text_color = imagecolorallocate($image, $rgb[0], $rgb[1], $rgb[2]);
     imagettftext($image, $font_size, 0, $padding, $padding, $text_color, $font_file, $text);
 
+    // save to temp file
     $filename = tempnam( 'tmp', 'cowsay');
     imagepng($image, $filename );
     imagedestroy($image);
 
+    // return filename
     return $filename;
   }
 

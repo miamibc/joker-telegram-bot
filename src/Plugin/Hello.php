@@ -9,9 +9,12 @@
  * @author Sergei Miami <miami@blackcrystal.net>
  */
 
-namespace Joker;
+namespace Joker\Plugin;
 
-class HelloPlugin extends Plugin
+use Joker\Plugin;
+use Joker\Event;
+
+class Hello extends Plugin
 {
 
   public function onPrivateText( Event $event )
@@ -36,8 +39,7 @@ EOF;
 
 
     $event->answerMessage( $message );
-
-    return Bot::PLUGIN_BREAK;
+    return false;
   }
 
 }

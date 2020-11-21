@@ -10,9 +10,12 @@
  * @author Sergei Miami <miami@blackcrystal.net>
  */
 
-namespace Joker;
+namespace Joker\Plugin;
 
-class QuotePlugin extends Plugin
+use Joker\Plugin;
+use Joker\Event;
+
+class Quote extends Plugin
 {
 
   protected $options = [
@@ -34,7 +37,7 @@ class QuotePlugin extends Plugin
     {
       $help = $this->getHelp( $this->getOption("dir") );
       $event->answerMessage( $help );
-      return Bot::PLUGIN_BREAK;
+      return false;
     }
 
     $filename =  $this->getOption('dir') . "/$command.txt";
@@ -42,7 +45,7 @@ class QuotePlugin extends Plugin
 
     $joke = $this->getJoke( $command, $params );
     $event->answerMessage( $joke );
-    return Bot::PLUGIN_BREAK;
+    return false;
   }
 
   /**
@@ -74,7 +77,7 @@ class QuotePlugin extends Plugin
     // return last joke
     $joke = $this->getJoke( "!tg", "last" );
     $event->answerMessage( "Added: $joke" );
-    return Bot::PLUGIN_BREAK;
+    return false;
   }
 
 

@@ -12,9 +12,12 @@
  * @author Sergei Miami <miami@blackcrystal.net>
  */
 
-namespace Joker;
+namespace Joker\Plugin;
 
-class TempPlugin extends Plugin
+use Joker\Plugin;
+use Joker\Event;
+
+class Temp extends Plugin
 {
 
   const API_URL = 'http://api.openweathermap.org/data/2.5/weather';

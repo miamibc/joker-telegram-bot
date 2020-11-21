@@ -8,9 +8,12 @@
  * @author Dm!tro <dima@aseri.net>
  */
 
-namespace Joker;
+namespace Joker\Plugin;
 
-class BeerPlugin extends Plugin
+use Joker\Plugin;
+use Joker\Event;
+
+class Beer extends Plugin
 {
 
   private $last_message = 0;
