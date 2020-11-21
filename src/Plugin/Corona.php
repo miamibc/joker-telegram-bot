@@ -2,6 +2,7 @@
 
 /**
  * Corona virus stats for Joker
+ * From https://github.com/CSSEGISandData/COVID-19
  *
  * You can:
  * Ask last report by providing country and region
