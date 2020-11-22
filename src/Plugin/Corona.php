@@ -83,16 +83,16 @@ class Corona extends Plugin
     }
 
     // answer with result, don't process other plugins
-    $event->answerMessage(
-      "Corona situation in $result[Combined_Key]:\n" .
-      "Incident rate: $result[Incident_Rate]\n" .
-      "Case fatality ratio: $result[Case_Fatality_Ratio]\n" .
-      "Active cases: $result[Active]\n" .
-      "Confirmed cases: $result[Confirmed]\n" .
-      "Recovered cases: $result[Recovered]\n" .
-      "Deaths: $result[Deaths]\n" .
-      "Last update: $result[Last_Update]"
-    );
+    $event->answerMessage( implode(PHP_EOL, [
+      'Corona situation in '  . $result['Combined_Key'],
+      'Incident rate: '       . round( $result['Incident_Rate'],2),
+      'Case fatality ratio: ' . round( $result['Case_Fatality_Ratio'],2),
+      'Active cases: '        . round( $result['Active']),
+      'Confirmed cases: '     . round( $result['Confirmed']),
+      'Recovered cases: '     . round( $result['Recovered']),
+      'Deaths: '              . round( $result['Deaths']),
+      'Last update: '         . $result['Last_Update'],
+    ]));
     return false;
   }
 
@@ -182,11 +182,11 @@ class Corona extends Plugin
         fclose($handle);
         return $row;
       }
-
       // not exact match found, make a suggestion
-      if (stripos($key, $query) !== false)
-        $suggestions[] = $row['Combined_Key'];
-
+      elseif (stripos($key, $query) !== false)
+      {
+        $suggestions[] = "!corona $row[Combined_Key]";
+      }
     }
 
     fclose($handle);
