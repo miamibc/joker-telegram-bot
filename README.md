@@ -69,6 +69,8 @@ Todo
 -----
 
 - Reboot counter
+- Restart plugins without lose their state
+- Reload plugins without actual restart
 - Add onTimer event type, to process events by time
 - Add CommandPlugin base class, to simplify adding new commands
 - Database implementations: Redis, Mysql, Simplesql and nosql
@@ -76,7 +78,7 @@ Todo
 - ~~CowsayPlugin post image instead of text~~ done
 - Improved admin of jokes
 - Currency rates (thanks ʎǝxǝl∀ for ide∀)
-- Corona plugin
+- ~~Corona plugin~~
 - More cool plugins
 
 Please send your ideas into the [issues](https://github.com/miamibc/joker-telegram-bot/issues)
