@@ -4,10 +4,7 @@
  * @author Sergei Miami <miami@blackcrystal.net>
  */
 
-require 'vendor/autoload.php';
-
-$dotenv = Dotenv\Dotenv::create(dirname(__FILE__));
-$dotenv->load();
+require 'autoload.php';
 
 $stdin = fopen('php://stdin', 'r');
 $stdout = fopen('php://stdout', 'w');
