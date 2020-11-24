@@ -1,12 +1,14 @@
 {
-  "name": "blackcrystal/joker-telegram-bot",
+  "name": "miamibc/joker-telegram-bot",
   "description": "Joker the Telegram bot",
   "minimum-stability": "stable",
   "license": "MIT",
   "authors": [
     {
       "name": "Sergei Miami",
-      "email": "miami@blackcrystal.net"
+      "email": "miami@blackcrystal.net",
+      "homepage": "https://blackcrystal.net",
+      "role": "Developer"
     }
   ],
   "require": {
