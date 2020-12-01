@@ -20,6 +20,7 @@ $bot->plug([
   new Joker\Plugin\Sticker(),
   new Joker\Plugin\Quote( ['dir' =>'data/jokes'] ),
   new Joker\Plugin\Corona( ['file' => 'data/corona/today.csv', 'update_hours'=>3]),
+  new Joker\Plugin\Currency(),
 ]);
 
 do { $bot->loop(); } while(true);
