@@ -246,13 +246,12 @@ Send sticker to Joker private chat, he will answer with random sticker from same
 Temp Plugin
 -----------
 
-Weather conditions worldwide
-
-Ask current temperature in city, for example:
+Weather conditions worldwide. Commands to activate this:
+- !temp
 - !temp moscow
 - !temp 59.4525804,24.844022
 
-For example
+Example
 
 ```
 !temp moscow
@@ -270,10 +269,12 @@ You can repeat without location
 !temp
 ```
 
-And answers with weather condition from your last requested location
+Bot answers with weather condition from your last requested location. 
 
 ```
 !temp: -6.8°C, from -10 to -4.44°С, wind 1 m/s, clouds 100%, pressure 1033 hPa, visibility 10000 m, overcast clouds in Moscow RU
 ```
+
+If no last location exists, bot will answer with `default` location from options.
 
 Data source [Openweather API](http://api.openweathermap.org)
