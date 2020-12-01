@@ -187,17 +187,93 @@ Answer will be parsed from Wikimedia article (suddenly not the best quality)
 Moderate Plugin
 -----------
 
+Removes sticker flood in Group. Bot must be administrator.
+
+Plugin counts amount of text between stickers. If user trying to flood with stickers his stickers will be removed.
+
+Parameter `characters_between` defaults to 255, can be set in plugin options. 
+
 Pasta Plugin
 -----------
+
+Example plugin with custom text triggers.
 
 Quote Plugin
 -----------
 
+Random joke from collection of our jokes.
+
+Jokes are kept in files, in `data/jokes` directory. File name is `!<trigger>.txt`
+
+When bot founds file, he will answer by random joke from that file, or specific joke by id (number) or performs search. Example:
+
+```
+!irc
+<Krichek> маям скинь мне джоки
+
+!irc Krichek
+<Krichek> маям скинь мне джоки
+
+!irc 1
+<Krichek> маям скинь мне джоки
+```
+
 Spotify Plugin
 -----------
+
+Random music track from Spotify API
+
+Ask random track or search:
+- !spotify
+- !spotify limp bizkit
+
+Bot will answer with random track from the top of results.
+
+Documentation:
+- Spotify Search API https://developer.spotify.com/documentation/web-api/reference-beta/#category-search
+- Spotify Authorization https://developer.spotify.com/documentation/general/guides/authorization-guide/#client-credentials-flow
+
+TODO:
+- Add fade-in/out effect to audio track https://ffmpeg.org/ffmpeg-filters.html#afade-1
+- Publish result as audio message
+
 
 Sticker Plugin
 -----------
 
+Send sticker to Joker private chat, he will answer with random sticker from same pack.
+
 Temp Plugin
 -----------
+
+Weather conditions worldwide
+
+Ask current temperature in city, for example:
+- !temp moscow
+- !temp 59.4525804,24.844022
+
+For example
+
+```
+!temp moscow
+```
+
+Bot will answer:
+
+```
+!temp: -6.8°C, from -10 to -4.44°С, wind 1 m/s, clouds 100%, pressure 1033 hPa, visibility 10000 m, overcast clouds in Moscow RU
+```
+
+You can repeat without location
+
+```
+!temp
+```
+
+And answers with weather condition from your last requested location
+
+```
+!temp: -6.8°C, from -10 to -4.44°С, wind 1 m/s, clouds 100%, pressure 1033 hPa, visibility 10000 m, overcast clouds in Moscow RU
+```
+
+Data source [Openweather API](http://api.openweathermap.org)
