@@ -216,6 +216,41 @@ When bot founds file, he will answer by random joke from that file, or specific 
 <Krichek> маям скинь мне джоки
 ```
 
+To get list of all triggers available, ask this:
+
+```
+!list
+```
+
+Bot will look jokes directory and answers:
+
+```
+List of jokes: !2alsmom !2forsedad !al !anek !cyberzx !ep !fly !fun !gorkiy !hmage !irc !ircnet !joke !jokerquery !kod !lancer !matpac !mind !morg !mt !onliner !patriot !peni !pore !romes !say !test !tg !trigger !ua !vou !wolf
+```
+
+To add new joke, you can send it to Joker private chat.
+
+```
+SHPONGIk, [01.11.20 21:58]
+Димас, ты с концентраторами от моника к ПС знаком?
+
+QQSKA, [01.11.20 21:58]
+концентрацептивачто?
+
+SHPONGIk, [01.11.20 21:59]
+понятно)
+
+```
+
+If joke is from Telegram chat, it will be converted to well-formed format with date and parsed lines, otherwise will be added as is.
+
+```
+Added: !tg 111 of 111: [01.11.20 21:58]
+<SHPONGIk> Димас, ты с концентраторами от моника к ПС знаком?
+<QQSKA> концентрацептивачто?
+<SHPONGIk> понятно)
+```
+
 Spotify Plugin
 -----------
 
