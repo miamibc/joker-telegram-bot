@@ -63,6 +63,8 @@ Return value of plugin method can be:
 - `Joker\Bot::PLUGIN_NEXT` or `true` or `null`- (default) process next plugin in chain
 - `Joker\Bot::PLUGIN_BREAK` or `false` - do not process plugin chain anymore.
 
+More information about existing plugins functionality can be found [here](https://github.com/miamibc/joker-telegram-bot/blob/master/src/Plugin/README.md).
+
 I'll be glad to see your plugins and help with implementations.
 
 Todo
