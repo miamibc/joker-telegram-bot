@@ -103,7 +103,7 @@ Bot will answer:
   
 After some time, we changed this output to be an image.
 
-![image](assets/cowsay9bS19a.png)
+![Example image, cow saing Moo](https://raw.githubusercontent.com/miamibc/joker-telegram-bot/master/assets/cowsay9bS19a.png)
 
 
 Currency Plugin
