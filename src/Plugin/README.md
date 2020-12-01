@@ -86,8 +86,6 @@ Data from [COVID-19 Data Repository by the Center for Systems Science and Engine
 Cowsay Plugin
 -----------
 
-Cowsay plugin for Joker.
-
 Classic [linux console fun](https://en.wikipedia.org/wiki/Cowsay) now is in Joker. Say
 
     !cowsay Moo
