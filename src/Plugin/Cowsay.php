@@ -30,11 +30,12 @@ class Cowsay extends Plugin
    * CowsayPlugin constructor.
    *
    * @param array $options
-   *   font_file - default /usr/share/fonts/truetype/ubuntu-font-family/UbuntuMono-R.ttf
+   *   font_file - default /usr/share/fonts/truetype/ubuntu/UbuntuMono-R.ttf'
    *   font_size - default 20
-   *   padding - default 20
+   *   padding - default 5 x font_size
    *   bg_color - default #000000
    *   text_color - default #ffffff
+   *   delete - default true, delete generated image after sending
    */
   public function __construct($options = [])
   {
@@ -68,16 +69,21 @@ class Cowsay extends Plugin
 
     // create image version
     $image  = $this->createImage( $result );
+    echo $image;
 
     // send photo and remove
-    if ( $event->answerPhoto( $image ) ) unlink($image);
+    $event->answerPhoto( $image );
+
+    // delete photo after
+    if ( $this->getOption('delete', true) ) unlink($image);
+
     return false;
   }
 
 
   private function createImage( $text )
   {
-    $font_file = $this->getOption('font_file', '/usr/share/fonts/truetype/ubuntu-font-family/UbuntuMono-R.ttf');
+    $font_file = $this->getOption('font_file', '/usr/share/fonts/truetype/ubuntu/UbuntuMono-R.ttf');
     $font_size = $this->getOption('font_size', 20);
     $padding   = $this->getOption('padding', $font_size*5);
 
@@ -101,7 +107,8 @@ class Cowsay extends Plugin
     imagettftext($image, $font_size, 0, $padding, $padding, $text_color, $font_file, $text);
 
     // save to temp file
-    $filename = tempnam( 'tmp', 'cowsay');
+    if (!file_exists('data/tmp')) mkdir('data/tmp');
+    $filename = tempnam( 'data/tmp', 'cowsay');
     imagepng($image, $filename );
     imagedestroy($image);
 

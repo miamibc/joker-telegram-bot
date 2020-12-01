@@ -8,7 +8,7 @@ Plugins are well documented in inline comments, some interesting details will be
 Bash Plugin
 -----------
 
-Jokes from Bash.im
+Random jokes from [Bash.im](https://bash.im/).
 
 Ask random joke, or search by id or text:
 
@@ -39,7 +39,7 @@ Thanks to [Dm!tro](https://github.com/Dm1tro-in-da-world) for this contribution.
 Corona Plugin
 -----------
 
-Corona virus stats for Joker, loaded from [COVID-19 Data Repository by the Center for Systems Science and Engineering (CSSE) at Johns Hopkins University](https://github.com/CSSEGISandData/COVID-19).
+Corona worldwide virus stats for Joker.
 
 You can ask last report by providing country and region
 
@@ -81,9 +81,30 @@ To complete action, pick one of this list, for example
 
     !corona Berlin, Germany
      
+Data from [COVID-19 Data Repository by the Center for Systems Science and Engineering (CSSE) at Johns Hopkins University](https://github.com/CSSEGISandData/COVID-19) repository.
 
 Cowsay Plugin
 -----------
+
+Cowsay plugin for Joker.
+
+Classic linux console fun now is in Joker. Say
+
+    !cowsay Moo
+
+Bot will answer:
+
+     < Moo >
+          \   ^__^
+           \  (oo)\_______
+              (__)\       )\/\
+                 ||----w |
+                 ||     ||
+  
+After some time, we changed this output to be an image.
+
+![image](assets/cowsay9bS19a.png)
+
 
 Currency Plugin
 -----------
