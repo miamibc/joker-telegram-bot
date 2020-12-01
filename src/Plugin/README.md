@@ -88,7 +88,7 @@ Cowsay Plugin
 
 Cowsay plugin for Joker.
 
-Classic linux console fun now is in Joker. Say
+Classic [linux console fun](https://en.wikipedia.org/wiki/Cowsay) now is in Joker. Say
 
     !cowsay Moo
 
@@ -128,11 +128,61 @@ Information requested from [Coinbase API](https://developers.coinbase.com/api/v2
 Hello Plugin
 -----------
 
+Hello world plugin, small example of writing basic plugin for Joker.
+
+Find your bot in telegram and say him privately:
+
+    /start
+    
+Bot will answer you with standart greeting
+
+    Hello, Sergei. I'm Joker, the Telegram Bot.
+    
+    Born in 2001, I was entertainment chatbot written in miRCscript. Now I'm a bit new: I run PHP on fast virtual server to connect modern geeky Telegram network and joke my random funs.
+    
+    Read more: https://github.com/miamibc/joker-telegram-bot 
+
 Log Plugin
 -----------
 
+Log all incoming messages to a file
+
 Lurk Plugin
 -----------
+
+Shows articles from [Lurkmore](https://lurkmore.to/) with use of [Mediawiki API](https://www.mediawiki.org/wiki/API).
+
+You can search topics in Lurkmore
+
+    !lurk мем
+    
+Bot will find all articles with these words
+
+    Please choose one:
+    !lurk Мем
+    !lurk Форсед-мем
+    !lurk Новый мем
+    !lurk Автобус (мем)
+    !lurk Не мем
+    !lurk Я придумал новый мем
+    !lurk Это не мем
+    !lurk Это мем
+    !lurk Форсед мем
+    
+Then you can request for article
+
+    !lurk Форсед-мем
+    
+Answer will be parsed from Wikimedia article (suddenly not the best quality)
+
+    «Превед медвед — другим наука. Превед медвед — какая скука! Превед медвед и день, и ночь, Превед медвед — ни шагу прочь!
+    
+    »— М. Кронгауз feat. [Наше всё](/%D0%9F%D1%83%D1%88%D0%BA%D0%B8%D0%BD "Пушкин")«Если показывать по ТВ каждый день задницу лошади, она в результате станет популярной
+    
+    »— Владимир Познер[![](//lurkmore.so/images/thumb/a/ac/Lurkosparta.jpg/250px-Lurkosparta.jpg)](/%D0%A4%D0%B0%D0%B9%D0%BB:Lurkosparta.jpg)[![](/skins/common/images/magnify-clip.png)](/%D0%A4%D0%B0%D0%B9%D0%BB:Lurkosparta.jpg "Увеличить")
+    
+    Как это обычно бывает у нас…
+ 
 
 Moderate Plugin
 -----------
