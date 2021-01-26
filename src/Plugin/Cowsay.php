@@ -30,7 +30,7 @@ class Cowsay extends Plugin
    * CowsayPlugin constructor.
    *
    * @param array $options
-   *   font_file - default /usr/share/fonts/truetype/ubuntu/UbuntuMono-R.ttf'
+   *   font_file - default depends from ubuntu version
    *   font_size - default 20
    *   padding - default 5 x font_size
    *   bg_color - default #000000
@@ -39,6 +39,15 @@ class Cowsay extends Plugin
    */
   public function __construct($options = [])
   {
+    if (!isset($options['font_file']))
+    {
+      // find default font file.  Ubuntu 16 and 20 has different paths
+      if (file_exists($path = '/usr/share/fonts/truetype/ubuntu-font-family/UbuntuMono-R.ttf'))
+        $options['font_file'] = $path;
+      elseif (file_exists($path = '/usr/share/fonts/truetype/ubuntu/UbuntuMono-R.ttf' ))
+        $options['font_file'] = $path;
+    }
+
     parent::__construct($options);
   }
 
@@ -69,7 +78,6 @@ class Cowsay extends Plugin
 
     // create image version
     $image  = $this->createImage( $result );
-    echo $image;
 
     // send photo and remove
     $event->answerPhoto( $image );
@@ -83,7 +91,7 @@ class Cowsay extends Plugin
 
   private function createImage( $text )
   {
-    $font_file = $this->getOption('font_file', '/usr/share/fonts/truetype/ubuntu/UbuntuMono-R.ttf');
+    $font_file = $this->getOption('font_file');
     $font_size = $this->getOption('font_size', 20);
     $padding   = $this->getOption('padding', $font_size*5);
 
@@ -107,8 +115,8 @@ class Cowsay extends Plugin
     imagettftext($image, $font_size, 0, $padding, $padding, $text_color, $font_file, $text);
 
     // save to temp file
-    if (!file_exists('data/tmp')) mkdir('data/tmp');
-    $filename = tempnam( 'data/tmp', 'cowsay');
+    if (!file_exists('data/cowsay')) mkdir('data/cowsay');
+    $filename = tempnam( 'data/cowsay', 'image');
     imagepng($image, $filename );
     imagedestroy($image);
 
