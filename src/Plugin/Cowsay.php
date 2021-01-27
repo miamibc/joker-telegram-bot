@@ -59,10 +59,13 @@ class Cowsay extends Plugin
     if (!preg_match('@^([\/!](\w+)say)\s?(.*)$@ui', $message_text, $matches)) return;
 
     $trigger = trim( $matches[1] ); // !cowsay
-    $animal  = trim( $matches[2] ); // cow
+    $animal  = ucfirst(trim( $matches[2] )); // Cow
     $message = trim( $matches[3] ); // text
 
-    $class = '\Cowsayphp\Farm\\' . ucfirst($animal);
+    if (in_array($animal, ['Cow', 'Dragon', 'Tux', 'Whale']))
+      $class = '\\Cowsayphp\\Farm\\' . $animal;
+    else
+      $class = '\\Joker\\Animal\\'. $animal;
 
     if (!class_exists( $class )) return;
 
