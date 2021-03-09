@@ -321,7 +321,7 @@ Example:
 
 ```
 $joker->plug([
-  new Joker\Plugin\Callback(['trigger'=>'test', 'callback' => function(Joker\Event $event){
+  new Joker\Plugin\Callback(['trigger'=>'callbacktest', 'callback' => function(Joker\Event $event){
     $event->answerMessage('test ok');
     return false;
   }]),
