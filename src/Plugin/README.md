@@ -36,6 +36,22 @@ Answers to message with beer thematics, by one of hardcoded joke.
 Beer plugin is version of [Pasta](https://github.com/miamibc/joker-telegram-bot/tree/master/src/Plugin#pasta-plugin) plugin. 
 Thanks to [Dm!tro](https://github.com/Dm1tro-in-da-world) for this contribution.  
 
+Callback Plugin
+---------------
+
+Plugin for fast prototyping. Allows to bind trigger and a callback as a parameters of plugin initialization.
+
+Example:
+
+```
+$joker->plug([
+  new Joker\Plugin\Callback(['trigger'=>'callbacktest', 'callback' => function(Joker\Event $event){
+    $event->answerMessage('test ok');
+    return false;
+  }]),
+]);
+```
+
 Corona Plugin
 -----------
 
@@ -311,19 +327,3 @@ Bot answers with weather condition from your last requested location.
 If no last location exists, bot will answer with `default` location from options.
 
 Data source [Openweather API](http://api.openweathermap.org)
-
-Callback Plugin
----------------
-
-Plugin for fast prototyping. Allows to bind trigger and a callback as a parameters of plugin initialization.
-
-Example:
-
-```
-$joker->plug([
-  new Joker\Plugin\Callback(['trigger'=>'callbacktest', 'callback' => function(Joker\Event $event){
-    $event->answerMessage('test ok');
-    return false;
-  }]),
-]);
-```
