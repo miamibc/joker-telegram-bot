@@ -26,7 +26,7 @@ $bot->plug([
 
   new Joker\Plugin\Callback(['trigger'=>'callbacktest', 'callback' => function(Joker\Event $event){
     $event->answerMessage('test ok');
-    return false;
+    return;
   }]),
 
   // somethingg wide, without triggers, must stay in the end
