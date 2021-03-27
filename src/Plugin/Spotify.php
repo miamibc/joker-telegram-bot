@@ -20,9 +20,12 @@
  * @author Sergei Miami <miami@blackcrystal.net>
  */
 
-namespace Joker;
+namespace Joker\Plugin;
 
-class SpotifyPlugin extends Plugin
+use Joker\Plugin;
+use Joker\Event;
+
+class Spotify extends Plugin
 {
 
   const SPOTIFY_API_ENDPOINT  = 'https://api.spotify.com/v1';

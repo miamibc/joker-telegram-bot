@@ -11,9 +11,12 @@
  * @author Sergei Miami <miami@blackcrystal.net>
  */
 
-namespace Joker;
+namespace Joker\Plugin;
 
-class LurkPlugin extends Plugin
+use Joker\Plugin;
+use Joker\Event;
+
+class Lurk extends Plugin
 {
 
   const API_URL  = 'https://lurkmore.to/api.php';

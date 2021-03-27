@@ -1,15 +1,18 @@
 {
-  "name": "blackcrystal/joker-telegram-bot",
+  "name": "miamibc/joker-telegram-bot",
   "description": "Joker the Telegram bot",
   "minimum-stability": "stable",
   "license": "MIT",
   "authors": [
     {
       "name": "Sergei Miami",
-      "email": "miami@blackcrystal.net"
+      "email": "miami@blackcrystal.net",
+      "homepage": "https://blackcrystal.net",
+      "role": "Developer"
     }
   ],
   "require": {
+    "ext-gd": "*",
     "ext-json": "*",
     "ext-curl": "*",
     "ext-mbstring": "*",
@@ -21,5 +24,13 @@
     "psr-4": {
       "Joker\\": "src\\"
     }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Tests\\": "tests/"
+    }
+  },
+  "require-dev": {
+    "phpunit/phpunit": "^9.4"
   }
 }

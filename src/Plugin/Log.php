@@ -6,10 +6,14 @@
  * @author Sergei Miami <miami@blackcrystal.net>
  */
 
-namespace Joker;
+namespace Joker\Plugin;
 
-class LogPlugin extends Plugin
+use Joker\Plugin;
+use Joker\Event;
+
+class Log extends Plugin
 {
+
   protected $options = [
     'empty'  => false, // empty event symbol, for example .
     'screen' => false, // show log in screen

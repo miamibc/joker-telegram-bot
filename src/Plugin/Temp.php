@@ -12,9 +12,12 @@
  * @author Sergei Miami <miami@blackcrystal.net>
  */
 
-namespace Joker;
+namespace Joker\Plugin;
 
-class TempPlugin extends Plugin
+use Joker\Plugin;
+use Joker\Event;
+
+class Temp extends Plugin
 {
 
   const API_URL = 'http://api.openweathermap.org/data/2.5/weather';
@@ -33,9 +36,9 @@ class TempPlugin extends Plugin
     $text = $event->getMessageText();
     $author = $event->getMessageFromId();
 
-    if (!preg_match('@^(/temp|!temp)\b(.*)?$@ui', $text, $matches)) return;
+    if (!preg_match('@^(/temp|!temp|!еуьз|/еуьз)\b(.*)?$@ui', $text, $matches)) return;
 
-    $trigger = mb_strtolower( trim( $matches[1] ));
+    $trigger = '!temp'; // mb_strtolower( trim( $matches[1] ));
     $query   = mb_strtolower( trim( $matches[2] ));
 
     // if no query, try to recall last one or get default
