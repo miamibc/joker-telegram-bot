@@ -9,10 +9,18 @@ require 'autoload.php';
 $bot = new Joker\Bot( getenv( 'TELEGRAM_TOKEN' ) );
 $bot->plug([
 
-  // something that must be executed everytime, must stay at top
-  new Joker\Plugin\Log( ['file' =>'data/log/log.json'] ),
+  // *** something, that must be executed everytime, must stay at top ***
 
-  // your plugins, order is important
+  // these plugins never stops processing of other plugins
+  // (never returns false or Joker\Bot::PLUGIN_BREAK)
+  new Joker\Plugin\Log( ['file' =>'data/log/log.json'] ),
+  new Joker\Plugin\Forwarder( [
+    ['from' => -343502518, 'text' => ['*покуп*'], 'to' => -343502518, ],
+    ['from' => -343502518, 'text' => ['*прода*', '*сдаё*'], 'to' => -343502518, 'forward' => false ],
+  ]),
+
+  // *** insert your plugins here, order is important ***
+
   new Joker\Plugin\Temp( ['api_key' => getenv( 'OPENWEATHER_API_KEY' ),'default' => 'Tallinn'] ),
   new Joker\Plugin\Spotify( ['client_id' => getenv( 'SPOTIFY_CLIENT_ID' ),'secret' =>getenv( 'SPOTIFY_SECRET' )] ),
   new Joker\Plugin\Lurk(),
@@ -23,13 +31,13 @@ $bot->plug([
   new Joker\Plugin\Quote( ['dir' =>'data/jokes'] ),
   new Joker\Plugin\Corona( ['file' => 'data/corona/today.csv', 'update_hours'=>3]),
   new Joker\Plugin\Currency(),
-
   new Joker\Plugin\Callback(['trigger'=>'callbacktest', 'callback' => function(Joker\Event $event){
     $event->answerMessage('test ok');
-    return;
+    return false;
   }]),
 
-  // somethingg wide, without triggers, must stay in the end
+  // *** somethingg wide, without triggers, must stay in the end ***
+
   new Joker\Plugin\Pasta( ['minimum_time' => 60 * 60] ),
   new Joker\Plugin\Beer( ['minimum_time'=>15*60] ),
 
