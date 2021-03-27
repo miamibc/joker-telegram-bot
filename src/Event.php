@@ -20,6 +20,10 @@ class Event
     $this->data = $data;
   }
 
+  public function sendMessage( $chat_id, $text, $options = [] )
+  {
+    return $this->bot->sendMessage( $chat_id, $text, $options );
+  }
 
   public function answerMessage( $text, $options = [] )
   {
@@ -43,6 +47,12 @@ class Event
   {
     if (!isset($this->data['message']['chat']['id'])) return false;
     return $this->bot->sendPhoto( $this->data['message']['chat']['id'], $file, $options );
+  }
+
+  public function forwardMessage( $chat_id , $options = [])
+  {
+    if (!isset($this->data['message']['chat']['id'], $this->data['message']['message_id'])) return false;
+    return $this->bot->forwardMessage( $chat_id, $this->data['message']['chat']['id'], $this->data['message']['message_id'], $options );
   }
 
   public function customRequest( $method, $data = [])
@@ -79,6 +89,16 @@ class Event
     elseif ( isset( $this->data['message']['caption'] ))
       $text = $this->data['message']['caption'];
     return trim($text);
+  }
+
+  public function getMessageId()
+  {
+    return($this->data['message']['message_id']);
+  }
+
+  public function getMessageChatId()
+  {
+    return isset($this->data['message']['chat']['id']) ? $this->data['message']['chat']['id'] : null;
   }
 
   public function getMessageFromId()
