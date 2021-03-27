@@ -154,7 +154,7 @@ class Beer extends Plugin
     $answer = $beer[$rand];
     $event->answerMessage($answer);
 
-    // set lat_message time
+    // save last message time
     $this->last_message = time();
 
     // stop other plugins processing
