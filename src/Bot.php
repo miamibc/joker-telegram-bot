@@ -133,6 +133,19 @@ class Bot
   }
 
   /**
+   * Perform custom request to Telegram API
+   * @param $method
+   * @param $data
+   *
+   * @return array|bool
+   * @throws Exception
+   */
+  public function customRequest( $method, $data )
+  {
+    return $this->_request( $method, $data );
+  }
+
+  /**
    * @throws Exception
    */
   private function requestUpdates()
@@ -162,15 +175,16 @@ class Bot
     return $result;
   }
 
-  public function customRequest( $method, $data )
-  {
-    return $this->_request( $method, $data );
-  }
 
   public function sendPhoto( $chat_id, $file, $options = [] )
   {
     if (!file_exists($file)) return false;
     return $this->_requestMultipart( 'sendPhoto', array_merge( [ 'chat_id'=>$chat_id, 'photo'=>new \CURLFile( $file ) ], $options ));
+  }
+
+  public function forwardMessage( $chat_id, $from_chat_id, $message_id, $options = [] )
+  {
+    return $this->_request( 'forwardMessage', array_merge( [ 'chat_id'=>$chat_id, 'from_chat_id'=>$from_chat_id, 'message_id' => $message_id ], $options ));
   }
 
   private function processEvent(Event $event )
