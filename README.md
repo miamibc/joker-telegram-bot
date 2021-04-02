@@ -1,23 +1,28 @@
-Joker Telegram Bot 
-=================
+# Joker Telegram Bot 
 
 Born in 2001'th this bot was entertaiment chatbot written in miRCscript, joking on #blackcrystal Quakenet channel. 
 
 Since that time many things has been changed. Here is third rewrite of Joker, made for Telegram to be modern and simple, with PHP to be fun.
 
-Currently this bot is used in telegram channel @bc_dev
+Currently this bot is used in telegram channel [@blackcrystalnet](https://t.me/blackcrystalnet)
 
-Installation and start
--------------------------------------------------
+## Installation and start
 
 Install required software packages
 
+**Ubuntu, Debian:**
+
 ```
-# (Ubuntu, Debian)
 sudo apt-get install php-cli php-gd php-json php-curl php-mbstring git composer ttf-ubuntu-font-family
 ```
 
-Clone repository and install dependencies.
+**Windows:**
+
+1. Install [php 7.4](https://windows.php.net/download#php-7.4) and basic extensions.
+2. Install [git](https://git-scm.com/downloads) 
+3. Install [composer](https://getcomposer.org/download/)
+
+Clone repository and install dependencies. 
 
 ```
 git clone https://github.com/miamibc/joker-telegram-bot.git
@@ -37,8 +42,7 @@ php joker.php
 
 Find your bot in Telegram by name and say him **Hi**. 
 
-Plugins
--------
+## Plugins
 
 By default bot does nothing, [plugins](https://github.com/miamibc/joker-telegram-bot/tree/master/src/Plugin) is used to extend functionality and interact with users.  We made few classic plugins for Joker, like [Hello](https://github.com/miamibc/joker-telegram-bot/blob/master/src/Plugin/Hello.php) and more complex one [Temp](https://github.com/miamibc/joker-telegram-bot/blob/master/src/Plugin/Temp.php), feel free to use them and add new. 
 
@@ -56,7 +60,7 @@ To add plugin, create new class extending `Joker\Plugin` and connect it with `$j
 
 For example, `onPrivateSticker` or `onStickerPrivate` will be called when both `sticker` and `private` is found in request.
 
-Parameter of this method is used get message details and react. For example `$event->answerMessage()` or `$event->answerSticker()` is a shortcut to answer same channel or private user, by message or sticker. 
+Parameter of this method is used get message details and react. For example `$event->answerMessage()` or `$event->answerSticker()` is a shortcut to answer same channel or private user, by message or sticker. Other actions can be found in `Joker\Event` class.
 
 Return value of plugin method can be:
 
@@ -67,8 +71,7 @@ More information about existing plugins functionality can be found [here](https:
 
 I'll be glad to see your plugins and help with implementations.
 
-Todo
------
+## Todo
 
 - Reboot counter
 - Restart plugins without lose their state
@@ -85,14 +88,12 @@ Todo
 
 Please send your ideas into the [issues](https://github.com/miamibc/joker-telegram-bot/issues)
 
-Project pages
--------------
+## Project pages
 
 * https://github.com/miamibc/joker-telegram-bot
 * https://blackcrystal.net/project/joker/
 
-Contributors
-------------
+## Contributors
 
 * Sergei Miami <miami@blackcrystal.net>
 * Dm!tro <dima@aseri.net>
