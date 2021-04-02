@@ -10,13 +10,13 @@ Currently this bot is used in telegram channel [@blackcrystalnet](https://t.me/b
 
 Install required software packages
 
-**Ubuntu, Debian:**
+Ubuntu, Debian:
 
 ```
 sudo apt-get install php-cli php-gd php-json php-curl php-mbstring git composer ttf-ubuntu-font-family
 ```
 
-**Windows:**
+Windows:
 
 1. Install [php 7.4](https://windows.php.net/download#php-7.4) and basic extensions `gd`, `json`, `curl`, `mbstring`
 2. Install [git](https://git-scm.com/downloads)
