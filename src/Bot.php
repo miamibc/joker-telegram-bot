@@ -37,6 +37,20 @@ class Bot
     $this->token = $token;
     $this->debug = $debug;
     $this->ch = curl_init();
+
+    // check bot is okay
+    $check = $this->_request('getMe');
+
+    // display information, or throw an error
+    if (isset($check['id']) && $check['id'])
+    {
+      echo "\nBot started: "; print_r($check);
+    }
+    else
+    {
+      throw new Exception("Wrong or inactive Telegram API token. More info https://core.telegram.org/bots#6-botfather");
+    }
+
   }
 
   /**
