@@ -139,6 +139,24 @@ And receive information, something like
 
 Information requested from [Coinbase API](https://developers.coinbase.com/api/v2)
 
+Forwarder Plugin
+----------------
+
+Forwards messages from one chat to another. Rules can be added with configuration, example:
+
+```
+new Joker\Plugin\Forwarder([
+    ['from' => -343502518, 'text' => ['*покуп*'], 'to' => -343502519, ],
+    ['from' => -343502518, 'text' => ['*прода*', '*сдаё*'], 'to' => -343502519, 'forward' => false ],
+]),
+```
+
+Each line of configuration consists of array:
+- **from** (integer or array of integers, required) one or many chat_id's, to receive messages from 
+- **text** (string or array of strings) one or many masks of text to match
+- **to** (integer or array of integers) one or many chat_id, to send message to
+- **forward** (boolean, optional, default is true) forwards message, or creates a copy of text
+
 Hello Plugin
 -----------
 
