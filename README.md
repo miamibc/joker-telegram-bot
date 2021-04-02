@@ -18,9 +18,9 @@ sudo apt-get install php-cli php-gd php-json php-curl php-mbstring git composer 
 
 Windows:
 
-1. Install [php 7.4](https://windows.php.net/download#php-7.4) and basic extensions `gd`, `json`, `curl`, `mbstring`
-2. Install [git](https://git-scm.com/downloads)
-3. Install [composer](https://getcomposer.org/download/)
+1. Install [PHP 7.4](https://windows.php.net/download#php-7.4) with basic extensions `gd`, `json`, `curl`, `mbstring`, or just [XAMPP](https://www.apachefriends.org/download.html)
+2. Install [Git](https://git-scm.com/downloads)
+3. Install [Composer](https://getcomposer.org/download/)
 
 Clone repository and install dependencies. 
 
@@ -53,6 +53,8 @@ To add plugin, create new class extending `Joker\Plugin` and connect it with `$j
 - `text` - contains text
 - `photo` - contains photo
 - `caption` - contains caption, usually on photo
+- `reply` - reply to message
+- `forward` - forward message
 - `public` - public requests
 - `private` - non-public requests
 - `group` - group, supergroup and channel requests
