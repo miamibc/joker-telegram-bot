@@ -18,8 +18,8 @@ sudo apt-get install php-cli php-gd php-json php-curl php-mbstring git composer 
 
 **Windows:**
 
-1. Install [php 7.4](https://windows.php.net/download#php-7.4) and basic extensions `gd`, `json`, `curl`, `mbstring`;
-2. Install [git](https://git-scm.com/downloads);
+1. Install [php 7.4](https://windows.php.net/download#php-7.4) and basic extensions `gd`, `json`, `curl`, `mbstring`
+2. Install [git](https://git-scm.com/downloads)
 3. Install [composer](https://getcomposer.org/download/)
 
 Clone repository and install dependencies. 
