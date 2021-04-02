@@ -82,6 +82,7 @@ I'll be glad to see your plugins and help with implementations.
 - Audio processing with ffmpeg and sending with sendAudio/sendVoice
 - ~~CowsayPlugin post image instead of text~~ done
 - Improved admin of jokes
+- Implement [Payments](https://core.telegram.org/bots/payments)
 - ~~Currency rates~~ (thanks ʎǝxǝl∀ for ide∀)
 - ~~Corona plugin~~
 - More cool plugins
