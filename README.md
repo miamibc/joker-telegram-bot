@@ -48,16 +48,31 @@ By default bot does nothing, [plugins](https://github.com/miamibc/joker-telegram
 
 To add plugin, create new class extending `Joker\Plugin` and connect it with `$joker->plug( array )` command before main loop. Add methods like `on[Action][Action]( Joker\Event $event )`. These methods will be called when all actions is found in request. Actions can be:
 
-- `message` - requests containing message section
-- `sticker` - stickers or replies with sticker
-- `text` - contains text
-- `photo` - contains photo
-- `caption` - contains caption, usually on photo
-- `reply` - reply to message
-- `forward` - forward message
 - `public` - public requests
 - `private` - non-public requests
 - `group` - group, supergroup and channel requests
+- `message` - requests containing message section, this is always true
+- `sticker` - stickers or replies with sticker
+- `text` - has text
+- `photo` - has photo
+- `caption` - has caption, usually on photo
+- `animation` - has animation
+- `audio` - has audio
+- `document` - has document
+- `video` - has video
+- `voice` - has voice
+- `contact` - has contact
+- `dice` - is a rolled dice
+- `game` - contains game
+- `reply` - is a reply
+- `forward` - is a forwarded message
+- `poll` - polls
+- `edit` - edited message
+- `location` - location
+- `join` - somebody' joined the chat
+- `leave` - user leaves the chat
+- `pin` - new pinned message
+- `entities` - has entities attached  
 - `empty` - empty requests
 
 For example, `onPrivateSticker` or `onStickerPrivate` will be called when both `sticker` and `private` is found in request.

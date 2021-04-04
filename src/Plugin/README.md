@@ -157,6 +157,8 @@ Each line of configuration consists of array:
 - **to** (integer or array of integers) one or many chat_id, to send message to
 - **forward** (boolean, optional, default is true) forwards message, or creates a copy of text
 
+NB! Joker can't read and forward messages from another bots, because Telegram [does not allow to read bots messages with Telegram Bot API](https://core.telegram.org/bots/faq#why-doesnt-my-bot-see-messages-from-other-bots). If you need to read them, try to search implementations of another protocol - Mtproto. 
+
 Hello Plugin
 -----------
 

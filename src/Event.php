@@ -68,16 +68,38 @@ class Event
   {
     return [
       'private' => $private = (
-        isset($this->data['message']['chat']['type']) && in_array( $this->data['message']['chat']['type'], ['private'])
+        isset($this->data['message']['chat']['type'])
+        && in_array( $this->data['message']['chat']['type'], ['private'])
       ),
-      'group'   => isset($this->data['message']['chat']['type']) && in_array( $this->data['message']['chat']['type'], ['group', 'supergroup', 'channel']),
       'public'  => !$private,
-      'sticker' => isset($this->data['message']['sticker']),
-      'photo'   => isset($this->data['message']['photo']),
-      'caption' => isset($this->data['message']['caption']),
-      'text'    => isset($this->data['message']['text']),
-      'message' => isset($this->data['message']),
-      'empty'   => empty($this->data),
+      'group'   => isset($this->data['message']['chat']['type'])
+                   && in_array( $this->data['message']['chat']['type'], ['group', 'supergroup', 'channel']),
+      'sticker'   => isset($this->data['message']['sticker']),
+      'entities'  => isset($this->data['message']['entities']),
+      'animation' => isset($this->data['message']['animation']),
+      'audio'     => isset($this->data['message']['audio']),
+      'document'  => isset($this->data['message']['document']),
+      'video'     => isset($this->data['message']['video']),
+      'voice'     => isset($this->data['message']['voice']),
+      'contact'   => isset($this->data['message']['contact']),
+      'dice'      => isset($this->data['message']['dice']),
+      'game'      => isset($this->data['message']['game']),
+      'photo'     => isset($this->data['message']['photo']),
+      'caption'   => isset($this->data['message']['caption']),
+      'text'      => isset($this->data['message']['text']),
+      'reply'     => isset($this->data['message']['reply_to_message']),
+      'forward'   => isset($this->data['message']['forward_from'])
+                  || isset($this->data['message']['forward_from_chat'])
+                  || isset($this->data['message']['forward_from_message_id'])
+                  || isset($this->data['message']['forward_date']),
+      'poll'      => isset($this->data['message']['poll']),
+      'edit'      => isset($this->data['message']['edit_date']),
+      'location'  => isset($this->data['message']['venue'])|| isset($this->data['message']['location'])   ,
+      'join'      => isset($this->data['message']['new_chat_members']),
+      'leave'     => isset($this->data['message']['left_chat_member']),
+      'pin'       => isset($this->data['message']['pinned_message']),
+      'message'   => isset($this->data['message']),
+      'empty'     => empty($this->data),
     ];
   }
 
