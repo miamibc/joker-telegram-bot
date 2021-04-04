@@ -69,7 +69,7 @@ To add plugin, create new class extending `Joker\Plugin` and connect it with `$j
 - `poll` - polls
 - `edit` - edited message
 - `location` - location
-- `join` - somebody' joined the chat
+- `join` - user joined the chat
 - `leave` - user leaves the chat
 - `pin` - new pinned message
 - `entities` - has entities attached  
