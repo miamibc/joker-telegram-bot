@@ -35,6 +35,7 @@ $bot->plug([
     $event->answerMessage('test ok');
     return false;
   }]),
+  new Joker\Plugin\Mana(),
 
   // *** somethingg wide, without triggers, must stay in the end ***
 
