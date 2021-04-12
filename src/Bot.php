@@ -15,6 +15,8 @@
 
 namespace Joker;
 
+use Joker\Parser\Update;
+
 class Bot
 {
 
@@ -57,7 +59,7 @@ class Bot
    * @param $method
    * @param $data
    *
-   * @return array|bool
+   * @return Update|false
    * @throws Exception
    */
   private function _request($method,$data = [])
@@ -87,14 +89,14 @@ class Bot
     if (!isset($result['ok']) || !$result['ok'])
       throw new Exception("Something went wrong");
 
-    return isset($result['result']) ? $result['result'] : false;
+    return isset($result['result']) ? new Update($result['result']) : false;
   }
 
   /**
    * @param $method
    * @param $data
    *
-   * @return array|bool
+   * @return Update|false
    * @throws Exception
    */
   private function _requestMultipart($method,$data = [])
@@ -124,7 +126,7 @@ class Bot
     if (!isset($result['ok']) || !$result['ok'])
       throw new Exception("Something went wrong");
 
-    return isset($result['result']) ? $result['result'] : false;
+    return isset($result['result']) ? new Update($result['result']) : false;
   }
 
   public function loop()
