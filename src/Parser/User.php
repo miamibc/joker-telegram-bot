@@ -38,5 +38,9 @@ class User
     return $this->data['is_bot'];
   }
 
+  public function getLanguageCode()
+  {
+    return $this->data['language_code'];
+  }
 
 }
