@@ -31,10 +31,10 @@ class Mana extends Plugin
    */
   public function onPublicText( Event $event )
   {
-    $parser = $event->getMessageTextParser();
-    if ($parser->trigger() !== 'me') return;
+    $message = $event->getMessage();
+    if ($message->getText()->trigger() !== 'me') return;
 
-    $rating = $this->getRating( $event->getMessageFromId());
+    $rating = $this->getRating( $message->getFrom()->getId() );
     $event->answerMessage("Mana " . $rating);
     return false;
   }
@@ -45,18 +45,18 @@ class Mana extends Plugin
     $message = $event->getMessage();
 
     // check all required fields exists in request
-    if (!isset($message['from']['id'], $message['reply_to_message']['from']['id'])) return;
+    // if (!isset($message['from']['id'], $message['reply_to_message']['from']['id'])) return;
 
     // get information about authors of both messages
-    $from_id   = $message['from']['id'];
-    $to_id     = $message['reply_to_message']['from']['id'];
-    $from_name = $this->getNameOf($message['from']);
-    $to_name   = $this->getNameOf($message['reply_to_message']['from']);
+    $from_id   = $message->getFrom()->getId();
+    $to_id     = $message->getReplyToMessage()->getFrom()->getId();
+    $from_name = $message->getFrom()->getName();
+    $to_name   = $message->getReplyToMessage()->getFrom()->getName();
 
     // get ratings
     $rating = [
       'from' => $this->getRating($from_id),
-      'to' => $this->getRating($to_id),
+      'to'   => $this->getRating($to_id),
     ];
 
     // check first leter, is it + or -
@@ -65,14 +65,15 @@ class Mana extends Plugin
       case '+':
         $rating['from_new'] = $rating['from']-.5;
         $rating['to_new'] = $rating['to']+1;
-        $rating['action'] = "$from_name ({$rating['from']} -.5) shared mana with $to_name ({$rating['to']} +1)";
+        $rating['action'] = "$from_name ({$rating['from']}-.5) shared mana with $to_name ({$rating['to']}+1)";
         break;
       case '-':
         $rating['from_new'] = $rating['from']+.5;
         $rating['to_new'] = $rating['to']-1;
-        $rating['action'] = "$from_name ({$rating['from']} +.5) sucked mana from $to_name ({$rating['to']} -1)";
+        $rating['action'] = "$from_name ({$rating['from']}+.5) sucked mana from $to_name ({$rating['to']}-1)";
         break;
-      default: return;
+      default:
+        return;
     }
 
     // not enough mana
@@ -89,7 +90,7 @@ class Mana extends Plugin
     }
 
     // cannot share mana with yourself
-    if (false) //$from_id == $to_id)
+    if ($from_id == $to_id)
     {
       $event->answerMessage('Sorry d0g, you cannot share mana with yourself');
       return false;
@@ -114,27 +115,6 @@ class Mana extends Plugin
   {
     if (!file_exists('data/carma')) mkdir('data/carma');
     file_put_contents("data/carma/$user_id", $value);
-  }
-
-  /**
-   * Extracts name from User object
-   * @param $from
-   *
-   * @return string
-   */
-  private function getNameOf( $from )
-  {
-
-    if (isset($from['first_name'],$from['last_name']))
-      return trim( "{$from['first_name']} {$from['last_name']}");
-
-    if (isset($from['first_name']))
-      return trim( $from['first_name'] );
-
-    if (isset($from['username']))
-      return trim( $from['username'] );
-
-    return 'Unknown';
   }
 
 }
