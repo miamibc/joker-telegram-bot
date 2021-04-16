@@ -19,7 +19,7 @@ class Update
 
   public function getId()
   {
-    return $this->getUpdateId();
+    return $this->data['id'];
   }
 
   public function getUpdateId()

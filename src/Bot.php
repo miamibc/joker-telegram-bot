@@ -44,14 +44,12 @@ class Bot
     $check = $this->_request('getMe');
 
     // display information, or throw an error
-    if (isset($check['id']) && $check['id'])
+    if (!$check['id'])
     {
-      echo "\nBot started: "; print_r($check);
-    }
-    else
-    {
+      print_r($check);
       throw new Exception("Wrong or inactive Telegram API token. More info https://core.telegram.org/bots#6-botfather");
     }
+    echo "\nBot started: "; print_r($check);
 
   }
 
@@ -89,7 +87,7 @@ class Bot
     if (!isset($result['ok']) || !$result['ok'])
       throw new Exception("Something went wrong");
 
-    return isset($result['result']) ? new Update($result['result']) : false;
+    return isset($result['result']) ? $result['result'] : false;
   }
 
   /**
@@ -126,7 +124,7 @@ class Bot
     if (!isset($result['ok']) || !$result['ok'])
       throw new Exception("Something went wrong");
 
-    return isset($result['result']) ? new Update($result['result']) : false;
+    return isset($result['result']) ? $result['result'] : false;
   }
 
   public function loop()
