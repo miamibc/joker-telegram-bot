@@ -1,14 +1,8 @@
 <?php
 /**
- * Forwarder plugin for Joker
+ * Mana plugin for Joker
  *
- * Forwards messages from one chat to another
- *
- * Array or options consists of items with elements:
- * - from - (number or array of numbers) one or many chat_ids to read messages from
- * - text - (string or array of strings) one or many patterns of text with *wildcards* or ?questions?
- * - to   - (number or array of numbers) one or many chat_ids to send message to
- * - forward - (bool, default is true)  should bot forward message, or just copy
+ * Allows people to exchange mana between them by like and dislike their posts
  *
  * @package joker-telegram-bot
  * @author Sergei Miami <miami@blackcrystal.net>
