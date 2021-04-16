@@ -8,22 +8,40 @@ Currently this bot is used in telegram channel [@blackcrystalnet](https://t.me/b
 
 ## Installation and start
 
+<details>
+<summary>Ubuntu/Debian</summary>
+
 Install required software packages
-
-Ubuntu, Debian:
-
 ```
-sudo apt-get install php-cli php-gd php-json php-curl php-mbstring git composer ttf-ubuntu-font-family
+sudo apt-get install php-cli php-gd php-json php-curl php-mbstring git composer screen ttf-ubuntu-font-family 
+```
+</details>
+<details>
+<summary>CentOS/Red Hat</summary>
+
+Install required software packages
+```
+sudo yum install php-cli php-gd php-json php-curl php-mbstring git composer screen
 ```
 
-Windows:
+Optionnaly, install Ubuntu fonts, used by some plugins
+```
+sudo mkdir -p /usr/share/fonts
+wget https://assets.ubuntu.com/v1/0cef8205-ubuntu-font-family-0.83.zip
+unzip 0cef8205-ubuntu-font-family-0.83.zip -d /usr/share/fonts/
+sudo fc-cache -fv
+```
+</details>
+<details>
+<summary>Windows</summary>
 
 1. Install [PHP 7.4](https://windows.php.net/download#php-7.4) with basic extensions `gd`, `json`, `curl`, `mbstring`, or just [XAMPP](https://www.apachefriends.org/download.html)
 2. Install [Git](https://git-scm.com/downloads)
 3. Install [Composer](https://getcomposer.org/download/)
+4. Install [Ubuntu fonts](https://assets.ubuntu.com/v1/0cef8205-ubuntu-font-family-0.83.zip)
+</details>
 
-Clone repository and install dependencies. 
-
+Clone repository and install dependencies.
 ```
 git clone https://github.com/miamibc/joker-telegram-bot.git
 cd joker-telegram-bot
@@ -35,12 +53,13 @@ To run Telegram bot, you must be [registered in BotFather](https://core.telegram
 and have working Telegram API token placed in `.env` configuration file or `joker.php` directly.
 
 Now we are ready to start.
-
 ```
 php joker.php
 ```
 
 Find your bot in Telegram by name and say him **Hi**. 
+
+Use `screen` command, to run bot in background.
 
 ## Plugins
 
