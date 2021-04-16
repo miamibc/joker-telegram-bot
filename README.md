@@ -11,7 +11,7 @@ Currently this bot is used in telegram channel [@blackcrystalnet](https://t.me/b
 <details>
 <summary>Ubuntu/Debian</summary>
 
-Install required software packages
+##### Install required software packages
 ```
 sudo apt-get install php-cli php-gd php-json php-curl php-mbstring git composer screen ttf-ubuntu-font-family 
 ```
@@ -19,12 +19,14 @@ sudo apt-get install php-cli php-gd php-json php-curl php-mbstring git composer 
 <details>
 <summary>CentOS/Red Hat</summary>
 
-Install required software packages
+##### Install required software packages
 ```
 sudo yum install php-cli php-gd php-json php-curl php-mbstring git composer screen
 ```
 
-Optionnaly, install Ubuntu fonts, used by some plugins
+##### Install Ubuntu fonts
+
+This is optional step, Ubuntu font is necessary for one of included plugins. You can change it to any other font in plugin configuration.
 ```
 sudo mkdir -p /usr/share/fonts
 wget https://assets.ubuntu.com/v1/0cef8205-ubuntu-font-family-0.83.zip
