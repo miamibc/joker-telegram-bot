@@ -15,6 +15,10 @@
 
 namespace Joker;
 
+use Joker\Parser\Message;
+use Joker\Parser\Update;
+use Joker\Parser\User;
+
 class Bot
 {
 
@@ -38,18 +42,13 @@ class Bot
     $this->debug = $debug;
     $this->ch = curl_init();
 
-    // check bot is okay
-    $check = $this->_request('getMe');
-
     // display information, or throw an error
-    if (isset($check['id']) && $check['id'])
-    {
-      echo "\nBot started: "; print_r($check);
-    }
-    else
+    $user = $this->getMe();
+    if (!$user->getId())
     {
       throw new Exception("Wrong or inactive Telegram API token. More info https://core.telegram.org/bots#6-botfather");
     }
+    echo "\nBot started: "; print_r($user);
 
   }
 
@@ -57,7 +56,7 @@ class Bot
    * @param $method
    * @param $data
    *
-   * @return array|bool
+   * @return Update|false
    * @throws Exception
    */
   private function _request($method,$data = [])
@@ -94,7 +93,7 @@ class Bot
    * @param $method
    * @param $data
    *
-   * @return array|bool
+   * @return Update|false
    * @throws Exception
    */
   private function _requestMultipart($method,$data = [])
@@ -171,34 +170,42 @@ class Bot
     }
   }
 
+  public function getMe()
+  {
+    $data = $this->_request('getMe');
+    return new User( $data );
+  }
+
   public function sendMessage( $chat_id, $text, $options = [])
   {
     $result = $this->_request("sendMessage", array_merge(["chat_id" =>$chat_id,"text" =>$text], $options) );
-    return $result;
+    return new Message( $result );
   }
 
   public function sendSticker( $chat_id, $file_id, $options = [])
   {
     $result = $this->_request("sendSticker", array_merge(["chat_id" =>$chat_id,"sticker" =>$file_id], $options) );
-    return $result;
+    return new Message( $result );
   }
 
   public function deleteMessage( $chat_id, $message_id)
   {
     $result = $this->_request("deleteMessage", ["chat_id" =>$chat_id,"message_id" =>$message_id] );
-    return $result;
+    return (bool)$result;
   }
 
 
   public function sendPhoto( $chat_id, $file, $options = [] )
   {
     if (!file_exists($file)) return false;
-    return $this->_requestMultipart( 'sendPhoto', array_merge( [ 'chat_id'=>$chat_id, 'photo'=>new \CURLFile( $file ) ], $options ));
+    $result = $this->_requestMultipart( 'sendPhoto', array_merge( [ 'chat_id'=>$chat_id, 'photo'=>new \CURLFile( $file ) ], $options ));
+    return new Message( $result );
   }
 
   public function forwardMessage( $chat_id, $from_chat_id, $message_id, $options = [] )
   {
-    return $this->_request( 'forwardMessage', array_merge( [ 'chat_id'=>$chat_id, 'from_chat_id'=>$from_chat_id, 'message_id' => $message_id ], $options ));
+    $result = $this->_request( 'forwardMessage', array_merge( [ 'chat_id'=>$chat_id, 'from_chat_id'=>$from_chat_id, 'message_id' => $message_id ], $options ));
+    return new Message( $result );
   }
 
   private function processEvent(Event $event )

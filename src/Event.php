@@ -8,6 +8,8 @@
 
 namespace Joker;
 
+use Joker\Parser\Message;
+
 class Event
 {
 
@@ -103,6 +105,11 @@ class Event
     ];
   }
 
+  public function getMessage()
+  {
+    return new Message( $this->data['message'] );
+  }
+
   public function getMessageText()
   {
     $text = "";
@@ -111,6 +118,11 @@ class Event
     elseif ( isset( $this->data['message']['caption'] ))
       $text = $this->data['message']['caption'];
     return trim($text);
+  }
+
+  public function getMessageTextParser()
+  {
+    return new MessageTextParser( $this->getMessageText() );
   }
 
   public function getMessageId()
@@ -130,8 +142,11 @@ class Event
 
   public function getMessageFrom()
   {
-    if (isset($this->data['message']['from']['first_name']) && isset($this->data['message']['from']['last_name']))
+    if (isset($this->data['message']['from']['first_name'], $this->data['message']['from']['last_name']))
       return trim( $this->data['message']['from']['first_name'] .' '. $this->data['message']['from']['last_name']);
+
+    if (isset($this->data['message']['from']['first_name']))
+      return trim( $this->data['message']['from']['first_name']);
 
     if (isset($this->data['message']['from']['username']))
       return trim( $this->data['message']['from']['username']);
