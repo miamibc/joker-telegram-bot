@@ -8,6 +8,8 @@
 
 namespace Joker;
 
+use Joker\Parser\Message;
+
 class Event
 {
 
@@ -105,7 +107,7 @@ class Event
 
   public function getMessage()
   {
-    return $this->data['message'];
+    return new Message( $this->data['message'] );
   }
 
   public function getMessageText()
