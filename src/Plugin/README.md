@@ -41,7 +41,6 @@ Bot will answer you with joke from bash
     Tellah: 
     or "scuko blya jjosh" for "awesome"
 
- 
 Beer Plugin
 -----------
 
@@ -50,7 +49,7 @@ Answers to message with beer thematics, by one of hardcoded joke.
     <Me> Как бы хотелось холодного пивка с закусочкой
     <Joker> Перед злоупотреблением, охладить
 
-Beer plugin is version of [Pasta](https://github.com/miamibc/joker-telegram-bot/tree/master/src/Plugin#pasta-plugin) plugin. 
+Beer plugin is version of [Pasta Plugin](#pasta-plugin). 
 Thanks to [Dm!tro](https://github.com/Dm1tro-in-da-world) for this contribution.  
 
 Callback Plugin
@@ -114,6 +113,10 @@ To complete action, pick one of this list, for example
 
     !corona Berlin, Germany
      
+Configuration options:
+- `file` (string, required) - file where to save data file from github
+- `update_hours` (integer, optional, default 3) - hours between update of data from github
+
 Data from [COVID-19 Data Repository by the Center for Systems Science and Engineering (CSSE) at Johns Hopkins University](https://github.com/CSSEGISandData/COVID-19) repository.
 
 Cowsay Plugin
@@ -136,6 +139,13 @@ After some time, we changed this output to be an image.
 
 ![Example image, cow saing Moo](https://raw.githubusercontent.com/miamibc/joker-telegram-bot/master/assets/cowsay9bS19a.png)
 
+Configuration options:
+- `font_file` (string, optional) - path to font to use. By default, depends on ubuntu version
+- `font_size` (integer, optional, default 20) - size of font 
+- `padding` (integer, optional, default 5 x font_size) - padding
+- `bg_color` (string, optional, default #000000) - background color
+- `text_color` (string, optional, default #ffffff) - text color
+- `delete` (boolean, optional, default true) - delete generated image after sending
 
 Currency Plugin
 -----------
@@ -198,6 +208,11 @@ Log Plugin
 
 Log all incoming messages to a file
 
+Configuration options:
+* `empty` (boolean, default false) - log empty messages
+* `screen` (boolean, default false) - log messages to the screen
+* `file` (string or false, default false) - log messages to file 
+
 Lurk Plugin
 -----------
 
@@ -249,12 +264,14 @@ Pasta Plugin
 
 Example plugin with custom text triggers.
 
+Parameter `minimum_time` can be used to set minimum time between triggering this plugin.
+
 Quote Plugin
 -----------
 
 Random joke from collection of our jokes.
 
-Jokes are kept in files, in `data/jokes` directory. File name is `!<trigger>.txt`
+Jokes are kept in files, saved in `dir` directory. File name must be `!<trigger>.txt`
 
 When bot founds file, he will answer by random joke from that file, or specific joke by id (number) or performs search. Example:
 
@@ -315,6 +332,10 @@ Ask random track or search:
 
 Bot will answer with random track from the top of results.
 
+Configuration options:
+- `client_id` (string, required)
+- `secret` (string, required)
+
 Documentation:
 - Spotify Search API https://developer.spotify.com/documentation/web-api/reference-beta/#category-search
 - Spotify Authorization https://developer.spotify.com/documentation/general/guides/authorization-guide/#client-credentials-flow
@@ -362,5 +383,9 @@ Bot answers with weather condition from your last requested location.
 ```
 
 If no last location exists, bot will answer with `default` location from options.
+
+Configuration options:
+- `default` (string, optional) - default location, by default Tallinn
+- `api_key` (string, required) - Openwearther API key
 
 Data source [Openweather API](http://api.openweathermap.org)
