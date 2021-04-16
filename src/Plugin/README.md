@@ -5,6 +5,23 @@ Here you can find library of plugins we use for our own purpose. They are probab
 
 Plugins are well documented in inline comments, some interesting details will be added here. 
 
+* [Bash Plugin](#bash-plugin)
+* [Beer Plugin](#beer-plugin)
+* [Callback Plugin](#callback-plugin)
+* [Corona Plugin](#corona-plugin)
+* [Cowsay Plugin](#cowsay-plugin)
+* [Currency Plugin](#currency-plugin)
+* [Forwarder Plugin](#forwarder-plugin)
+* [Hello Plugin](#hello-plugin)
+* [Log Plugin](#log-plugin)
+* [Lurk Plugin](#lurk-plugin)
+* [Moderate Plugin](#moderate-plugin)
+* [Pasta Plugin](#pasta-plugin)
+* [Quote Plugin](#quote-plugin)
+* [Spotify Plugin](#spotify-plugin)
+* [Sticker Plugin](#sticker-plugin)
+* [Temp Plugin](#temp-plugin)
+
 Bash Plugin
 -----------
 
