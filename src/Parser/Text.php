@@ -29,9 +29,11 @@ class Text
 
   public function trigger()
   {
-    $trigger = strtolower( $this->token(0,1));
+    $trigger    = strtolower( $this->token(0,1));
+    $first_char = substr( $trigger, 0, 1);
 
-    if (in_array( substr( $trigger, 0, 1), ['!', '/']))
+    // remove first char, if it's ! or /
+    if (in_array( $first_char, ['!', '/']))
       $trigger = substr( $trigger, 1);
 
     return $trigger;
