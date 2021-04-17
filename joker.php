@@ -28,6 +28,7 @@ $bot->plug([
   new Joker\Plugin\Cowsay( ['bg_color' =>'#222222','text_color' =>'#dadada']),
   new Joker\Plugin\Hello(),
   new Joker\Plugin\Sticker(),
+  new Joker\Plugin\Mana(['speed' => 600, 'start' => 10]),
   new Joker\Plugin\Quote( ['dir' =>'data/jokes'] ),
   new Joker\Plugin\Corona( ['file' => 'data/corona/today.csv', 'update_hours'=>3]),
   new Joker\Plugin\Currency(),
@@ -35,7 +36,6 @@ $bot->plug([
     $event->answerMessage('test ok');
     return false;
   }]),
-  new Joker\Plugin\Mana(),
 
   // *** somethingg wide, without triggers, must stay in the end ***
 
