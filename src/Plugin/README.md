@@ -16,10 +16,6 @@ Plugins are well documented in inline comments, some interesting details will be
 * [Hello Plugin](#hello-plugin)
 * [Log Plugin](#log-plugin)
 * [Lurk Plugin](#lurk-plugin)
-<<<<<<< HEAD
-=======
-* [Carma Plugin](#carma-plugin)
->>>>>>> 6b0349396c9b1a08078b22fdd96b20922f745637
 * [Moderate Plugin](#moderate-plugin)
 * [Pasta Plugin](#pasta-plugin)
 * [Quote Plugin](#quote-plugin)
