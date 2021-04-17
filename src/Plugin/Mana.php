@@ -136,7 +136,7 @@ class Mana extends Plugin
     if (!file_exists( $file )) return 1.0;
 
     // [speed] seconds chunks since last change of rating
-    $power = ( time() - filemtime( $file ) ) / $this->getOption('speed', 5*60);
+    $power = ( time() - filemtime( $file ) ) / $this->getOption('speed', 600);
     return $power>1 ? 1.0 : $power;
   }
 
