@@ -76,6 +76,12 @@ class Mana extends Plugin
       $answer[] = "$user, you have $rating manas available, your power is $power";
     }
 
+    $sum = array_sum( array_map(function ($item){
+      return $this->getRating( $item );
+    }, $this->users));
+
+    $answer[] = "Total: $sum";
+
     // add instructions to the end of answer
     $answer[] = "";
     $answer[] = "To give or steal mana, say + or - in reply to anybody's message. " .
@@ -86,7 +92,7 @@ class Mana extends Plugin
   }
 
   /**
-   * Delete message after [seconds] seconds
+   * Clean message after [clean_time] seconds
    * @param Event $event
    *
    */
@@ -191,6 +197,9 @@ class Mana extends Plugin
 
     // if no rating yet - maximum power
     if (!file_exists( $file )) return 1.0;
+
+    // need to clear stat cache for more accurate result
+    clearstatcache( true, $file );
 
     // 0 seconds = 0, ..., [power_time] seconds = 1
     $power = ( time() - filemtime( $file ) ) / $this->getOption('power_time', 600);
