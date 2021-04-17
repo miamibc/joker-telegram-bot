@@ -66,8 +66,8 @@ class Mana extends Plugin
       }
     }
 
-    // otherwise, show current user's mana
-    else
+    // if no answer yet, add current user's mana
+    if (!count($answer))
     {
       $user   = $message->getFrom();
       $rating = round( $this->getRating( $user ), 2 );
