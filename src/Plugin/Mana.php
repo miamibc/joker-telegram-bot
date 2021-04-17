@@ -4,6 +4,10 @@
  *
  * Allows people to exchange mana between them by like and dislike their posts
  *
+ * Options:
+ * - `speed` (integer, optional, default 600) - number of seconds for full strength (1)
+ * - `start` (integer, optional, default 10)  - points you start with
+ *
  * @package joker-telegram-bot
  * @author Sergei Miami <miami@blackcrystal.net>
  */
@@ -11,13 +15,14 @@
 namespace Joker\Plugin;
 
 use Joker\Event;
+use Joker\Parser\User;
 use Joker\Plugin;
 
 class Mana extends Plugin
 {
 
   /**
-   * Reply to /me command with information (for now only rating available)
+   * Reply to /mana command with information (for now only rating available)
    *
    * @param Event $event
    *
@@ -26,89 +31,134 @@ class Mana extends Plugin
   public function onPublicText( Event $event )
   {
     $message = $event->getMessage();
-    if ($message->getText()->trigger() !== 'me') return;
+    if ($message->getText()->trigger() !== 'mana') return;
 
-    $rating = $this->getRating( $message->getFrom()->getId() );
-    $event->answerMessage("Mana " . $rating);
+    $user = $message->getFrom();
+    $rating = round( $this->getRating( $user ), 2 );
+    $event->answerMessage("$user, you have $rating manas available.");
     return false;
   }
 
 
+  /**
+   * Reply public chat with + or -
+   * @param Event $event
+   *
+   * @return false|void
+   */
   public function onPublicTextReply( Event $event )
   {
     $message = $event->getMessage();
+    $userfrom = $message->getFrom();
+    $userto   = $message->getReplyToMessage()->getFrom();
 
-    // check all required fields exists in request
-    // if (!isset($message['from']['id'], $message['reply_to_message']['from']['id'])) return;
-
-    // get information about authors of both messages
-    $from_id   = $message->getFrom()->getId();
-    $to_id     = $message->getReplyToMessage()->getFrom()->getId();
-    $from_name = $message->getFrom()->getName();
-    $to_name   = $message->getReplyToMessage()->getFrom()->getName();
+    // cannot share mana with yourself
+    if ( $userfrom->getId() === $userto->getId()) return false;
 
     // get ratings
-    $rating = [
-      'from' => $this->getRating($from_id),
-      'to'   => $this->getRating($to_id),
-    ];
+    $r = [
+      'fr' =>[
+        'power' => $this->getPower( $userfrom ),
+        'old'   => $rating = $this->getRating( $userfrom ),
+        'new'   => $rating,
+      ],
+      'to' => [
+        'power' => $this->getPower( $userto ),
+        'old'   => $rating = $this->getRating( $userto ),
+        'new'   => $rating,
+    ]];
+
 
     // check first leter, is it + or -
-    switch (substr( $event->getMessageText(), 0, 1))
+    switch ( $sign = substr( $event->getMessageText(), 0, 1))
     {
       case '+':
-        $rating['from_new'] = $rating['from']-.5;
-        $rating['to_new'] = $rating['to']+1;
-        $rating['action'] = "$from_name ({$rating['from']}-.5) shared mana with $to_name ({$rating['to']}+1)";
+        $r['fr']['new'] -= $r['to']['power']; // remove up to 1 mana from 'fr'
+        $r['to']['new'] += $r['fr']['power']; // give up to 1 mana to 'to'
         break;
       case '-':
-        $rating['from_new'] = $rating['from']+.5;
-        $rating['to_new'] = $rating['to']-1;
-        $rating['action'] = "$from_name ({$rating['from']}+.5) sucked mana from $to_name ({$rating['to']}-1)";
+        $r['fr']['new'] += $r['to']['power']; // give up to 1 mana to 'fr'
+        $r['to']['new'] -= $r['fr']['power']; // remove up to 1 mana from 'to'
         break;
       default:
         return;
     }
 
+    $save = true;
+    $answer = "%from %action %to %amount manas.";
+
     // not enough mana
-    if ($rating['from_new'] < 0)
+    if ($r['fr']['new'] < 0)
     {
-      $event->answerMessage("Not enough mana to do that");
-      return false;
-    }
-    // not enough mana
-    if ($rating['to_new'] < 0)
-    {
-      $event->answerMessage("No mana here");
-      return false;
+      $answer = "S0rry %from, not enough mana to do that.";
+      $save = false;
     }
 
-    // cannot share mana with yourself
-    if ($from_id == $to_id)
+    // not enough mana
+    if ($r['to']['new'] < 0)
     {
-      $event->answerMessage('Sorry d0g, you cannot share mana with yourself');
-      return false;
+      $answer = "S0rry %from, %to has not enough mana to suck.";
+      $save = false;
     }
 
     // save ratings
-    $this->setRating($from_id, $rating['from_new']);
-    $this->setRating($to_id, $rating['to_new']);
+    if ($save)
+    {
+      $this->setRating( $userfrom, $r['fr']['new'] );
+      $this->setRating( $userto, $r['to']['new'] );
+    }
 
     // answer
-    $event->answerMessage( $rating['action'] );
+    $answer = strtr( "$answer\n%from has %newfrom, %to has %newto", [
+      '%from' => $userfrom,
+      '%action' => $sign == '+' ? 'gave' : 'sucked from',
+      '%to' => $userto,
+      '%amount'  => round( abs($r['to']['old'] - $r['to']['new']), 2),
+      '%newfrom' => round( $r['fr']['new'], 2),
+      '%newto'   => round( $r['to']['new'], 2),
+    ]);
+
+    $event->answerMessage( $answer );
     return false;
   }
 
-  private function getRating( $user_id )
+  /**
+   * Calculate power of user (amount of hours, since last change of his rating), maximum 1
+   * @param User $user
+   *
+   * @return float
+   */
+  private function getPower(User $user ): float
   {
-    if (!file_exists('data/carma')) mkdir('data/carma');
-    return file_exists("data/carma/$user_id") ? file_get_contents("data/carma/$user_id") : 0;
+    $file = "data/mana/" . $user->getId();
+
+    // if no rating yet - maximum power
+    if (!file_exists( $file )) return 1.0;
+
+    // [speed] seconds chunks since last change of rating
+    $power = ( time() - filemtime( $file ) ) / $this->getOption('speed', 5*60);
+    return $power>1 ? 1.0 : $power;
   }
 
-  private function setRating( $user_id, $value )
+  /**
+   * Get rating of user
+   * @param User $user
+   *
+   * @return float
+   */
+  private function getRating( User $user ) : float
   {
-    if (!file_exists('data/carma')) mkdir('data/carma');
-    file_put_contents("data/carma/$user_id", $value);
+    $file = "data/mana/" . $user->getId();
+    return file_exists( $file )
+      ? (float) file_get_contents( $file )
+      : (float) $this->getOption('start', 10);
+  }
+
+  private function setRating( User $user, $value )
+  {
+    $file = "data/mana/" . $user->getId();
+    if (!file_exists( $dir = dirname( $file ))) mkdir( $dir );
+    file_put_contents( $file , $value);
   }
 
 }

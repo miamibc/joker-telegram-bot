@@ -17,6 +17,11 @@ class User
     $this->data = $data;
   }
 
+  public function __toString()
+  {
+    return $this->getName() . '';
+  }
+
   public function getId()
   {
     return $this->data['id'];
