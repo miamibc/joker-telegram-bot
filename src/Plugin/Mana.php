@@ -15,11 +15,15 @@
 namespace Joker\Plugin;
 
 use Joker\Event;
+use Joker\Parser\Message;
 use Joker\Parser\User;
 use Joker\Plugin;
 
 class Mana extends Plugin
 {
+
+  protected $messages = [];
+  protected $users = [];
 
   /**
    * Reply to /mana command with information (for now only rating available)
@@ -30,20 +34,78 @@ class Mana extends Plugin
    */
   public function onPublicText( Event $event )
   {
+
+    // if no users, add this bot
+    if (empty($this->users))
+    {
+      $user = $event->getBot()->getMe();
+      $this->users[ '@' . $user->getUsername() ] = $user;
+    }
+
     $message = $event->getMessage();
+
+    // listen all public messages and make local database of usernames/users
+    $this->users[ '@' . $message->getFrom()->getUsername() ] = $message->getFrom();
+
     if ($message->getText()->trigger() !== 'mana') return;
 
-    $user = $message->getFrom();
-    $rating = round( $this->getRating( $user ), 2 );
-    $power  = round( $this->getPower( $user ), 2 );
-    $event->answerMessage(
-      "$user, you have $rating manas available, your power now is $power.\n\n" .
-      "To give or steal mana, say + or - in reply to anybody's message. " .
-      "Amount of mana you exchange, depends on yours and other party powers."
-    );
+    // raw text to parse entities from
+    $text = $message->getText() .'';
+
+    // array of answer
+    $answer = [];
+
+    // if message has entities, then search them in known users database
+    if ($entities = $message->getEntities())
+    {
+
+      print_r($this->users);
+
+      foreach ( $entities as $entity)
+      {
+        if ($entity->getType() !== 'mention') continue;
+        $username = substr( $text, $entity->getOffset(), $entity->getLength());
+
+        if (!isset($this->users[$username])) continue;
+        $user   = $this->users[$username];
+        $rating = round( $this->getRating( $user ), 2 );
+        $power  = round( $this->getPower( $user ), 2 );
+        $answer[] = "$user has $rating manas and $power power";
+      }
+    }
+    // otherwise, show current user's mana
+    else
+    {
+      $user   = $message->getFrom();
+      $rating = round( $this->getRating( $user ), 2 );
+      $power  = round( $this->getPower( $user ), 2 );
+      $answer[] = "$user, you have $rating manas available, your power is $power";
+    }
+
+    $answer[] = "";
+    $answer[] = "To give or steal mana, say + or - in reply to anybody's message. " .
+                "Amount of mana you exchange, depends on yours and other party powers.";
+
+    $event->answerMessage( implode(PHP_EOL, $answer) );
     return false;
   }
 
+  /**
+   * Delete message after [seconds] seconds
+   * @param Event $event
+   *
+   */
+  public function onEmpty( Event $event )
+  {
+    foreach ($this->messages as $key => $message) /** @var Message $message */
+    {
+      if (time() >= $message->getDate() + $this->getOption('display_message',5))
+      {
+        $event->getBot()->deleteMessage($message->getChat()->getId(),$message->getMessageId());
+        unset($this->messages[$key]);
+      }
+    }
+  }
 
   /**
    * Reply public chat with + or -
@@ -53,7 +115,7 @@ class Mana extends Plugin
    */
   public function onPublicTextReply( Event $event )
   {
-    $message = $event->getMessage();
+    $message  = $event->getMessage();
     $userfrom = $message->getFrom();
     $userto   = $message->getReplyToMessage()->getFrom();
 
@@ -61,7 +123,7 @@ class Mana extends Plugin
     if ( $userfrom->getId() === $userto->getId() ) return false;
 
     // cannot share mana with bot
-    if ( $userto->isBot() ) return false;
+    if ( $userfrom->isBot() || $userto->isBot() ) return false;
 
     // get ratings
     $r = [
@@ -116,7 +178,7 @@ class Mana extends Plugin
       '%newto%'   => round( $r['to']['new'], 2),
     ]);
 
-    $event->answerMessage( $answer );
+    $this->messages[] = $event->answerMessage( $answer );
     return false;
   }
 

@@ -103,4 +103,15 @@ class Message
     return new Document( $this->data['document']);
   }
 
+  public function getEntities()
+  {
+    if (!isset($this->data['entities'])) return false;
+    $result = [];
+    foreach ($this->data['entities'] as $entity)
+    {
+      $result[] = new Entity($entity);
+    }
+    return $result;
+  }
+
 }

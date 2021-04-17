@@ -10,16 +10,17 @@ namespace Joker\Parser;
 class Text
 {
 
-  private $data = [];
+  protected $text = "", $data = [];
 
   public function __construct( $text )
   {
     $this->data = preg_split("@\s+@imU", $text );
+    $this->text = $text;
   }
 
   public function __toString()
   {
-    return implode(" ", $this->data);
+    return $this->text;
   }
 
   public function token( $from = 0, $to = null)
@@ -38,6 +39,5 @@ class Text
 
     return $trigger;
   }
-
 
 }

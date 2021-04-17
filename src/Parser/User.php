@@ -38,6 +38,11 @@ class User
     return "Unknown";
   }
 
+  public function getUsername()
+  {
+    return $this->data['username'];
+  }
+
   public function isBot()
   {
     return $this->data['is_bot'];
