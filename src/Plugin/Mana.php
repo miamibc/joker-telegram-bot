@@ -5,7 +5,7 @@
  * Allows people to exchange mana between them by like and dislike their posts
  *
  * Options:
- * - `speed` (integer, optional, default 600) - number of seconds for full strength (1)
+ * - `speed` (integer, optional, default 600) - number of seconds to have full power (1)
  * - `start` (integer, optional, default 10)  - points you start with
  *
  * @package joker-telegram-bot
@@ -75,47 +75,38 @@ class Mana extends Plugin
       case '+':
         $r['fr']['new'] -= $r['to']['power']; // remove up to 1 mana from 'fr'
         $r['to']['new'] += $r['fr']['power']; // give up to 1 mana to 'to'
+        $answer = "%from% gave %amount% manas to %to%.";
         break;
       case '-':
         $r['fr']['new'] += $r['to']['power']; // give up to 1 mana to 'fr'
         $r['to']['new'] -= $r['fr']['power']; // remove up to 1 mana from 'to'
+        $answer = "%from% sucked %amount% manas from %to%.";
         break;
       default:
         return;
     }
 
-    $save = true;
-    $answer = "%from %action %to %amount manas.";
-
-    // not enough mana
-    if ($r['fr']['new'] < 0)
+    if ($r['fr']['new'] < 0) // not enough mana
     {
-      $answer = "S0rry %from, not enough mana to do that.";
-      $save = false;
+      $answer = "S0rry %from%, not enough mana to do that.";
     }
-
-    // not enough mana
-    if ($r['to']['new'] < 0)
+    elseif ($r['to']['new'] < 0)  // not enough mana
     {
-      $answer = "S0rry %from, %to has not enough mana to suck.";
-      $save = false;
+      $answer = "%to% has not enough mana to suck.";
     }
-
-    // save ratings
-    if ($save)
+    else // save ratings
     {
       $this->setRating( $userfrom, $r['fr']['new'] );
       $this->setRating( $userto, $r['to']['new'] );
     }
 
     // answer
-    $answer = strtr( "$answer\n%from has %newfrom, %to has %newto.\nType !mana to see yours.", [
-      '%from' => $userfrom,
-      '%action' => $sign == '+' ? 'gave' : 'sucked from',
-      '%to' => $userto,
-      '%amount'  => round( abs($r['to']['old'] - $r['to']['new']), 2),
-      '%newfrom' => round( $r['fr']['new'], 2),
-      '%newto'   => round( $r['to']['new'], 2),
+    $answer = strtr( "$answer\n%from% has %newfrom%, %to% has %newto%.\nType !mana to see yours.", [
+      '%from%'    => $userfrom,
+      '%to%'      => $userto,
+      '%amount%'  => round( abs($r['to']['old'] - $r['to']['new']), 2),
+      '%newfrom%' => round( $r['fr']['new'], 2),
+      '%newto%'   => round( $r['to']['new'], 2),
     ]);
 
     $event->answerMessage( $answer );
