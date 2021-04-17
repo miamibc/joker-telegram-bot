@@ -109,7 +109,7 @@ class Mana extends Plugin
     }
 
     // answer
-    $answer = strtr( "$answer\n%from has %newfrom, %to has %newto", [
+    $answer = strtr( "$answer\n%from has %newfrom, %to has %newto.\nType !mana to see yours.", [
       '%from' => $userfrom,
       '%action' => $sign == '+' ? 'gave' : 'sucked from',
       '%to' => $userto,
