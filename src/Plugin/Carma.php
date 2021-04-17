@@ -39,7 +39,8 @@ class Carma extends Plugin
     $message = $event->getMessage();
 
     // make local database of usernames/users
-    $this->users[ '@' . $message->getFrom()->getUsername() ] = $message->getFrom();
+    if ($username = $message->getFrom()->getUsername())
+      $this->users[ "@$username" ] = $message->getFrom();
 
     // debug info
     if ($message->getText()->trigger() === 'carmadebug')
