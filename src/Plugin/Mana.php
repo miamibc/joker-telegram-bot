@@ -35,22 +35,12 @@ class Mana extends Plugin
   public function onPublicText( Event $event )
   {
 
-    // if no users, add this bot
-    if (empty($this->users))
-    {
-      $user = $event->getBot()->getMe();
-      $this->users[ '@' . $user->getUsername() ] = $user;
-    }
-
     $message = $event->getMessage();
 
-    // listen all public messages and make local database of usernames/users
+    // make local database of usernames/users
     $this->users[ '@' . $message->getFrom()->getUsername() ] = $message->getFrom();
 
     if ($message->getText()->trigger() !== 'mana') return;
-
-    // raw text to parse entities from
-    $text = $message->getText() .'';
 
     // array of answer
     $answer = [];
@@ -58,6 +48,8 @@ class Mana extends Plugin
     // if message has entities, then search them in known users database
     if ($entities = $message->getEntities())
     {
+      // raw text to parse entities from
+      $text = $message->getText() .'';
 
       foreach ( $entities as $entity)
       {
@@ -88,7 +80,7 @@ class Mana extends Plugin
     $answer[] = "To give or steal mana, say + or - in reply to anybody's message. " .
                 "Amount of mana you exchange, depends on yours and other party powers.";
 
-    $event->answerMessage( implode(PHP_EOL, $answer) );
+    $event->answerMessage( trim( implode(PHP_EOL, $answer)) );
     return false;
   }
 
