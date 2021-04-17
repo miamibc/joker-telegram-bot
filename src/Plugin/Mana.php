@@ -35,7 +35,12 @@ class Mana extends Plugin
 
     $user = $message->getFrom();
     $rating = round( $this->getRating( $user ), 2 );
-    $event->answerMessage("$user, you have $rating manas available.");
+    $power  = round( $this->getPower( $user ), 2 );
+    $event->answerMessage(
+      "$user, you have $rating manas available, your power now is $power.\n\n" .
+      "To give or suck mana, say + or - in reply to anybody's message. " .
+      "Amount of mana you give or suck, depends on yours and other party powers."
+    );
     return false;
   }
 
@@ -53,7 +58,10 @@ class Mana extends Plugin
     $userto   = $message->getReplyToMessage()->getFrom();
 
     // cannot share mana with yourself
-    if ( $userfrom->getId() === $userto->getId()) return false;
+    if ( $userfrom->getId() === $userto->getId() ) return false;
+
+    // cannot share mana with bot
+    if ( $userto->isBot() ) return false;
 
     // get ratings
     $r = [
@@ -67,7 +75,6 @@ class Mana extends Plugin
         'old'   => $rating = $this->getRating( $userto ),
         'new'   => $rating,
     ]];
-
 
     // check first leter, is it + or -
     switch ( $sign = substr( $event->getMessageText(), 0, 1))

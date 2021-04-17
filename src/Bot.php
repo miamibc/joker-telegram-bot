@@ -30,6 +30,7 @@ class Bot
     $ch = null,
     $token = null,
     $buffer = [],
+    $me = null,
     $last_update_id = 0,
     $plugins = [];
 
@@ -43,12 +44,12 @@ class Bot
     $this->ch = curl_init();
 
     // display information, or throw an error
-    $user = $this->getMe();
-    if (!$user->getId())
+    $this->me = $this->getMe();
+    if (!$this->me->getId())
     {
       throw new Exception("Wrong or inactive Telegram API token. More info https://core.telegram.org/bots#6-botfather");
     }
-    echo "\nBot started: "; print_r($user);
+    echo "\nBot started: "; print_r($this->me);
 
   }
 
