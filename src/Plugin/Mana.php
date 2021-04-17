@@ -59,13 +59,13 @@ class Mana extends Plugin
     if ($entities = $message->getEntities())
     {
 
-      print_r($this->users);
-
       foreach ( $entities as $entity)
       {
+        // only mentions is needed
         if ($entity->getType() !== 'mention') continue;
         $username = substr( $text, $entity->getOffset(), $entity->getLength());
 
+        // if not exists, skip
         if (!isset($this->users[$username])) continue;
         $user   = $this->users[$username];
         $rating = round( $this->getRating( $user ), 2 );
@@ -73,6 +73,7 @@ class Mana extends Plugin
         $answer[] = "$user has $rating manas and $power power";
       }
     }
+
     // otherwise, show current user's mana
     else
     {
@@ -82,6 +83,7 @@ class Mana extends Plugin
       $answer[] = "$user, you have $rating manas available, your power is $power";
     }
 
+    // add instructions to the end of answer
     $answer[] = "";
     $answer[] = "To give or steal mana, say + or - in reply to anybody's message. " .
                 "Amount of mana you exchange, depends on yours and other party powers.";
