@@ -38,8 +38,8 @@ class Mana extends Plugin
     $power  = round( $this->getPower( $user ), 2 );
     $event->answerMessage(
       "$user, you have $rating manas available, your power now is $power.\n\n" .
-      "To give or suck mana, say + or - in reply to anybody's message. " .
-      "Amount of mana you give or suck, depends on yours and other party powers."
+      "To give or steal mana, say + or - in reply to anybody's message. " .
+      "Amount of mana you exchange, depends on yours and other party powers."
     );
     return false;
   }
@@ -87,7 +87,7 @@ class Mana extends Plugin
       case '-':
         $r['fr']['new'] += $r['to']['power']; // give up to 1 mana to 'fr'
         $r['to']['new'] -= $r['fr']['power']; // remove up to 1 mana from 'to'
-        $answer = "%from% sucked %amount% manas from %to%.";
+        $answer = "%from% stole %amount% manas from %to%.";
         break;
       default:
         return;
@@ -99,7 +99,7 @@ class Mana extends Plugin
     }
     elseif ($r['to']['new'] < 0)  // not enough mana
     {
-      $answer = "%to% has not enough mana to suck.";
+      $answer = "%to% has not enough mana to steal.";
     }
     else // save ratings
     {
