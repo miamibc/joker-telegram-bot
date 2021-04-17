@@ -133,7 +133,7 @@ class Mana extends Plugin
     // if no rating yet - maximum power
     if (!file_exists( $file )) return 1.0;
 
-    // [speed] seconds chunks since last change of rating
+    // 0 seconds = 0, ..., [speed] seconds = 1
     $power = ( time() - filemtime( $file ) ) / $this->getOption('speed', 600);
     return $power>1 ? 1.0 : $power;
   }

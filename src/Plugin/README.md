@@ -15,6 +15,7 @@ Plugins are well documented in inline comments, some interesting details will be
 * [Hello Plugin](#hello-plugin)
 * [Log Plugin](#log-plugin)
 * [Lurk Plugin](#lurk-plugin)
+* [Mana Plugin](#mana-plugin)
 * [Moderate Plugin](#moderate-plugin)
 * [Pasta Plugin](#pasta-plugin)
 * [Quote Plugin](#quote-plugin)
@@ -248,7 +249,15 @@ Answer will be parsed from Wikimedia article (suddenly not the best quality)
     »— Владимир Познер[![](//lurkmore.so/images/thumb/a/ac/Lurkosparta.jpg/250px-Lurkosparta.jpg)](/%D0%A4%D0%B0%D0%B9%D0%BB:Lurkosparta.jpg)[![](/skins/common/images/magnify-clip.png)](/%D0%A4%D0%B0%D0%B9%D0%BB:Lurkosparta.jpg "Увеличить")
     
     Как это обычно бывает у нас…
- 
+
+Mana plugin
+-----------
+
+Allows people to exchange mana between them by like and dislike their posts.
+
+Options:
+- `speed` (integer, optional, default 600) - number of seconds to have full power (1)
+- `start` (integer, optional, default 10)  - points you start with
 
 Moderate Plugin
 -----------
