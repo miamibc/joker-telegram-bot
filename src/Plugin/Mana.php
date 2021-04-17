@@ -5,8 +5,9 @@
  * Allows people to exchange mana between them by like and dislike their posts
  *
  * Options:
- * - `speed` (integer, optional, default 600) - number of seconds to have full power (1)
- * - `start` (integer, optional, default 10)  - points you start with
+ * - `clean_time` (false|integer, optional, default 5)  - false, or seconds to remove mana exchange message
+ * - `power_time` (integer, optional, default 600) - number of seconds to have full power (1)
+ * - `start`      (integer, optional, default 10)  - points you start with
  *
  * @package joker-telegram-bot
  * @author Sergei Miami <miami@blackcrystal.net>
@@ -91,9 +92,11 @@ class Mana extends Plugin
    */
   public function onEmpty( Event $event )
   {
+    if (!$this->getOption('clean_time', 5)) return;
+
     foreach ($this->messages as $key => $message) /** @var Message $message */
     {
-      if (time() >= $message->getDate() + $this->getOption('display_message',5))
+      if (time() >= $message->getDate() + $this->getOption('clean_time', 5))
       {
         $event->getBot()->deleteMessage($message->getChat()->getId(),$message->getMessageId());
         unset($this->messages[$key]);
@@ -189,8 +192,8 @@ class Mana extends Plugin
     // if no rating yet - maximum power
     if (!file_exists( $file )) return 1.0;
 
-    // 0 seconds = 0, ..., [speed] seconds = 1
-    $power = ( time() - filemtime( $file ) ) / $this->getOption('speed', 600);
+    // 0 seconds = 0, ..., [power_time] seconds = 1
+    $power = ( time() - filemtime( $file ) ) / $this->getOption('power_time', 600);
     return $power>1 ? 1.0 : $power;
   }
 

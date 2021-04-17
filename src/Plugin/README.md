@@ -256,8 +256,9 @@ Mana plugin
 Allows people to exchange mana between them by like and dislike their posts.
 
 Options:
-- `speed` (integer, optional, default 600) - number of seconds to have full power (1)
-- `start` (integer, optional, default 10)  - points you start with
+- `clean_time` (false|integer, optional, default 5)  - false, or seconds to remove mana exchange message
+- `power_time` (integer, optional, default 600) - number of seconds to have full power (1)
+- `start`      (integer, optional, default 10)  - points you start with
 
 Moderate Plugin
 -----------
