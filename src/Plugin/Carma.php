@@ -1,13 +1,13 @@
 <?php
 /**
- * Mana plugin for Joker
+ * Carma plugin for Joker
  *
- * Allows people to exchange mana between them by like and dislike their posts
+ * Allows people to exchange carma between them by like and dislike their posts
  *
  * Options:
- * - `clean_time` (false|integer, optional, default 5)  - false, or seconds to remove mana exchange message
+ * - `clean_time` (false|integer, optional, default 5)  - false, or seconds to remove carma exchange message
  * - `power_time` (integer, optional, default 600) - number of seconds to have full power (1)
- * - `start`      (integer, optional, default 10)  - points you start with
+ * - `start_carma` (integer, optional, default 10)  - points you start with
  *
  * @package joker-telegram-bot
  * @author Sergei Miami <miami@blackcrystal.net>
@@ -20,14 +20,14 @@ use Joker\Parser\Message;
 use Joker\Parser\User;
 use Joker\Plugin;
 
-class Mana extends Plugin
+class Carma extends Plugin
 {
 
   protected $messages = [];
   protected $users = [];
 
   /**
-   * Reply to /mana command with information (for now only rating available)
+   * Reply to /carma command with information (for now only rating available)
    *
    * @param Event $event
    *
@@ -39,9 +39,26 @@ class Mana extends Plugin
     $message = $event->getMessage();
 
     // make local database of usernames/users
-    $this->users[ '@' . $message->getFrom()->getUsername() ] = $message->getFrom();
+    if ($username = $message->getFrom()->getUsername())
+      $this->users[ "@$username" ] = $message->getFrom();
 
-    if ($message->getText()->trigger() !== 'mana') return;
+    // debug info
+    if ($message->getText()->trigger() === 'carmadebug')
+    {
+      $answer = [];
+      $answer[] = 'Debug carma info:';
+      $sum = array_sum( array_map(function ($user) use (&$answer){
+        $rating = round( $result = $this->getRating( $user ), 2);
+        $power  = round( $this->getPower( $user ), 1 );
+        $answer[] = "- $user has $rating carma and $power power";
+        return $result;
+      }, $this->users));
+      $answer[] = "Total: $sum";
+      $event->answerMessage( trim( implode(PHP_EOL, $answer)) );
+      return false;
+    }
+
+    if ($message->getText()->trigger() !== 'carma') return;
 
     // array of answer
     $answer = [];
@@ -52,40 +69,31 @@ class Mana extends Plugin
       // raw text to parse entities from
       $text = $message->getText() .'';
 
-      foreach ( $entities as $entity)
-      {
-        // only mentions is needed
-        if ($entity->getType() !== 'mention') continue;
+      $answer = array_filter( array_map(function ($entity) use ($text) {
+        if ($entity->getType() !== 'mention') return;
         $username = substr( $text, $entity->getOffset(), $entity->getLength());
+        if (!isset($this->users[$username])) return;
+        $user = $this->users[ $username ];
+        $rating = round( $result = $this->getRating( $user ), 2);
+        $power  = round( $this->getPower( $user ), 1 );
+        return"- $user has $rating carma and $power power";
+      }, $entities) );
 
-        // if not exists, skip
-        if (!isset($this->users[$username])) continue;
-        $user   = $this->users[$username];
-        $rating = round( $this->getRating( $user ), 2 );
-        $power  = round( $this->getPower( $user ), 2 );
-        $answer[] = "$user has $rating manas and $power power";
-      }
     }
 
-    // if no answer yet, add current user's mana
+    // if no answer yet, add current user's carma
     if (!count($answer))
     {
       $user   = $message->getFrom();
       $rating = round( $this->getRating( $user ), 2 );
-      $power  = round( $this->getPower( $user ), 2 );
-      $answer[] = "$user, you have $rating manas available, your power is $power";
+      $power  = round( $this->getPower( $user ), 1 );
+      $answer[] = "$user, you have $rating carma available, your power is $power";
     }
-
-    $sum = array_sum( array_map(function ($item){
-      return $this->getRating( $item );
-    }, $this->users));
-
-    $answer[] = "Total: $sum";
 
     // add instructions to the end of answer
     $answer[] = "";
-    $answer[] = "To give or steal mana, say + or - in reply to anybody's message. " .
-                "Amount of mana you exchange, depends on yours and other party powers.";
+    $answer[] = "To give or steal carma, say + or - in reply to anybody's message. " .
+                "Amount of carma you exchange, depends on yours and other party powers.";
 
     $event->answerMessage( trim( implode(PHP_EOL, $answer)) );
     return false;
@@ -122,10 +130,10 @@ class Mana extends Plugin
     $userfrom = $message->getFrom();
     $userto   = $message->getReplyToMessage()->getFrom();
 
-    // cannot share mana with yourself
+    // cannot share carma with yourself
     if ( $userfrom->getId() === $userto->getId() ) return false;
 
-    // cannot share mana with bot
+    // cannot share carma with bot
     if ( $userfrom->isBot() || $userto->isBot() ) return false;
 
     // get ratings
@@ -145,26 +153,30 @@ class Mana extends Plugin
     switch ( $sign = substr( $event->getMessageText(), 0, 1))
     {
       case '+':
-        $r['fr']['new'] -= $r['to']['power']; // remove up to 1 mana from 'fr'
-        $r['to']['new'] += $r['fr']['power']; // give up to 1 mana to 'to'
-        $answer = "%from% gave %amount% manas to %to%.";
+        $r['fr']['new'] -= $r['to']['power']; // remove up to 1 carma from 'fr'
+        $r['to']['new'] += $r['fr']['power']; // give up to 1 carma to 'to'
+        $answer = "%from% gave %amount% carma to %to%.";
         break;
       case '-':
-        $r['fr']['new'] += $r['to']['power']; // give up to 1 mana to 'fr'
-        $r['to']['new'] -= $r['fr']['power']; // remove up to 1 mana from 'to'
-        $answer = "%from% stole %amount% manas from %to%.";
+        $r['fr']['new'] += $r['to']['power']; // give up to 1 carma to 'fr'
+        $r['to']['new'] -= $r['fr']['power']; // remove up to 1 carma from 'to'
+        $answer = "%from% stole %amount% carma from %to%.";
         break;
       default:
         return;
     }
 
-    if ($r['fr']['new'] < 0) // not enough mana
+    if ($r['fr']['new'] < 0) // not enough carma
     {
-      $answer = "S0rry %from%, not enough mana to do that.";
+      $answer = "S0rry %from%, not enough carma to do that.";
+      $r['fr']['new'] = $r['fr']['old'];
+      $r['to']['new'] = $r['to']['old'];
     }
-    elseif ($r['to']['new'] < 0)  // not enough mana
+    elseif ($r['to']['new'] < 0)  // not enough carma
     {
-      $answer = "%to% has not enough mana to steal.";
+      $answer = "%to% has not enough carma to steal.";
+      $r['fr']['new'] = $r['fr']['old'];
+      $r['to']['new'] = $r['to']['old'];
     }
     else // save ratings
     {
@@ -173,7 +185,7 @@ class Mana extends Plugin
     }
 
     // answer
-    $answer = strtr( "$answer\n%from% has %newfrom%, %to% has %newto%.\nType !mana to see yours.", [
+    $answer = strtr( "$answer\n%from% has %newfrom%, %to% has %newto%.\nType !carma to see yours.", [
       '%from%'    => $userfrom,
       '%to%'      => $userto,
       '%amount%'  => round( abs($r['to']['old'] - $r['to']['new']), 2),
@@ -193,7 +205,7 @@ class Mana extends Plugin
    */
   private function getPower(User $user ): float
   {
-    $file = "data/mana/" . $user->getId();
+    $file = "data/carma/" . $user->getId();
 
     // if no rating yet - maximum power
     if (!file_exists( $file )) return 1.0;
@@ -214,15 +226,15 @@ class Mana extends Plugin
    */
   private function getRating( User $user ) : float
   {
-    $file = "data/mana/" . $user->getId();
+    $file = "data/carma/" . $user->getId();
     return file_exists( $file )
       ? (float) file_get_contents( $file )
-      : (float) $this->getOption('start', 10);
+      : (float) $this->getOption('start_carma', 10);
   }
 
   private function setRating( User $user, $value )
   {
-    $file = "data/mana/" . $user->getId();
+    $file = "data/carma/" . $user->getId();
     if (!file_exists( $dir = dirname( $file ))) mkdir( $dir );
     file_put_contents( $file , $value);
   }
