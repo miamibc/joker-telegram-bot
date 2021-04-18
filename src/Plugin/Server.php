@@ -32,7 +32,6 @@ class Server extends Plugin
   public function __construct($options = [])
   {
     parent::__construct($options);
-    // $sock = $this->sock = stream_socket_server( "tcp://0.0.0.0:5566", $errno, $errstr);
 
     $sock = socket_create(AF_INET, SOCK_STREAM, SOL_TCP);
     socket_bind($sock,
