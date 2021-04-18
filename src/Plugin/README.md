@@ -80,7 +80,7 @@ Options:
 - `power_time` (integer, optional, default 600) - number of seconds to have full power (1)
 - `start_carma` (integer, optional, default 10)  - points you start with
 
-Thanks for help in development to **D0b3rm4nN** and **AL^Raven**.
+Thanks for help in development to **D0b3rm4nN** and [AL^Raven](https://github.com/alravenbc).
 
 Corona Plugin
 -----------
