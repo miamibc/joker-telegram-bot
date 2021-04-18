@@ -21,6 +21,7 @@ $bot->plug([
 
   // *** insert your plugins here, order is important ***
 
+  new Joker\Plugin\Server( ['host' => '127.0.0.1', 'port' => 5566] ),
   new Joker\Plugin\Temp( ['api_key' => getenv( 'OPENWEATHER_API_KEY' ),'default' => 'Tallinn'] ),
   new Joker\Plugin\Spotify( ['client_id' => getenv( 'SPOTIFY_CLIENT_ID' ),'secret' =>getenv( 'SPOTIFY_SECRET' )] ),
   new Joker\Plugin\Lurk(),
@@ -28,7 +29,7 @@ $bot->plug([
   new Joker\Plugin\Cowsay( ['bg_color' =>'#222222','text_color' =>'#dadada']),
   new Joker\Plugin\Hello(),
   new Joker\Plugin\Sticker(),
-  new Joker\Plugin\Carma(['clean_time' =>false,'power_time' => 600,'start_carma' => 10]),
+  new Joker\Plugin\Carma(['clean_time' => 10,'power_time' => 600,'start_carma' => 10]),
   new Joker\Plugin\Quote( ['dir' =>'data/jokes'] ),
   new Joker\Plugin\Corona( ['file' => 'data/corona/today.csv', 'update_hours'=>3]),
   new Joker\Plugin\Currency(),
