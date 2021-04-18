@@ -85,7 +85,8 @@ class Bot
     $this->log( $method . ' '. $plain_request . ' => ' . $plain_response );
 
     if (!isset($result['ok']) || !$result['ok'])
-      throw new Exception("Something went wrong");
+      // throw new Exception("Something went wrong");
+      return false;
 
     return isset($result['result']) ? $result['result'] : false;
   }

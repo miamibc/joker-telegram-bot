@@ -18,6 +18,7 @@ Plugins are well documented in inline comments, some interesting details will be
 * [Lurk Plugin](#lurk-plugin)
 * [Moderate Plugin](#moderate-plugin)
 * [Pasta Plugin](#pasta-plugin)
+* [Server Plugin](#server-plugin)
 * [Quote Plugin](#quote-plugin)
 * [Spotify Plugin](#spotify-plugin)
 * [Sticker Plugin](#sticker-plugin)
@@ -75,7 +76,7 @@ Carma plugin
 Allows people to exchange carma between them by like and dislike their posts.
 
 Options:
-- `clean_time` (false|integer, optional, default 5)  - false, or seconds to remove mana exchange message
+- `clean_time` (false|integer, optional, default 10)  - false, or seconds to remove mana exchange message
 - `power_time` (integer, optional, default 600) - number of seconds to have full power (1)
 - `start_carma` (integer, optional, default 10)  - points you start with
 
@@ -332,6 +333,35 @@ Added: !tg 111 of 111: [01.11.20 21:58]
 <QQSKA> концентрацептивачто?
 <SHPONGIk> понятно)
 ```
+
+Server Plugin
+-----------
+
+With this plugin you can communicate bot from outside.
+
+Start bot with this plugin attached, and try one of these methods of communication:
+
+- **HTTP request** - send command with curl or other HTTP client, HTTP method must be POST, 
+  URL can be any supported by [Telegram Bot API](https://core.telegram.org/bots/api#available-methods).
+
+  Example:
+  ```
+  curl -X POST --data '{"chat_id":"-343502518", "text":"Testing Server Plugin"}' http://127.0.0.1:5566/sendMessage
+  ```
+  You will receive JSON-formatted response from Telegram API, and new message from bot in your chat.
+  
+- **Plain JSON** - use Telnet or other network tool, send JSON-formatted message to the bot. 
+  Only `sendMessage` can be executed with plain request.
+  
+  Example:
+  ```
+  echo '{"chat_id":"-343502518", "text":"Testing Server Plugin"}' | telnet 127.0.0.1 5566
+  ```
+
+Configuration options:
+- `address` (string, optional, default 127.0.0.1)  - address of interface to listen
+- `port` (integer, optional, default 5566) - port number
+
 
 Spotify Plugin
 -----------

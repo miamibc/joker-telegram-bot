@@ -5,7 +5,7 @@
  * Allows people to exchange carma between them by like and dislike their posts
  *
  * Options:
- * - `clean_time` (false|integer, optional, default 5)  - false, or seconds to remove carma exchange message
+ * - `clean_time` (false|integer, optional, default 10)  - false, or seconds to remove carma exchange message
  * - `power_time` (integer, optional, default 600) - number of seconds to have full power (1)
  * - `start_carma` (integer, optional, default 10)  - points you start with
  *
@@ -23,8 +23,9 @@ use Joker\Plugin;
 class Carma extends Plugin
 {
 
-  protected $messages = [];
-  protected $users = [];
+  protected
+    $messages = [], // array with messages that must be cleaned
+    $users = [];    // array of username/user
 
   /**
    * Reply to /carma command with information (for now only rating available)
@@ -42,11 +43,14 @@ class Carma extends Plugin
     if ($username = $message->getFrom()->getUsername())
       $this->users[ "@$username" ] = $message->getFrom();
 
-    // debug info
-    if ($message->getText()->trigger() === 'carmadebug')
+    // do not process, if trigger is not carma
+    if ($message->getText()->trigger() !== 'carma') return;
+
+    echo $message->getText()->token(1);
+    // !carma debug, lists all registered users
+    if ($message->getText()->token(1) === 'debug')
     {
-      $answer = [];
-      $answer[] = 'Debug carma info:';
+      $answer = ['Debug carma info:'];
       $sum = array_sum( array_map(function ($user) use (&$answer){
         $rating = round( $result = $this->getRating( $user ), 2);
         $power  = round( $this->getPower( $user ), 1 );
@@ -57,8 +61,6 @@ class Carma extends Plugin
       $event->answerMessage( trim( implode(PHP_EOL, $answer)) );
       return false;
     }
-
-    if ($message->getText()->trigger() !== 'carma') return;
 
     // array of answer
     $answer = [];
@@ -93,7 +95,7 @@ class Carma extends Plugin
     // add instructions to the end of answer
     $answer[] = "";
     $answer[] = "To give or steal carma, say + or - in reply to anybody's message. " .
-                "Amount of carma you exchange, depends on yours and other party powers.";
+                "Amount of carma you share, depends on yours and other party powers.";
 
     $event->answerMessage( trim( implode(PHP_EOL, $answer)) );
     return false;
@@ -106,11 +108,11 @@ class Carma extends Plugin
    */
   public function onEmpty( Event $event )
   {
-    if (!$this->getOption('clean_time', 5)) return;
+    if (!$this->getOption('clean_time', 10)) return;
 
     foreach ($this->messages as $key => $message) /** @var Message $message */
     {
-      if (time() >= $message->getDate() + $this->getOption('clean_time', 5))
+      if (time() >= $message->getDate() + $this->getOption('clean_time', 10))
       {
         $event->getBot()->deleteMessage($message->getChat()->getId(),$message->getMessageId());
         unset($this->messages[$key]);
@@ -149,7 +151,7 @@ class Carma extends Plugin
         'new'   => $rating,
     ]];
 
-    // check first leter, is it + or -
+    // check first char, is it + or -
     switch ( $sign = substr( $event->getMessageText(), 0, 1))
     {
       case '+':

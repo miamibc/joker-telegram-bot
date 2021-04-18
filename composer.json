@@ -16,9 +16,10 @@
     "ext-json": "*",
     "ext-curl": "*",
     "ext-mbstring": "*",
+    "ext-sockets": "*",
     "vlucas/phpdotenv": "^3.4",
     "alrik11es/cowsayphp": "^1.2",
-    "league/html-to-markdown": "^4.9"
+    "league/html-to-markdown": "^4.9",
   },
   "autoload": {
     "psr-4": {

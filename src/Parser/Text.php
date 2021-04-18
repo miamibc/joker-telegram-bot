@@ -25,7 +25,7 @@ class Text
 
   public function token( $from = 0, $to = null)
   {
-    return implode( " ", array_splice($this->data, $from, $to));
+    return implode( " ", array_slice($this->data, $from, $to));
   }
 
   public function trigger()

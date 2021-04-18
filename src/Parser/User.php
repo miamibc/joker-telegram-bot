@@ -40,17 +40,17 @@ class User
 
   public function getUsername()
   {
-    return $this->data['username'];
+    return $this->data['username'] ?? false;
   }
 
   public function isBot()
   {
-    return $this->data['is_bot'];
+    return $this->data['is_bot'] ?? false;
   }
 
   public function getLanguageCode()
   {
-    return $this->data['language_code'];
+    return $this->data['language_code'] ?? false;
   }
 
 }
