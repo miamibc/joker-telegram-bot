@@ -439,7 +439,7 @@ This plugin allows you to search Twitch channels, other possibilities of Twitch 
 
 To enable plugin:
 1. Register your application in [Twitch API](https://dev.twitch.tv/docs/api). 
-2. Pass `client_id` and `secret` to this plugin options, or set environment variables `TWITCH_CLIENT_ID` and `TWITCH_SECRET`
+2. Pass `client_id` and `client_secret` to this plugin options, or set environment variables `TWITCH_CLIENT_ID` and `TWITCH_CLIENT_SECRET`
 3. Start the bot.
 
 Configuration options:
