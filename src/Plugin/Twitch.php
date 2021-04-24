@@ -2,6 +2,10 @@
 /**
  * Twitch Plugin for Joker
  *
+ * Search channels
+ *   !twitch quake
+ *   !twitch poker
+ *
  * @package joker-telegram-bot
  * @author Sergei Miami <miami@blackcrystal.net>
  */
@@ -18,11 +22,10 @@ class Twitch extends Plugin
 
   public function onPublicText( Event $event )
   {
-    $message = $event->getMessage();
-    if ($message->getText()->trigger() !== 'twitch') return;
+    $text = $event->getMessage()->getText();
+    if ($text->trigger() !== 'twitch') return;
 
-    $text = trim( $message->getText()->token(1, null) );
-    if (empty($text))
+    if (empty($text = trim( $text->token(1, null) )))
     {
       $event->answerMessage('Usage: !twitch searchtext');
       return false;
@@ -39,9 +42,11 @@ class Twitch extends Plugin
 
   /**
    * Search channels
+   *
    * @param $query
    *
    * @return false|string
+   * @throws \Exception
    */
   public function searchChannels( $query )
   {
@@ -62,22 +67,22 @@ class Twitch extends Plugin
       ]));
     }
 
-    return implode("\n", $result);
+    return implode( PHP_EOL, $result);
   }
 
-
+  /**
+   * Performs authorization
+   * @return bool
+   */
   private function _authorize()
   {
-    // Create a stream
-    $context = stream_context_create(["http" => [
-      "method" => 'POST',
-    ]]);
-
     $json = file_get_contents("https://id.twitch.tv/oauth2/token?". http_build_query([
       'client_id' => $this->getOption('client_id', getenv('TWITCH_CLIENT_ID')),
       'client_secret' => $this->getOption('client_secret', getenv('TWITCH_CLIENT_SECRET')),
       'grant_type' => 'client_credentials',
-    ]), false, $context);
+    ]), false, stream_context_create(["http" => [
+      "method" => 'POST',
+    ]]));
 
     $data = json_decode( $json, true);
     if (!isset($data['access_token'], $data['expires_in'])) return false;
@@ -97,7 +102,7 @@ class Twitch extends Plugin
    *
    * @return mixed
    */
-  private function _request( string $method = 'GET', string $url = '/helix/search/channels', array $params = [])
+  private function _request( string $method = 'GET', string $url = '/', array $params = [])
   {
 
     // authorize, if necessary
@@ -106,16 +111,11 @@ class Twitch extends Plugin
       $this->_authorize();
     }
 
-    // Create a stream
-    $context = stream_context_create(["http" => [
+    $json = file_get_contents("https://api.twitch.tv$url?". http_build_query($params), false, stream_context_create(["http" => [
       "method" => $method,
       "header" => "Client-id: ". $this->getOption('client_id', getenv('TWITCH_CLIENT_ID'))."\r\n" .
                   "Authorization: Bearer ". $this->access_token."\r\n"
-    ]]);
-
-    $json = file_get_contents("https://api.twitch.tv$url?". http_build_query($params), false, $context);
-
-    // echo $json . PHP_EOL;
+    ]]));
 
     return json_decode( $json, true );
   }

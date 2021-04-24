@@ -23,6 +23,7 @@ Plugins are well documented in inline comments, some interesting details will be
 * [Spotify Plugin](#spotify-plugin)
 * [Sticker Plugin](#sticker-plugin)
 * [Temp Plugin](#temp-plugin)
+* [Twitch Plugin](#twitch-plugin)
 
 Bash Plugin
 -----------
@@ -435,15 +436,15 @@ Data source [Openweather API](http://api.openweathermap.org)
 Twitch Plugin
 -----------
 
-This plugin allows you to search Twitch channels, other possibilities of Twitch API can also be used.
+This plugin allows you to search Twitch channels.
 
 To enable plugin:
-1. Register your application in [Twitch API](https://dev.twitch.tv/docs/api). 
+1. Create your application in [Twitch API](https://dev.twitch.tv/docs/api). 
 2. Pass `client_id` and `client_secret` to this plugin options, or set environment variables `TWITCH_CLIENT_ID` and `TWITCH_CLIENT_SECRET`
 3. Start the bot.
 
 Configuration options:
-- `client_id` (string, required) - client_id  of your Twitch API application
-- `client_secret` (string, required) - secret of your Twitch API application
+- `client_id` (string, optional, default is env variable `TWITCH_CLIENT_ID`) - client_id  of your Twitch API application
+- `client_secret` (string, optional, default is env variable `TWITCH_CLIENT_SECRET`) - client secret of your Twitch API application
 
 Thanks for idea to **D0b3rm4nN**.
