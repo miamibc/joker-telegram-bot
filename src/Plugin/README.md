@@ -431,3 +431,19 @@ Configuration options:
 - `api_key` (string, required) - Openwearther API key
 
 Data source [Openweather API](http://api.openweathermap.org)
+
+Twitch Plugin
+-----------
+
+This plugin allows you to search Twitch channels, other possibilities of Twitch API can also be used.
+
+To enable plugin:
+1. Register your application in [Twitch API](https://dev.twitch.tv/docs/api). 
+2. Pass `client_id` and `client_secret` to this plugin options, or set environment variables `TWITCH_CLIENT_ID` and `TWITCH_CLIENT_SECRET`
+3. Start the bot.
+
+Configuration options:
+- `client_id` (string, required) - client_id  of your Twitch API application
+- `client_secret` (string, required) - secret of your Twitch API application
+
+Thanks for idea to **D0b3rm4nN**.
