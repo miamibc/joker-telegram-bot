@@ -3,49 +3,43 @@
  *
  * @package joker-telegram-bot
  * @author Sergei Miami <miami@blackcrystal.net>
+ *
  */
 
 namespace Joker\Parser;
 
-class Chat
+use Joker\Database\Sqlite;
+
+/**
+ * @method int id()
+ * @method string type()
+ * @method string title()
+ * @method string username()
+ * @method ChatPhoto photo()
+ * @method string bio()
+ * @method string description()
+ * @method string invite_link()
+ * @method Message pinned_message()
+ */
+class Chat extends Base
 {
 
-  private $data = [];
+  use Sqlite;
 
-  public function __construct($data)
-  {
-    $this->data = $data;
-  }
+  protected $wrapper = [
+    'photo' => ChatPhoto::class,
+    'pinned_message' => Message::class,
+  ];
 
   public function __toString()
   {
-    return $this->getName();
+    return $this->name();
   }
 
-  public function getId()
-  {
-    return $this->data['id'];
-  }
-
-  public function getType()
-  {
-    return $this->data['type'];
-  }
-
-  public function getTitle()
-  {
-    return $this->data['title'];
-  }
-
-  public function getUsername()
-  {
-    return $this->data['username'];
-  }
-
-  public function getName()
+  public function name()
   {
     if (isset($this->data['title']))
-      return $this->getTitle();
+      return $this->data['title'];
     if (isset($this->data['first_name'], $this->data['last_name']))
       return implode(" ", [$this->data['first_name'], $this->data['last_name']]);
     if (isset($this->data['first_name']))
@@ -54,33 +48,5 @@ class Chat
       return $this->data['username'];
     return "Unknown";
   }
-
-  public function getPhoto()
-  {
-    return new ChatPhoto( $this->data['photo'] );
-  }
-
-  public function getBio()
-  {
-    return $this->data['bio'];
-  }
-
-  public function getDescription()
-  {
-    return $this->data['description'];
-  }
-
-  public function getInviteLink()
-  {
-    return $this->data['invite_link'];
-  }
-
-  public function getPinnedMessage()
-  {
-    if (!isset($this->data['pinned_message'])) return false;
-    return new Message( $this->data['pinned_message'] );
-  }
-
-
 
 }

@@ -29,12 +29,12 @@ class Bash extends Plugin
   public function onPublicText( Event $event )
   {
 
-    $text = $event->getMessageText();
+    $text = $event->message()->text();
 
-    if (!preg_match('@^(/bash|!bash)\b(.*)?$@ui', $text, $matches)) return;
+    if ( $text->trigger() !== 'bash') return;
 
-    $trigger = trim( $matches[1] );
-    $query   = trim( $matches[2] );
+    $trigger = trim( $text->trigger() );
+    $query   = trim( $text->token(1) );
 
     if (empty( $query ))
     {

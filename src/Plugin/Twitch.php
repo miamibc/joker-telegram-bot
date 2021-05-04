@@ -22,7 +22,7 @@ class Twitch extends Plugin
 
   public function onPublicText( Event $event )
   {
-    $text = $event->getMessage()->getText();
+    $text = $event->message()->text();
     if ($text->trigger() !== 'twitch') return;
 
     if (empty($text = trim( $text->token(1, null) )))

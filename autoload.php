@@ -18,4 +18,5 @@ $dotenv = Dotenv\Dotenv::create(dirname(__FILE__));
 $dotenv->load();
 
 // RedbeanPHP (ORM)
-R::setup( 'sqlite:data/joker.db' );
+use RedBeanPHP\R;
+R::setup( 'sqlite:data/sqlite.db' );

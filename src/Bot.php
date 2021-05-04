@@ -45,11 +45,11 @@ class Bot
 
     // display information, or throw an error
     $this->me = $this->getMe();
-    if (!$this->me->getId())
+    if (!$this->me->id())
     {
       throw new Exception("Wrong or inactive Telegram API token. More info https://core.telegram.org/bots#6-botfather");
     }
-    echo "\nBot started: "; print_r($this->me);
+    echo "\nBot started: "; print_r( $this->me->getData() );
 
   }
 

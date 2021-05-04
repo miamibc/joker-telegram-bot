@@ -54,7 +54,7 @@ class Cowsay extends Plugin
   public function onPublicText( Event $event )
   {
 
-    $message_text = $event->getMessageText();
+    $message_text = $event->message()->text();
 
     if (!preg_match('@^([\/!](\w+)say)\s?(.*)$@ui', $message_text, $matches)) return;
 

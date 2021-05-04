@@ -7,60 +7,26 @@
 
 namespace Joker\Parser;
 
-class Update
+/**
+ * @method int id()
+ * @method int update_id()
+ * @method Message message()
+ * @method Message edited_message()
+ * @method Message channel_post()
+ * @method Message edited_channel_post()
+ * @method Message poll()
+ * @method Message poll_answer()
+ */
+class Update extends Base
 {
 
-  private $data = [];
-
-  public function __construct( $data )
-  {
-    $this->data = $data;
-  }
-
-  public function getId()
-  {
-    return $this->data['id'];
-  }
-
-  public function getUpdateId()
-  {
-    return $this->data['update_id'];
-  }
-
-  public function getMessage()
-  {
-    if (!isset($this->data['message'])) return false;
-    return new Message( $this->data['message']);
-  }
-
-  public function getEditedMessage()
-  {
-    if (!isset($this->data['edited_message'])) return false;
-    return new Message( $this->data['edited_message']);
-  }
-
-  public function getChannelPost()
-  {
-    if (!isset($this->data['channel_post'])) return false;
-    return new Message( $this->data['channel_post']);
-  }
-
-  public function getEditedChannelPost()
-  {
-    if (!isset($this->data['edited_channel_post'])) return false;
-    return new Message( $this->data['edited_channel_post']);
-  }
-
-  public function getPoll()
-  {
-    if (!isset($this->data['poll'])) return false;
-    return new Message( $this->data['poll']);
-  }
-
-  public function getPollAnswer()
-  {
-    if (!isset($this->data['poll_answer'])) return false;
-    return new Message( $this->data['poll_answer']);
-  }
+  protected $wrapper = [
+    'message' => Message::class,
+    'edited_message' => Message::class,
+    'channel_post' => Message::class,
+    'edited_channel_post' => Message::class,
+    'poll' => Message::class,
+    'poll_answer' => Message::class,
+  ];
 
 }

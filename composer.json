@@ -20,7 +20,7 @@
     "vlucas/phpdotenv": "^3.4",
     "alrik11es/cowsayphp": "^1.2",
     "league/html-to-markdown": "^4.9",
-    "gabordemooij/redbean": "^5.7"
+    "gabordemooij/redbean": "dev-master"
   },
   "autoload": {
     "psr-4": {

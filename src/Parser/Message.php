@@ -7,111 +7,54 @@
 
 namespace Joker\Parser;
 
-class Message
+/**
+ * @method int message_id()
+ * @method User from()
+ * @method Chat sender_chat()
+ * @method User forward_from()
+ * @method Chat forward_from_chat()
+ * @method Message reply_to_message()
+ * @method User via_bot()
+ * @method integer date()
+ * @method string edit_date()
+ * @method Chat chat()
+ * @method Text text()
+ * @method Animation animation()
+ * @method Audio audio()
+ * @method Document document()
+ */
+class Message extends Base
 {
 
-  private $data = [];
+  protected $wrapper = [
+    'from' => User::class,
+    'sender_chat' => Chat::class,
+    'forward_from' => User::class,
+    'forward_from_chat' => Chat::class,
+    'reply_to_message' => Message::class,
+    'via_bot' => User::class,
+    'chat' => Chat::class,
+    'text' => Text::class,
+    'animation' => Animation::class,
+    'audio' => Audio::class,
+    'document' => Document::class,
+  ];
 
-  public function __construct( $data )
+  public function id()
   {
-    $this->data = $data;
+    return $this->message_id();
   }
 
-  public function getId()
-  {
-    return $this->getMessageId();
-  }
-
-  public function getMessageId()
-  {
-    return $this->data['message_id'];
-  }
-
-  public function getFrom()
-  {
-    if (!isset($this->data['from'])) return false;
-    return new User( $this->data['from'] );
-  }
-
-  public function getSenderChat()
-  {
-    if (!isset($this->data['sender_chat'])) return false;
-    return new Chat( $this->data['sender_chat'] );
-  }
-
-  public function getForwardFrom()
-  {
-    if (!isset($this->data['forward_from'])) return false;
-    return new User( $this->data['forward_from'] );
-  }
-
-  public function getForwardFromChat()
-  {
-    if (!isset($this->data['forward_from_chat'])) return false;
-    return new Chat( $this->data['forward_from_chat'] );
-  }
-
-  public function getReplyToMessage()
-  {
-    if (!isset($this->data['reply_to_message'])) return false;
-    return new Message( $this->data['reply_to_message']);
-  }
-
-  public function getViaBot()
-  {
-    if (!isset($this->data['via_bot'])) return false;
-    return new User( $this->data['via_bot']);
-  }
-
-  public function getDate()
-  {
-    return $this->data['date'];
-  }
-
-  public function getEditDate()
-  {
-    return $this->data['edit_date'];
-  }
-
-  public function getChat()
-  {
-    if (!isset($this->data['chat'])) return false;
-    return new Chat( $this->data['chat']);
-  }
-
-  public function getText()
-  {
-    if (!isset($this->data['text'])) return false;
-    return new Text($this->data['text']);
-  }
-
-  public function getAnimation()
-  {
-    if (!isset($this->data['animation'])) return false;
-    return new Animation( $this->data['animation']);
-  }
-
-  public function getAudio()
-  {
-    if (!isset($this->data['audio'])) return false;
-    return new Audio( $this->data['audio']);
-  }
-
-  public function getDocument()
-  {
-    if (!isset($this->data['document'])) return false;
-    return new Document( $this->data['document']);
-  }
-
-  public function getEntities()
+  public function entities()
   {
     if (!isset($this->data['entities'])) return false;
+    if (isset($this->cache['entities'])) return $this->cache['entities'];
     $result = [];
     foreach ($this->data['entities'] as $entity)
     {
       $result[] = new Entity($entity);
     }
-    return $result;
+    return $this->cache['entities'] = $result;
   }
 
 }

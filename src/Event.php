@@ -105,7 +105,7 @@ class Event
     ];
   }
 
-  public function getMessage()
+  public function message()
   {
     return new Message( $this->data['message'] );
   }

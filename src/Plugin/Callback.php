@@ -29,16 +29,10 @@ class Callback extends Plugin
   public function onPublicText( Event $event )
   {
     $trigger = strtolower( $this->getOption('trigger') );
+    if ($event->message()->text()->trigger() !== $trigger) return;
 
-    $text = $event->getMessageText();
-    $text = preg_split('/\s+/', $text, -1, PREG_SPLIT_NO_EMPTY);
-
-    // if trigger exists, and it matches one of versions of triggers...
-    if (isset($text[0]) && in_array( strtolower($text[0]), [ "!$trigger", "/$trigger" ] )  )
-    {
-      // process callback and return it's result
-      return call_user_func( $this->getOption('callback'), $event );
-    }
+    // process callback and return it's result
+    return call_user_func( $this->getOption('callback'), $event );
   }
 
 }

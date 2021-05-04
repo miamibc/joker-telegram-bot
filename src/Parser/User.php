@@ -7,27 +7,29 @@
 
 namespace Joker\Parser;
 
-class User
+use Joker\Database\Sqlite;
+
+/**
+ * @method integer id()
+ * @method string username()
+ * @method string is_bot()
+ * @method string language_code()
+ */
+class User extends Base
 {
 
-  private $data = [];
+  use Sqlite;
 
-  public function __construct( $data )
-  {
-    $this->data = $data;
-  }
+  protected $wrapper = [
+
+  ];
 
   public function __toString()
   {
-    return $this->getName() . '';
+    return $this->name().'';
   }
 
-  public function getId()
-  {
-    return $this->data['id'];
-  }
-
-  public function getName()
+  public function name()
   {
     if (isset($this->data['first_name'], $this->data['last_name']))
       return implode(" ", [$this->data['first_name'], $this->data['last_name']]);
@@ -36,21 +38,6 @@ class User
     if (isset($this->data['username']))
       return $this->data['username'];
     return "Unknown";
-  }
-
-  public function getUsername()
-  {
-    return $this->data['username'] ?? false;
-  }
-
-  public function isBot()
-  {
-    return $this->data['is_bot'] ?? false;
-  }
-
-  public function getLanguageCode()
-  {
-    return $this->data['language_code'] ?? false;
   }
 
 }

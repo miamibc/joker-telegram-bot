@@ -29,13 +29,11 @@ class Corona extends Plugin
 
   public function onPublicText( Event $event )
   {
+    $text = $event->message()->text();
+    if ($text->trigger() !== 'twitch') return;
 
-    $text = $event->getMessageText();
-
-    if (!preg_match('@^(/corona|!corona)\b(.*)?$@ui', $text, $matches)) return;
-
-    $trigger = trim( $matches[1] );
-    $query   = trim( $matches[2] );
+    $trigger = $text->trigger();
+    $query   = $text->token(1);
 
     if (empty( $query ))
     {
