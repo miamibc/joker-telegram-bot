@@ -74,7 +74,7 @@ class Message extends Base
     $result = [];
     foreach ($this->data['entities'] as $entity)
     {
-      $result[] = new Entity($entity);
+      $result[] = new MessageEntity($entity);
     }
     return $this->cache['entities'] = $result;
   }
