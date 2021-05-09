@@ -41,15 +41,15 @@ class Base
     // wrap and save to cache
     $wrapper = $this->wrapper[$key];
     $data = $this->data[$key];
-    $result = [];
 
     // data is sequental array, result will be array of wrapped elements
     if (is_array( $data ) && array_keys($data) === range(0, count($data) - 1))
     {
-      foreach ($data as $item)
-        $result[] = new $wrapper($item);
+      $result = array_map(function ( $item ) use ($wrapper){
+        return new $wrapper( $item );
+      }, $data);
     }
-    // all other types of daata, wrap and return
+    // all other types of data, just wrap it
     else
     {
       $result = new $wrapper($data);
