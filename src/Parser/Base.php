@@ -40,7 +40,21 @@ class Base
 
     // wrap and save to cache
     $wrapper = $this->wrapper[$key];
-    return $this->cache[$key] = new $wrapper($this->data[$key]);
+    $data = $this->data[$key];
+    $result = [];
+
+    // data is sequental array, result will be array of wrapped elements
+    if (is_array( $data ) && array_keys($data) === range(0, count($data) - 1))
+    {
+      foreach ($data as $item)
+        $result[] = new $wrapper($item);
+    }
+    // all other types of daata, wrap and return
+    else
+    {
+      $result = new $wrapper($data);
+    }
+    return $this->cache[$key] = $result;
   }
 
   public function getData()

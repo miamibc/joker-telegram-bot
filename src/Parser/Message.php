@@ -20,6 +20,7 @@ namespace Joker\Parser;
  * @method string edit_date()
  * @method Chat chat()
  * @method Text text()
+ * @method MessageEntity[] entities()
  * @method Animation animation()
  * @method Audio audio()
  * @method Document document()
@@ -47,6 +48,7 @@ class Message extends Base
     'via_bot' => User::class,
     'chat' => Chat::class,
     'text' => Text::class,
+    'entities' => MessageEntity::class,
     'animation' => Animation::class,
     'audio' => Audio::class,
     'document' => Document::class,
@@ -65,18 +67,6 @@ class Message extends Base
   public function id()
   {
     return $this->message_id();
-  }
-
-  public function entities()
-  {
-    if (!isset($this->data['entities'])) return false;
-    if (isset($this->cache['entities'])) return $this->cache['entities'];
-    $result = [];
-    foreach ($this->data['entities'] as $entity)
-    {
-      $result[] = new MessageEntity($entity);
-    }
-    return $this->cache['entities'] = $result;
   }
 
 }
