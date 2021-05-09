@@ -1,5 +1,6 @@
 <?php
 /**
+ * Telegram Bot API parser for Joker
  *
  * @package joker-telegram-bot
  * @author Sergei Miami <miami@blackcrystal.net>

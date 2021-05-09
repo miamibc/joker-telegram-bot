@@ -1,5 +1,6 @@
 <?php
 /**
+ * Telegram Bot API parser for Joker
  *
  * @package joker-telegram-bot
  * @author Sergei Miami <miami@blackcrystal.net>
@@ -8,7 +9,7 @@
 namespace Joker\Parser;
 
 /**
- * @method int message_id()
+ * @method integer message_id()
  * @method User from()
  * @method Chat sender_chat()
  * @method User forward_from()
@@ -22,6 +23,17 @@ namespace Joker\Parser;
  * @method Animation animation()
  * @method Audio audio()
  * @method Document document()
+ * @method Sticker sticker()
+ * @method Video video()
+ * @method Voice voice()
+ * @method string caption()
+ * @method Contact contact()
+ * @method Dice dice()
+ * @method Game game()
+ * @method Poll poll()
+ * @method Venue venue()
+ * @method Location location()
+ * @method User left_chat_member()
  */
 class Message extends Base
 {
@@ -38,6 +50,16 @@ class Message extends Base
     'animation' => Animation::class,
     'audio' => Audio::class,
     'document' => Document::class,
+    'sticker' => Sticker::class,
+    'video' => Video::class,
+    'voice' => Voice::class,
+    'contact' => Contact::class,
+    'dice' => Dice::class,
+    'game' => Game::class,
+    'poll' => Poll::class,
+    'venue' => Venue::class,
+    'location' => Location::class,
+    'left_chat_member' => User::class,
   ];
 
   public function id()
