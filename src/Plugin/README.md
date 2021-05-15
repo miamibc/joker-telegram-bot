@@ -5,6 +5,7 @@ Here you can find library of plugins we use for our own purpose. They are probab
 
 Plugins are well documented in inline comments, some interesting details will be added here. 
 
+* [Activity Plugin](#activity-plugin)
 * [Bash Plugin](#bash-plugin)
 * [Beer Plugin](#beer-plugin)
 * [Callback Plugin](#callback-plugin)
@@ -24,6 +25,20 @@ Plugins are well documented in inline comments, some interesting details will be
 * [Sticker Plugin](#sticker-plugin)
 * [Temp Plugin](#temp-plugin)
 * [Twitch Plugin](#twitch-plugin)
+
+Activity Plugin
+-----------
+
+Stores user activity from messages containing `from` field. Data will be stored in sqlite database, table `user`.
+
+- User ID
+- Username
+- Full name
+- Last message time
+- Last message ID
+
+Configuration options:
+- `sync_time` (integer, default 60) - seconds, how often to write data to database
 
 Bash Plugin
 -----------
