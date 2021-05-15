@@ -15,13 +15,8 @@ class TwitchTest extends TestCase
 
   public function test()
   {
-
     $plugin = new Twitch();
-
     $result = $plugin->searchChannels('quake');
-
-    $this->assertSame("", $result);
-
-
+    $this->assertNotEmpty( $result);
   }
 }

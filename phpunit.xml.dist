@@ -12,6 +12,9 @@
         <testsuite name="Plugin">
             <directory suffix="Test.php">./tests/Plugin</directory>
         </testsuite>
+        <testsuite name="Database">
+            <directory suffix="Test.php">./tests/Database</directory>
+        </testsuite>
     </testsuites>
     <coverage processUncoveredFiles="true">
         <include>
