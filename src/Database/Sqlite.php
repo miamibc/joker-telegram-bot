@@ -40,9 +40,16 @@ trait Sqlite
   public function saveCustom()
   {
     if (!is_null($this->sqlite_cache))
-    {
       R::store($this->sqlite_cache);
-    }
+
+    return $this;
+  }
+
+  public function cleanCustom()
+  {
+    if (!is_null($this->sqlite_cache))
+      R::trash($this->sqlite_cache);
+
     return $this;
   }
 

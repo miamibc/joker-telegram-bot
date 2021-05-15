@@ -20,6 +20,7 @@ class SqliteTest extends TestCase
     $this->assertInstanceOf( \RedBeanPHP\OODBBean::class , $redis = $this->getCustom() );
     $redis->test = 'ok';
     $this->assertInstanceOf( self::class, $this->saveCustom() );
+    $this->assertInstanceOf( self::class, $this->cleanCustom() );
   }
 
   private function id()

@@ -19,8 +19,8 @@ class RedisTest extends TestCase
   {
     $this->assertInstanceOf( \stdClass::class, $redis = $this->getRedis() );
     $redis->test = 'ok';
-    $this->assertInstanceOf( RedisTest::class, $this->saveRedis() );
-    $this->assertInstanceOf( RedisTest::class, $this->cleanRedis() );
+    $this->assertInstanceOf( self::class, $this->saveRedis() );
+    $this->assertInstanceOf( self::class, $this->cleanRedis() );
   }
 
   private function id()
