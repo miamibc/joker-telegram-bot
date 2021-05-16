@@ -26,25 +26,21 @@ class Currency extends Plugin
   public function onPublicText( Event $event )
   {
 
-    $text = $event->getMessageText();
+    $text = $event->message()->text();
 
     // trigger without parameters, show help message
-    if (preg_match('@^(/currency|!currency)$@ui', $text, $matches))
+    if ($text->trigger() !== 'currency') return;
+
+    // token 1 and 2 required. If not set, answer with help message
+    if (!$text->token(2,1))
     {
-      $trigger = trim( $matches[1] );
-      $event->answerMessage("Usage: $trigger [from] [to]\nExample: $trigger USD BTC");
+      $event->answerMessage("Usage: /currency [from] [to]\nExample: /currency EUR USD");
       return false;
     }
 
-    // must be trigger with two parameters
-    if (!preg_match('@^(/currency|!currency) (\w+) (\w+)$@ui', $text, $matches)) return;
-
-    $trigger = trim( $matches[1] );
-    $from    = strtoupper( trim( $matches[2] ) );
-    $to      = strtoupper( trim( $matches[3] ) );
-
+    $from = strtoupper( $text->token(1,1) );
+    $to   = strtoupper( $text->token(2,1) );
     $result = $this->getExchangeRate($from,$to);
-
     $event->answerMessage( $result ? "1 $from = $result $to" : "Can't find exchange rate from $from to $to");
     return false;
   }

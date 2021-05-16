@@ -22,32 +22,26 @@ class Temp extends Plugin
 
   const API_URL = 'http://api.openweathermap.org/data/2.5/weather';
 
-  private $last_query = [];
-
   public function onPublicText( Event $event )
   {
 
-    if (!$api_key = $this->getOption('api_key'))
-    {
-      $event->answerMessage("!temp: Openweather API key is required for this plugin (api_key)");
-      return false;
-    }
+    // process only if api_key defined
+    if (!$api_key = $this->getOption('api_key')) return;
 
-    $text = $event->getMessageText();
-    $author = $event->getMessageFromId();
+    // process only trigger messages
+    $trigger = $event->message()->text()->trigger();
 
-    if (!preg_match('@^(/temp|!temp|!еуьз|/еуьз)\b(.*)?$@ui', $text, $matches)) return;
+    if (!in_array( $trigger , ['temp', 'еуьз'])) return;
 
-    $trigger = '!temp'; // mb_strtolower( trim( $matches[1] ));
-    $query   = mb_strtolower( trim( $matches[2] ));
+    $author  = $event->message()->from();
+    $custom  = $author->getCustom();
 
-    // if no query, try to recall last one or get default
-    if (!$query)
-    {
-      $query = isset($this->last_query[$author])
-             ? $this->last_query[$author]
-             : $this->getOption('default', 'tallinn');
-    }
+    // try to get query from token1
+    if (!$query = $event->message()->text()->token(1))
+      // try to get query from database
+      if (!$query = $custom->temp_query)
+        // get default from options
+        $query = $this->getOption('default', 'tallinn');
 
     // virtual locations
     $locations = [
@@ -65,22 +59,23 @@ class Temp extends Plugin
       $query = $locations[$query];
     }
 
-    // coordinates,or place name?
+    // by coordinate
     if ( preg_match('@^(-?[\d.]+)[, ]+(-?[\d.]+)$@', $query, $matches) )
     {
       $params = [
         'lat'   => $matches[1],
         'lon'   => $matches[2],
         'units' => 'metric',
-        'APPID' => $this->getOption('api_key'),
+        'APPID' => $api_key,
       ];
     }
+    // by country name
     else
     {
       $params = [
         'q'     => $query,
         'units' => 'metric',
-        'APPID' => $this->getOption('api_key'),
+        'APPID' => $api_key,
       ];
     }
 
@@ -88,7 +83,7 @@ class Temp extends Plugin
 
     if (!$json = @file_get_contents( $url ))
     {
-      $event->answerMessage( "$trigger: oops... can't find thermometer there :/" );
+      $event->answerMessage( "!$trigger: oops... can't find thermometer there :/" );
       return false;
     }
 
@@ -96,12 +91,13 @@ class Temp extends Plugin
 
     if (!isset( $data['main']['temp'], $data['name'] ))
     {
-      $event->answerMessage( "$trigger: uh... sorry, thermometer is broken there" );
+      $event->answerMessage( "!$trigger: uh... sorry, thermometer is broken there" );
       return false;
     }
 
     // got result! remember last query
-    $this->last_query[$author] = $query;
+    $custom->temp_query = $query;
+    $author->saveCustom();
 
     /* example
       {
@@ -169,7 +165,7 @@ class Temp extends Plugin
       ? "{$data['name']}, {$data['sys']['country']}"
       : "this place";
 
-    $message = "$trigger: ". trim( implode(', ', $result) ) . " in {$place}";
+    $message = "!$trigger: ". trim( implode(', ', $result) ) . " in {$place}";
 
     $event->answerMessage( $message );
     return false;

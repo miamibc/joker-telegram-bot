@@ -17,30 +17,23 @@ class Sticker extends Plugin
 
   public function onPrivateSticker( Event $event )
   {
-    $data = $event->getData();
 
-    // check requirements
-    if (!isset(
-      $data['message']['sticker']['file_id'],
-      $data['message']['sticker']['set_name']
-    )) return;
-
-    $file_id = $data['message']['sticker']['file_id'];
+    $sticker = $event->message()->sticker();
 
     // request stickers in this pack
-    $result = $event->customRequest('getStickerSet', ['name'=>$data['message']['sticker']['set_name']]);
+    $result = $event->customRequest('getStickerSet', ['name'=> $sticker->set_name()]);
 
     // error or no stickers in set?
     if (!isset($result['stickers'])) return;
 
     // collect stickers from pack but not same sticker
-    $stickers = [];
-    foreach ($result['stickers'] as $sticker)
-      if ($stickers['file_id'] !== $file_id)
-        $stickers[] = $sticker['file_id'];
+    $ids = [];
+    foreach ($result['stickers'] as $item)
+      if ($item['file_id'] !== $sticker->file_id())
+        $ids[] = $item['file_id'];
 
     // random sticker from collected, or same if nothing there
-    $answer = count($stickers) ? $stickers[ mt_rand(0, count($stickers)-1) ] : $file_id;
+    $answer = count($ids) ? $ids[ mt_rand(0, count($ids)-1) ] : $sticker->file_id();
     $event->answerSticker( $answer );
     return false;
 

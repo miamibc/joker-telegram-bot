@@ -33,7 +33,7 @@ class Log extends Plugin
 
     if ($this->getOption('screen'))
     {
-      echo PHP_EOL . "LogPlugin: " . $json . PHP_EOL;
+      echo $json.PHP_EOL;
     }
 
     if ($this->getOption('file'))

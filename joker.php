@@ -14,6 +14,7 @@ $bot->plug([
   // these plugins never stops processing of other plugins
   // (never returns false or Joker\Bot::PLUGIN_BREAK)
   new Joker\Plugin\Log( ['file' =>'data/log/log.json'] ),
+  new Joker\Plugin\Activity( ['sync_time' => 60] ),
   new Joker\Plugin\Forwarder( [
     ['from' => -343502518, 'text' => ['*покуп*'], 'to' => -343502518, ],
     ['from' => -343502518, 'text' => ['*прода*', '*сдаё*'], 'to' => -343502518, 'forward' => false ],
@@ -29,7 +30,7 @@ $bot->plug([
   new Joker\Plugin\Cowsay( ['bg_color' =>'#222222','text_color' =>'#dadada']),
   new Joker\Plugin\Hello(),
   new Joker\Plugin\Sticker(),
-  new Joker\Plugin\Carma(['clean_time' => 10,'power_time' => 600,'start_carma' => 10]),
+  new Joker\Plugin\Carma(['clean_time' => false, 'power_time' => 600,'start_carma' => 10]),
   new Joker\Plugin\Quote( ['dir' =>'data/jokes'] ),
   new Joker\Plugin\Corona( ['file' => 'data/corona/today.csv', 'update_hours'=>3]),
   new Joker\Plugin\Currency(),

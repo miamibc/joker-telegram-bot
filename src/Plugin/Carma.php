@@ -19,12 +19,13 @@ use Joker\Event;
 use Joker\Parser\Message;
 use Joker\Parser\User;
 use Joker\Plugin;
+use RedbeanPHP\R;
 
 class Carma extends Plugin
 {
 
   protected
-    $messages = [], // array with messages that must be cleaned
+    $messages_to_clean = [], // array with messages that must be cleaned
     $users = [];    // array of username/user
 
   /**
@@ -37,26 +38,28 @@ class Carma extends Plugin
   public function onPublicText( Event $event )
   {
 
-    $message = $event->getMessage();
+    $message = $event->message();
+    $userfrom = $message->from();
 
-    // make local database of usernames/users
-    if ($username = $message->getFrom()->getUsername())
-      $this->users[ "@$username" ] = $message->getFrom();
+    // increment rating, 1 per megabyte of text
+    $rating = $this->getRating( $userfrom );
+    $userfrom->getCustom()->carma_rating = $rating + strlen( $message->text() ) / 1024;
+    $userfrom->saveCustom();
 
     // do not process, if trigger is not carma
-    if ($message->getText()->trigger() !== 'carma') return;
+    if ($message->text()->trigger() !== 'carma') return;
 
-    echo $message->getText()->token(1);
     // !carma debug, lists all registered users
-    if ($message->getText()->token(1) === 'debug')
+    if ($message->text()->token(1) === 'debug')
     {
       $answer = ['Debug carma info:'];
       $sum = array_sum( array_map(function ($user) use (&$answer){
-        $rating = round( $result = $this->getRating( $user ), 2);
-        $power  = round( $this->getPower( $user ), 1 );
-        $answer[] = "- $user has $rating carma and $power power";
+        $rating = round( $result = $user->carma_rating ?? $this->getOption('start_carma', 10) , 2);
+        $power  = $user->carma_updated ? (time() - $user->carma_updated) / $this->getOption('power_time', 600) : 1.0;
+        $name   = $user->name ?? $user->username;
+        $answer[] = "- $name has $rating carma and $power power";
         return $result;
-      }, $this->users));
+      }, R::findAll('user', ' ORDER BY carma_rating DESC')));
       $answer[] = "Total: $sum";
       $event->answerMessage( trim( implode(PHP_EOL, $answer)) );
       return false;
@@ -66,27 +69,33 @@ class Carma extends Plugin
     $answer = [];
 
     // if message has entities, then search them in known users database
-    if ($entities = $message->getEntities())
+    if ($entities = $message->entities())
     {
       // raw text to parse entities from
-      $text = $message->getText() .'';
+      $text = $message->text().'';
 
-      $answer = array_filter( array_map(function ($entity) use ($text) {
-        if ($entity->getType() !== 'mention') return;
-        $username = substr( $text, $entity->getOffset(), $entity->getLength());
-        if (!isset($this->users[$username])) return;
-        $user = $this->users[ $username ];
-        $rating = round( $result = $this->getRating( $user ), 2);
-        $power  = round( $this->getPower( $user ), 1 );
-        return"- $user has $rating carma and $power power";
-      }, $entities) );
+      // extract usernames from entities
+      $usernames = array_filter( array_map(function ($entity) use ($text) {
+        if ($entity->type() !== 'mention') return;
+        $username = substr( $text, $entity->offset(), $entity->length());
+        return substr( $username, 1);
+      }, $entities));
+
+      // make answer from request to database
+      foreach (R::find('user', ' username IN (' . R::genSlots( $usernames ) . ') ORDER BY carma_rating DESC ', $usernames) as $user)
+      {
+        $rating = round( $result = $user->carma_rating ?? $this->getOption('start_carma', 10) , 2);
+        $power  = round( $user->carma_updated ? (time() - $user->carma_updated) / $this->getOption('power_time', 600) : 1.0 , 2);
+        $name   = $user->name ?? $user->username;
+        $answer[] = "- $name has $rating carma and $power power";
+      }
 
     }
 
     // if no answer yet, add current user's carma
     if (!count($answer))
     {
-      $user   = $message->getFrom();
+      $user   = $message->from();
       $rating = round( $this->getRating( $user ), 2 );
       $power  = round( $this->getPower( $user ), 1 );
       $answer[] = "$user, you have $rating carma available, your power is $power";
@@ -108,14 +117,12 @@ class Carma extends Plugin
    */
   public function onEmpty( Event $event )
   {
-    if (!$this->getOption('clean_time', 10)) return;
-
-    foreach ($this->messages as $key => $message) /** @var Message $message */
+    foreach ($this->messages_to_clean as $key => $message) /** @var Message $message */
     {
-      if (time() >= $message->getDate() + $this->getOption('clean_time', 10))
+      if (time() >= $message->date() + $this->getOption('clean_time',10))
       {
-        $event->getBot()->deleteMessage($message->getChat()->getId(),$message->getMessageId());
-        unset($this->messages[$key]);
+        $event->getBot()->deleteMessage($message->chat()->id(),$message->message_id());
+        unset($this->messages_to_clean[$key]);
       }
     }
   }
@@ -128,12 +135,12 @@ class Carma extends Plugin
    */
   public function onPublicTextReply( Event $event )
   {
-    $message  = $event->getMessage();
-    $userfrom = $message->getFrom();
-    $userto   = $message->getReplyToMessage()->getFrom();
+    $message  = $event->message();
+    $userfrom = $message->from();
+    $userto   = $message->reply_to_message()->from();
 
     // cannot share carma with yourself
-    if ( $userfrom->getId() === $userto->getId() ) return false;
+    if ($userfrom->id() === $userto->id() ) return false;
 
     // cannot share carma with bot
     if ( $userfrom->isBot() || $userto->isBot() ) return false;
@@ -195,7 +202,14 @@ class Carma extends Plugin
       '%newto%'   => round( $r['to']['new'], 2),
     ]);
 
-    $this->messages[] = $event->answerMessage( $answer );
+    $answer = $event->answerMessage( $answer );
+
+    // if clean_time option is set, put to array
+    if ($this->getOption('clean_time'))
+    {
+      $this->messages_to_clean[] = $answer;
+    }
+
     return false;
   }
 
@@ -207,17 +221,12 @@ class Carma extends Plugin
    */
   private function getPower(User $user ): float
   {
-    $file = "data/carma/" . $user->getId();
-
-    // if no rating yet - maximum power
-    if (!file_exists( $file )) return 1.0;
-
-    // need to clear stat cache for more accurate result
-    clearstatcache( true, $file );
-
-    // 0 seconds = 0, ..., [power_time] seconds = 1
-    $power = ( time() - filemtime( $file ) ) / $this->getOption('power_time', 600);
-    return $power>1 ? 1.0 : $power;
+    $time = $user->getCustom()->carma_updated;
+    $power = is_null($time)
+      ? 1.0
+      : (time() - $time) / $this->getOption('power_time', 600)
+    ;
+    return $power > 1 ? 1.0 : $power;
   }
 
   /**
@@ -228,17 +237,25 @@ class Carma extends Plugin
    */
   private function getRating( User $user ) : float
   {
-    $file = "data/carma/" . $user->getId();
-    return file_exists( $file )
-      ? (float) file_get_contents( $file )
-      : (float) $this->getOption('start_carma', 10);
+    $rating = $user->getCustom()->carma_rating;
+    return is_null($rating)
+      ? (float) $this->getOption('start_carma', 10)
+      : (float) $rating;
   }
 
+  /**
+   * Save rating with updated_date
+   * @param User $user
+   * @param $value
+   *
+   * @throws \RedBeanPHP\RedException\SQL
+   */
   private function setRating( User $user, $value )
   {
-    $file = "data/carma/" . $user->getId();
-    if (!file_exists( $dir = dirname( $file ))) mkdir( $dir );
-    file_put_contents( $file , $value);
+    $data = $user->getCustom();
+    $data->carma_rating = $value;
+    $data->carma_updated = time();
+    $user->saveCustom();
   }
 
 }
