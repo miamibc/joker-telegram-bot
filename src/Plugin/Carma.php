@@ -25,7 +25,7 @@ class Carma extends Plugin
 {
 
   protected
-    $messages = [], // array with messages that must be cleaned
+    $messages_to_clean = [], // array with messages that must be cleaned
     $users = [];    // array of username/user
 
   /**
@@ -41,13 +41,9 @@ class Carma extends Plugin
     $message = $event->message();
     $userfrom = $message->from();
 
-    // make local database of usernames/users
-    if ($username = $userfrom->username())
-      $this->users[ "@$username" ] = $userfrom;
-
     // increment rating, 1 per megabyte of text
     $rating = $this->getRating( $userfrom );
-    $userfrom->getCustom()->carma_rating = $rating + strlen( $message->text() ) / 1000000;
+    $userfrom->getCustom()->carma_rating = $rating + strlen( $message->text() ) / 1024;
     $userfrom->saveCustom();
 
     // do not process, if trigger is not carma
@@ -58,11 +54,12 @@ class Carma extends Plugin
     {
       $answer = ['Debug carma info:'];
       $sum = array_sum( array_map(function ($user) use (&$answer){
-        $rating = round( $result = $this->getRating( $user ), 2);
-        $power  = round( $this->getPower( $user ), 1 );
-        $answer[] = "- $user has $rating carma and $power power";
+        $rating = round( $result = $user->carma_rating ?? $this->getOption('start_carma', 10) , 2);
+        $power  = $user->carma_updated ? (time() - $user->carma_updated) / $this->getOption('power_time', 600) : 1.0;
+        $name   = $user->name ?? $user->username;
+        $answer[] = "- $name has $rating carma and $power power";
         return $result;
-      }, $this->users));
+      }, R::findAll('user', ' ORDER BY carma_rating DESC')));
       $answer[] = "Total: $sum";
       $event->answerMessage( trim( implode(PHP_EOL, $answer)) );
       return false;
@@ -77,15 +74,21 @@ class Carma extends Plugin
       // raw text to parse entities from
       $text = $message->text().'';
 
-      $answer = array_filter( array_map(function ($entity) use ($text) {
+      // extract usernames from entities
+      $usernames = array_filter( array_map(function ($entity) use ($text) {
         if ($entity->type() !== 'mention') return;
         $username = substr( $text, $entity->offset(), $entity->length());
-        if (!isset($this->users[$username])) return;
-        $user = $this->users[ $username ];
-        $rating = round( $result = $this->getRating( $user ), 2);
-        $power  = round( $this->getPower( $user ), 1 );
-        return"- $user has $rating carma and $power power";
-      }, $entities) );
+        return substr( $username, 1);
+      }, $entities));
+
+      // make answer from request to database
+      foreach (R::find('user', ' username IN (' . R::genSlots( $usernames ) . ') ORDER BY carma_rating DESC ', $usernames) as $user)
+      {
+        $rating = round( $result = $user->carma_rating ?? $this->getOption('start_carma', 10) , 2);
+        $power  = round( $user->carma_updated ? (time() - $user->carma_updated) / $this->getOption('power_time', 600) : 1.0 , 2);
+        $name   = $user->name ?? $user->username;
+        $answer[] = "- $name has $rating carma and $power power";
+      }
 
     }
 
@@ -114,14 +117,12 @@ class Carma extends Plugin
    */
   public function onEmpty( Event $event )
   {
-    if (!$this->getOption('clean_time', 10)) return;
-
-    foreach ($this->messages as $key => $message) /** @var Message $message */
+    foreach ($this->messages_to_clean as $key => $message) /** @var Message $message */
     {
-      if (time() >= $message->date() + $this->getOption('clean_time', 10))
+      if (time() >= $message->date() + $this->getOption('clean_time',10))
       {
         $event->getBot()->deleteMessage($message->chat()->id(),$message->message_id());
-        unset($this->messages[$key]);
+        unset($this->messages_to_clean[$key]);
       }
     }
   }
@@ -201,7 +202,14 @@ class Carma extends Plugin
       '%newto%'   => round( $r['to']['new'], 2),
     ]);
 
-    $this->messages[] = $event->answerMessage( $answer );
+    $answer = $event->answerMessage( $answer );
+
+    // if clean_time option is set, put to array
+    if ($this->getOption('clean_time'))
+    {
+      $this->messages_to_clean[] = $answer;
+    }
+
     return false;
   }
 
@@ -229,7 +237,6 @@ class Carma extends Plugin
    */
   private function getRating( User $user ) : float
   {
-
     $rating = $user->getCustom()->carma_rating;
     return is_null($rating)
       ? (float) $this->getOption('start_carma', 10)
@@ -245,7 +252,6 @@ class Carma extends Plugin
    */
   private function setRating( User $user, $value )
   {
-
     $data = $user->getCustom();
     $data->carma_rating = $value;
     $data->carma_updated = time();

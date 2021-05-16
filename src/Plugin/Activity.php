@@ -22,9 +22,9 @@ class Activity extends Plugin
   /** @var integer */
   private $sync;
 
-  public function onMessage( Event $event)
+  public function onPublicMessage( Event $event)
   {
-    // add messages to the pool, if it has from field
+    // add messages to the pool
     $this->pool[] = $event->message();
   }
 
@@ -56,9 +56,18 @@ class Activity extends Plugin
       $custom->username         = $user->username();
       $custom->name             = $user->name();
       $custom->last_messsage_at = $message->date();
-      $custom->last_messsage_id = $message->message_id();
+      $custom->last_messsage_id = $message->id();
 
-      // save custome data to sqlite
+      if ($message->chat())
+        $custom->last_messsage_chat_id = $message->chat()->id();
+
+      if ($message->text())
+        $custom->all_text_length = $custom->all_text_length + strlen( $message->text().'' );
+
+      if ($message->caption())
+        $custom->all_text_length = $custom->all_text_length + strlen( $message->caption().'' );
+
+      // save customer data to sqlite
       $user->saveCustom();
     }
 
