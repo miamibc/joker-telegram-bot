@@ -73,9 +73,9 @@ class Event
         isset($this->data['message']['chat']['type'])
         && in_array( $this->data['message']['chat']['type'], ['private'])
       ),
-      'public'  => !$private,
-      'group'   => isset($this->data['message']['chat']['type'])
-                   && in_array( $this->data['message']['chat']['type'], ['group', 'supergroup', 'channel']),
+      'public'    => !$private,
+      'group'     => isset($this->data['message']['chat']['type'])
+                  && in_array( $this->data['message']['chat']['type'], ['group', 'supergroup', 'channel']),
       'sticker'   => isset($this->data['message']['sticker']),
       'entities'  => isset($this->data['message']['entities']),
       'animation' => isset($this->data['message']['animation']),
@@ -96,7 +96,8 @@ class Event
                   || isset($this->data['message']['forward_date']),
       'poll'      => isset($this->data['message']['poll']),
       'edit'      => isset($this->data['message']['edit_date']),
-      'location'  => isset($this->data['message']['venue'])|| isset($this->data['message']['location'])   ,
+      'location'  => isset($this->data['message']['venue'])
+                  || isset($this->data['message']['location']),
       'join'      => isset($this->data['message']['new_chat_members']),
       'leave'     => isset($this->data['message']['left_chat_member']),
       'pin'       => isset($this->data['message']['pinned_message']),
@@ -107,6 +108,7 @@ class Event
 
   public function message()
   {
+    if (!isset($this->data['message'])) return false;
     return new Message( $this->data['message'] );
   }
 
@@ -120,10 +122,6 @@ class Event
     return trim($text);
   }
 
-  public function getMessageTextParser()
-  {
-    return new MessageTextParser( $this->getMessageText() );
-  }
 
   public function getMessageId()
   {
