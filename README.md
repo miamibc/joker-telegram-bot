@@ -72,7 +72,7 @@ To add plugin, create new class extending `Joker\Plugin` and connect it with `$j
 - `Public` - public requests
 - `Private` - non-public requests
 - `Group` - group, supergroup and channel requests
-- `Message` - request contains message section, this is always true
+- `Message` - all requests contains message, except `Empty`.  
 - `Sticker` - stickers or replies with sticker
 - `Text` - has text
 - `Photo` - has photo
@@ -94,7 +94,7 @@ To add plugin, create new class extending `Joker\Plugin` and connect it with `$j
 - `Leave` - user leaves the chat
 - `Pin` - new pinned message
 - `Entities` - has entities attached  
-- `Empty` - empty requests
+- `Empty` - empty requests, you can use this for processing timers
 
 For example, `onPrivateSticker` or `onStickerPrivate` will be called when both `sticker` and `private` is found in request.
 

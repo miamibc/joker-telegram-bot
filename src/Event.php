@@ -70,9 +70,9 @@ class Event
   {
     return [
       'private' => $private = (
-        isset($this->data['message']['chat']['type'])
-        && in_array( $this->data['message']['chat']['type'], ['private'])
-      ),
+                     isset($this->data['message']['chat']['type'])
+                     && in_array( $this->data['message']['chat']['type'], ['private'])
+                  ),
       'public'    => !$private,
       'group'     => isset($this->data['message']['chat']['type'])
                   && in_array( $this->data['message']['chat']['type'], ['group', 'supergroup', 'channel']),
@@ -106,6 +106,7 @@ class Event
       'pin'       => isset($this->data['message']['pinned_message']),
       'message'   => isset($this->data['message']),
       'empty'     => empty($this->data),
+      'timer'     => empty($this->data),
     ];
   }
 
