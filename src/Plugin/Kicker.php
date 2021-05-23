@@ -1,5 +1,8 @@
 <?php
 /**
+ * Kicker plugin for Joker Telegram Bot
+ *
+ * Checks joined person and kicks if emoji found in nickname.
  *
  * @package joker-telegram-bot
  * @author Sergei Miami <miami@blackcrystal.net>
@@ -21,11 +24,19 @@ class Kicker extends Plugin
     // check name for emoji
     if (self::containsEmoji($user->name()))
     {
+
+      // quote from Predator
+      $event->answerMessage('If it bleeds, we can kill it ;p');
+
       // kick user
       $event->customRequest('kickChatMember',[
         'chat_id' => $event->message()->chat()->id(),
         'user_id' => $user->id(),
       ]);
+
+      // delete message about join
+      $event->deleteMessage();
+
     }
 
   }
