@@ -34,8 +34,6 @@ class Kicker extends Plugin
       // delete message about join
       $event->deleteMessage();
 
-
-
     }
 
   }
