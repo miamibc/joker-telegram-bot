@@ -20,14 +20,9 @@ class Hello extends Plugin
   public function onPrivateText( Event $event )
   {
 
-    if (!preg_match('@^(/start|hello|hi|yo)\b@ui', $event->getMessageText())) return;
+    if (!preg_match('@^(/start|hello|hi|yo)\b@ui', $event->message()->text())) return;
 
-    $name = $event->getMessageFrom();
-
-    $greetings = [
-      "Hi, $name what's up",
-      "Nice to meet you $name. How r u?",
-    ];
+    $name = $event->message()->from()->name();
 
     $message = <<<EOF
 Hello, $name. I'm Joker, the Telegram Bot.
@@ -36,7 +31,6 @@ Born in 2001, I was entertainment chatbot written in miRCscript. Now I'm a bit n
 
 Read more: https://github.com/miamibc/joker-telegram-bot
 EOF;
-
 
     $event->answerMessage( $message );
     return false;

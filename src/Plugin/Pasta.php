@@ -22,9 +22,10 @@ class Pasta extends Plugin
   public function onPublicText( Event $event )
   {
 
-    $text = $event->getMessageText();
+    $text = $event->message()->text();
 
-    if (time() < $this->last_message + $this->getOption('minimum_time', 15*60)) return; // once in hour
+    // once in hour
+    if (time() < $this->last_message + $this->getOption('minimum_time', 60*60)) return;
 
     $answer = false;
     if (preg_match('@\b(кофе|кофеёк|кофейный)\b@ui',$text,$matches))

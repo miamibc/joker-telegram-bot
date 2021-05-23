@@ -21,7 +21,7 @@ class Beer extends Plugin
   public function onPublicText( Event $event )
   {
 
-    $text = $event->getMessageText();
+    $text = $event->message()->text();
 
     // if no trigger, skip to next plugin
     if (!preg_match('@\b(пиво|пива|пивк|пивчан)@ui',$text,$matches)) return;

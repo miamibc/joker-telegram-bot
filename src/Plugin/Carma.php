@@ -159,7 +159,7 @@ class Carma extends Plugin
     ]];
 
     // check first char, is it + or -
-    switch ( $sign = substr( $event->getMessageText(), 0, 1))
+    switch ( $sign = substr( $message->text(), 0, 1))
     {
       case '+':
         $r['fr']['new'] -= $r['to']['power']; // remove up to 1 carma from 'fr'

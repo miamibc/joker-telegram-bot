@@ -24,16 +24,14 @@ class Lurk extends Plugin
   public function onPublicText( Event $event )
   {
 
-    $text = $event->getMessageText();
+    $trigger =  $event->message()->text()->trigger();
+    if ($trigger !== 'lurk') return;
 
-    if (!preg_match('@^(/lurk|!lurk)\b(.*)?$@ui', $text, $matches)) return;
-
-    $trigger = trim( $matches[1] );
-    $query   = trim( $matches[2] );
+    $query = $event->message()->text()->token(1);
 
     if (empty( $query ))
     {
-      $event->answerMessage("$trigger usage: $trigger topic");
+      $event->answerMessage("!$trigger usage: !$trigger topic");
       return false;
     }
 
