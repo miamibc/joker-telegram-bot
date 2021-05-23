@@ -8,7 +8,6 @@
 
 namespace Joker\Parser;
 
-
 class Base
 {
 
@@ -60,6 +59,17 @@ class Base
   public function getData()
   {
     return $this->data;
+  }
+
+  /**
+   * Rewrap data into another class
+   * @param string $classname
+   *
+   * @return mixed
+   */
+  public function wrapIn( string $classname )
+  {
+    return new $classname($this->data);
   }
 
 }
