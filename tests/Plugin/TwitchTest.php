@@ -16,7 +16,7 @@ use PHPUnit\Framework\TestCase;
 class TwitchTest extends TestCase
 {
 
-  public function test()
+  public function testSearchChannels()
   {
     $plugin = new Twitch();
     $result = $plugin->searchChannels('quake');
