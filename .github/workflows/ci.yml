@@ -1,6 +1,10 @@
 name: CI
 
-on: [push]
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
 
 jobs:
   build-test:
@@ -9,7 +13,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - uses: php-actions/composer@v5
-      - uses: php-actions/phpunit@v2
         with:
           php_version: 7.4
           php_extensions: gd sockets
+      - uses: php-actions/phpunit@v2
