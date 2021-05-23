@@ -1,5 +1,8 @@
 <?php
 /**
+ * Kicker plugin for Joker Telegram Bot
+ *
+ * Checks joined person and kicks if emoji found in nickname.
  *
  * @package joker-telegram-bot
  * @author Sergei Miami <miami@blackcrystal.net>
