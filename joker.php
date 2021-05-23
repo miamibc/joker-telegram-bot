@@ -15,6 +15,7 @@ $bot->plug([
   // (never returns false or Joker\Bot::PLUGIN_BREAK)
   new Joker\Plugin\Log( ['file' =>'data/log/log.json'] ),
   new Joker\Plugin\Activity( ['sync_time' => 60] ),
+  new Joker\Plugin\Kicker(),
   new Joker\Plugin\Forwarder( [
     ['from' => -343502518, 'text' => ['*покуп*'], 'to' => -343502518, ],
     ['from' => -343502518, 'text' => ['*прода*', '*сдаё*'], 'to' => -343502518, 'forward' => false ],

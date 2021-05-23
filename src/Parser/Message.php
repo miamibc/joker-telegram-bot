@@ -34,6 +34,7 @@ namespace Joker\Parser;
  * @method Poll poll()
  * @method Venue venue()
  * @method Location location()
+ * @method User new_chat_member()
  * @method User left_chat_member()
  */
 class Message extends Base
@@ -61,6 +62,7 @@ class Message extends Base
     'poll' => Poll::class,
     'venue' => Venue::class,
     'location' => Location::class,
+    'new_chat_member' => User::class,
     'left_chat_member' => User::class,
   ];
 

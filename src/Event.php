@@ -98,8 +98,11 @@ class Event
       'edit'      => isset($this->data['message']['edit_date']),
       'location'  => isset($this->data['message']['venue'])
                   || isset($this->data['message']['location']),
-      'join'      => isset($this->data['message']['new_chat_members']),
-      'leave'     => isset($this->data['message']['left_chat_member']),
+      'join'      => isset($this->data['message']['new_chat_member'])
+                  || isset($this->data['message']['new_chat_members'])
+                  || isset($this->data['message']['new_chat_participant']),
+      'leave'     => isset($this->data['message']['left_chat_member'])
+                  || isset($this->data['message']['left_chat_participant']),
       'pin'       => isset($this->data['message']['pinned_message']),
       'message'   => isset($this->data['message']),
       'empty'     => empty($this->data),

@@ -15,6 +15,7 @@ Plugins are well documented in inline comments, some interesting details will be
 * [Currency Plugin](#currency-plugin)
 * [Forwarder Plugin](#forwarder-plugin)
 * [Hello Plugin](#hello-plugin)
+* [Kicker Plugin](#kicker-plugin)
 * [Log Plugin](#log-plugin)
 * [Lurk Plugin](#lurk-plugin)
 * [Meme Plugin](#meme-plugin)
@@ -233,6 +234,13 @@ Bot will answer you with standart greeting
     Born in 2001, I was entertainment chatbot written in miRCscript. Now I'm a bit new: I run PHP on fast virtual server to connect modern geeky Telegram network and joke my random funs.
     
     Read more: https://github.com/miamibc/joker-telegram-bot 
+
+Kicker Plugin
+-----------
+
+If your channel is popular enough, you will constantly be attacked with bots with strange names containing emoji. 
+
+Add this plugin to kick such users.  
 
 Log Plugin
 -----------
