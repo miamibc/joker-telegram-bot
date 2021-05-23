@@ -10,6 +10,9 @@ namespace Tests\Plugin;
 use Joker\Plugin\Twitch;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * @group exclude-from-github-test
+ */
 class TwitchTest extends TestCase
 {
 

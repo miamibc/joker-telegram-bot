@@ -10,6 +10,9 @@ namespace Tests\Database;
 use Joker\Database\Redis;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * @group exclude-from-github-test
+ */
 class RedisTest extends TestCase
 {
 

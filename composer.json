@@ -37,6 +37,7 @@
     "phpunit/phpunit": "^9.4"
   },
   "scripts": {
-    "test": "php vendor/bin/phpunit --testdox"
+    "test": "php vendor/bin/phpunit",
+    "test-github": "php vendor/bin/phpunit --testdox --exclude-group=exclude-from-github-test"
   }
 }
