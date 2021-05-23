@@ -25,7 +25,7 @@ class Forwarder extends Plugin
   public function onMessageText( Event $event )
   {
 
-    $text = $event->getMessageText();
+    $text = $event->message()->text();
 
     foreach ($this->getOptions() as $item)
     {
@@ -34,7 +34,7 @@ class Forwarder extends Plugin
       $item = $this->normalizeItem($item);
 
       // skip if not from needed chat
-      if (!in_array( $event->getMessageChatId(), $item['from'])) continue;
+      if (!in_array( $event->message()->chat()->id(), $item['from'])) continue;
 
       // check all patterns, skip if nothing found
       $found = false;

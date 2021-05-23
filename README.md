@@ -69,32 +69,32 @@ By default bot does nothing, [plugins](https://github.com/miamibc/joker-telegram
 
 To add plugin, create new class extending `Joker\Plugin` and connect it with `$joker->plug( array )` command before main loop. Add methods like `on[Action][Action]( Joker\Event $event )`. These methods will be called when all actions is found in request. Actions can be:
 
-- `public` - public requests
-- `private` - non-public requests
-- `group` - group, supergroup and channel requests
-- `message` - requests containing message section, this is always true
-- `sticker` - stickers or replies with sticker
-- `text` - has text
-- `photo` - has photo
-- `caption` - has caption, usually on photo
-- `animation` - has animation
-- `audio` - has audio
-- `document` - has document
-- `video` - has video
-- `voice` - has voice
-- `contact` - has contact
-- `dice` - is a rolled dice
-- `game` - contains game
-- `reply` - is a reply
-- `forward` - is a forwarded message
-- `poll` - polls
-- `edit` - edited message
-- `location` - location
-- `join` - user joined the chat
-- `leave` - user leaves the chat
-- `pin` - new pinned message
-- `entities` - has entities attached  
-- `empty` - empty requests
+- `Public` - public requests
+- `Private` - non-public requests
+- `Group` - group, supergroup and channel requests
+- `Message` - all requests contains message, except `Empty`.  
+- `Sticker` - stickers or replies with sticker
+- `Text` - has text
+- `Photo` - has photo
+- `Caption` - has caption, usually on photo
+- `Animation` - has animation
+- `Audio` - has audio
+- `Document` - has document
+- `Video` - has video
+- `Voice` - has voice
+- `Contact` - has contact
+- `Dice` - is a rolled dice
+- `Game` - contains game
+- `Reply` - is a reply
+- `Forward` - is a forwarded message
+- `Poll` - polls
+- `Edit` - edited message
+- `Location` - location
+- `Join` - user joined the chat
+- `Leave` - user leaves the chat
+- `Pin` - new pinned message
+- `Entities` - has entities attached  
+- `Empty` - empty requests, you can use this for processing timers
 
 For example, `onPrivateSticker` or `onStickerPrivate` will be called when both `sticker` and `private` is found in request.
 

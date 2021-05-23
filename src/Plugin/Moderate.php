@@ -15,31 +15,25 @@ use Joker\Event;
 class Moderate extends Plugin
 {
 
-  protected
-    $options = [
+  protected $options = [
       'characters_between' => 255,
     ];
 
   private $counter = [];
 
   /**
-   * Listen to public text mesage and increase counter
+   * Listen to public text message and increase counter
    * @param Event $event
    */
-  public function onPublicTextMessage( Event $event )
+  public function onPublicText( Event $event )
   {
-    $data = $event->getData();
-
-    // requirements
-    if (!isset( $data['message']['from']['id'])) return;
-
-    $id = $data['message']['from']['id'];
+    $id = $event->message()->from()->id();
 
     // if no counter yet, create it with normal number of messages
     if (!isset( $this->counter[ $id ] ))
       $this->counter[ $id ] = $this->getOption('characters_between');
 
-    $length = mb_strlen( @$data['message']['text'] , 'utf-8' );
+    $length = mb_strlen( $event->message()->text() , 'utf-8' );
 
     // for cheaters like edson
     if ($length > $this->getOption('characters_between'))
@@ -55,32 +49,25 @@ class Moderate extends Plugin
    *
    * @return int|void
    */
-  public function onPublicStickerMessage( Event $event)
+  public function onPublicSticker( Event $event)
   {
-    $data = $event->getData();
+    $message = $event->message();
 
-    // check requirements
-    if (!isset(
-      $data['message']['date'],
-      $data['message']['from']['id'],
-      $data['message']['sticker']['file_id']
-    )) return;
-
-    $id = $data['message']['from']['id'];
+    $id   = $message->from()->id();
+    $name = $message->from()->name();
 
     // if no counter yet, create it with normal number of messages
     if (!isset( $this->counter[ $id ] ))
       $this->counter[ $id ] = $this->getOption('characters_between');
 
+    // sticker flood
     if ($this->counter[ $id ] < $this->getOption('characters_between'))
     {
-      // sticker flood, delete it
+      // delete it
       $event->deleteMessage();
 
-      $need = $this->getOption('characters_between') - $this->counter[ $id ];
-
       // say something
-      $name = $event->getMessageFrom();
+      $need = $this->getOption('characters_between') - $this->counter[ $id ];
       $answer = [
         "Can't post this sh#t righ now, $name. Need $need more chars to post sticker.",
         "$name, you're little damn flooder. Need $need more chars to post sticker.",
@@ -94,6 +81,6 @@ class Moderate extends Plugin
       $this->counter[ $id ] = 0;
     }
 
-
   }
+
 }

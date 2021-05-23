@@ -15,8 +15,10 @@ Plugins are well documented in inline comments, some interesting details will be
 * [Currency Plugin](#currency-plugin)
 * [Forwarder Plugin](#forwarder-plugin)
 * [Hello Plugin](#hello-plugin)
+* [Kicker Plugin](#kicker-plugin)
 * [Log Plugin](#log-plugin)
 * [Lurk Plugin](#lurk-plugin)
+* [Meme Plugin](#meme-plugin)
 * [Moderate Plugin](#moderate-plugin)
 * [Pasta Plugin](#pasta-plugin)
 * [Quote Plugin](#quote-plugin)
@@ -233,6 +235,13 @@ Bot will answer you with standart greeting
     
     Read more: https://github.com/miamibc/joker-telegram-bot 
 
+Kicker Plugin
+-----------
+
+If your channel is popular enough, you will constantly be attacked with bots with strange names containing emoji. 
+
+Add this plugin to kick such users.  
+
 Log Plugin
 -----------
 
@@ -278,6 +287,35 @@ Answer will be parsed from Wikimedia article (suddenly not the best quality)
     »— Владимир Познер[![](//lurkmore.so/images/thumb/a/ac/Lurkosparta.jpg/250px-Lurkosparta.jpg)](/%D0%A4%D0%B0%D0%B9%D0%BB:Lurkosparta.jpg)[![](/skins/common/images/magnify-clip.png)](/%D0%A4%D0%B0%D0%B9%D0%BB:Lurkosparta.jpg "Увеличить")
     
     Как это обычно бывает у нас…
+
+Meme Plugin
+-----------
+
+Create meme with [Memegen.link](https://memegen.link/) project.
+
+For instructions, say
+
+```
+!meme
+```
+
+Bot will answer you with instructions, generated from API
+
+```
+Usage: !meme <name>
+then add one, or two lines of text.
+Name can be selected from: aag ackbar afraid agnes aint-got-time ams ants apcr atis away awesome awesome-awkward awkward awkward-awesome bad badchoice bd bender bihw biw blb boat both bs buzz captain captain-america cb cbg center ch cheems chosen cmm crazypills cryingfloor db dg disastergirl dodgson doge dragon drake ds dsm dwight elf ermg fa facepalm fbf feelsgood fetch fine firsttry fmr fry fwp gandalf gb gears ggg gru grumpycat hagrid happening harold hipster home icanhas imsorry inigo interesting ive iw jd jetpack joker jw keanu kermit kk kombucha leo live ll lrv mb michael-scott millers mini-keanu mmm money mordor morpheus mw nice noidea ntot oag officespace older oprah patrick persian philosoraptor pigeon ptj puffin red regret remembers rollsafe sad-biden sad-boehner sad-bush sad-clinton sad-obama sadfrog saltbae sarcasticbear sb scc sf sk ski snek soa sohappy sohot soup-nazi sparta spiderman spongebob ss stew stonks stop-it success tenguy toohigh tried trump ugandanknuck whatyear winter wkh wonka worst xy yallgot yodawg yuno zero-wing
+```
+
+Example meme
+
+```
+!meme rollsafe
+Show what you can.
+Learn what you don't.
+```
+
+![meme answer](https://api.memegen.link/images/rollsafe/Show_what_you_can./Learn_what_you_don't..jpg)
 
 Moderate Plugin
 -----------

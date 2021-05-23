@@ -76,4 +76,17 @@ class Activity extends Plugin
     $this->sync = false;
   }
 
+  public function onPublicPin( Event $event)
+  {
+    $chat = $event->message()->chat();
+
+    $custom = $chat->getCustom();
+
+    $custom->pinned_message_id = $event->message()->id();
+    $custom->pinned_text = $event->message()->text();
+
+    $chat->saveCustom();
+  }
+
+
 }

@@ -24,14 +24,14 @@ class Quote extends Plugin
 
   public function onPublicText( Event $event )
   {
-    $text = $event->getMessageText();
+    $text = $event->message()->text();
 
     $chunk = preg_split('@\s+@', $text);
 
     if ($chunk[0][0] !== '!') return;
 
-    $command = trim( strtolower( preg_replace("@[^!\w\d]@", "", array_shift($chunk)) ));
-    $params  = trim( implode(" ", $chunk) );
+    $command = '!' . $text->trigger();
+    $params  = $text->token(1);
 
     if (in_array( $command, [ '!list', '!help' ]) )
     {

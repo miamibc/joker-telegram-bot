@@ -29,10 +29,12 @@ class Callback extends Plugin
   public function onPublicText( Event $event )
   {
     $trigger = strtolower( $this->getOption('trigger') );
-    if ($event->message()->text()->trigger() !== $trigger) return;
+    if ($event->message()->text()->trigger() === $trigger)
+    {
+      // process callback and return it's result
+      return call_user_func( $this->getOption('callback'), $event );
+    }
 
-    // process callback and return it's result
-    return call_user_func( $this->getOption('callback'), $event );
   }
 
 }

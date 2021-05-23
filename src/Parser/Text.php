@@ -29,6 +29,12 @@ class Text
     return implode( " ", array_slice($this->data, $from, $to));
   }
 
+  public function line( $from, $to = null )
+  {
+    $text = explode("\n", $this->text);
+    return implode( "\n", array_slice($text, $from, $to));
+  }
+
   public function trigger()
   {
     $trigger    = strtolower( $this->token(0,1));

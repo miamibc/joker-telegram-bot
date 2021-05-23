@@ -3,6 +3,7 @@
  *
  * @package joker-telegram-bot
  * @author Sergei Miami <miami@blackcrystal.net>
+ *
  */
 
 namespace Tests\Plugin;
@@ -12,6 +13,9 @@ use Joker\Event;
 use Joker\Plugin\Quote;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * @group exclude-from-github-test
+ */
 class QuoteTest extends TestCase
 {
 

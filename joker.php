@@ -15,6 +15,7 @@ $bot->plug([
   // (never returns false or Joker\Bot::PLUGIN_BREAK)
   new Joker\Plugin\Log( ['file' =>'data/log/log.json'] ),
   new Joker\Plugin\Activity( ['sync_time' => 60] ),
+  new Joker\Plugin\Kicker(),
   new Joker\Plugin\Forwarder( [
     ['from' => -343502518, 'text' => ['*покуп*'], 'to' => -343502518, ],
     ['from' => -343502518, 'text' => ['*прода*', '*сдаё*'], 'to' => -343502518, 'forward' => false ],
@@ -39,6 +40,7 @@ $bot->plug([
     return false;
   }]),
   new Joker\Plugin\Twitch(['client_id'=>getenv('TWITCH_CLIENT_ID'), 'secret'=>getenv('TWITCH_CLIENT_SECRET')]),
+  new Joker\Plugin\Meme(),
 
   // *** somethingg wide, without triggers, must stay in the end ***
 
