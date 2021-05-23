@@ -13,7 +13,7 @@ use PHPUnit\Framework\TestCase;
 class CoronaTest extends TestCase
 {
 
-  public function test()
+  public function testDownloadAndSearch()
   {
 
     $tempfile = tempnam(sys_get_temp_dir(), 'test');

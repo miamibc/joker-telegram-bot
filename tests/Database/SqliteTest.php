@@ -15,7 +15,7 @@ class SqliteTest extends TestCase
 
   use Sqlite;
 
-  public function test()
+  public function testGetCustom()
   {
     $this->assertInstanceOf( \RedBeanPHP\OODBBean::class , $redis = $this->getCustom() );
     $redis->test = 'ok';

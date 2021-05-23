@@ -40,10 +40,6 @@ class Chat extends Base
   {
     if (isset($this->data['title']))
       return $this->data['title'];
-    if (isset($this->data['first_name'], $this->data['last_name']))
-      return implode(" ", [$this->data['first_name'], $this->data['last_name']]);
-    if (isset($this->data['first_name']))
-      return $this->data['first_name'];
     if (isset($this->data['username']))
       return $this->data['username'];
     return "Unknown";

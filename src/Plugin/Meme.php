@@ -1,5 +1,8 @@
 <?php
 /**
+ * Meme plugin for Joker Telegram Bot
+ *
+ * Generates meme from http://memegen.link API
  *
  * @package joker-telegram-bot
  * @author Sergei Miami <miami@blackcrystal.net>
@@ -62,6 +65,12 @@ class Meme extends Plugin
         '\\' => '~b',
         '"' => "''",
       ]));
+
+    if (empty($text))
+    {
+      $event->answerMessage("Usage: !meme $name\n$lines lines of text");
+      return false;
+    }
 
     // download image
     $image = @file_get_contents( "https://api.memegen.link/images/$name/$text.png" );

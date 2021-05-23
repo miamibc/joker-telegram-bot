@@ -18,7 +18,7 @@ class RedisTest extends TestCase
 
   use Redis;
 
-  public function test()
+  public function testGetRedis()
   {
     $this->assertInstanceOf( \stdClass::class, $redis = $this->getRedis() );
     $redis->test = 'ok';
