@@ -33,7 +33,7 @@ class Kicker extends Plugin
   /**
    * Check text contains emoji.
    * Full list got from https://unicode.org/emoji/charts/full-emoji-list.html
-   * some strange codes, like \x{00..} has been removed
+   * duplicates and strange codes, like \x{00..} has been removed
    *
    * @param $text
    *
