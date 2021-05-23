@@ -12,8 +12,7 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
-      - uses: php-actions/composer@v5
-        with:
-          php_version: 7.4
-          php_extensions: gd sockets
-          command: test
+      - uses: miami/phpunit@7.4.7.5
+      - name: phpunit
+        run:
+          composer test
