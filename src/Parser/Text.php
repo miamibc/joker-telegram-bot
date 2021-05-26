@@ -8,6 +8,10 @@
 
 namespace Joker\Parser;
 
+/**
+ * Text parser, my addition to telegram bot API for easy manipulation with text
+ * Includes function to read trigger, tokens and lines from string
+ */
 class Text
 {
 

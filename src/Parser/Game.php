@@ -23,6 +23,7 @@ class Game extends Base
 {
 
   protected $wrapper = [
+    'photo' => PhotoSize::class,
     'animation' => Animation::class,
   ];
 

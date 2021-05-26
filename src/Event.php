@@ -94,8 +94,10 @@ class Event
                   || isset($this->data['message']['forward_from_chat'])
                   || isset($this->data['message']['forward_from_message_id'])
                   || isset($this->data['message']['forward_date']),
-      'poll'      => isset($this->data['message']['poll']),
-      'edit'      => isset($this->data['message']['edit_date']),
+      'poll'      => isset($this->data['poll']),
+      'answer'    => isset($this->data['poll_answer']),
+      'edit'      => isset($this->data['edited_message'])
+                  || isset($this->data['edited_channel_post']),
       'location'  => isset($this->data['message']['venue'])
                   || isset($this->data['message']['location']),
       'join'      => isset($this->data['message']['new_chat_member'])

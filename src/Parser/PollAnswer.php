@@ -20,6 +20,7 @@ class PollAnswer extends Base
 {
 
   protected $wrapper = [
+    'user' => User::class,
   ];
 
 
