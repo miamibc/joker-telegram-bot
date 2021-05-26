@@ -35,7 +35,7 @@ class Spotify extends Plugin
   public function onPublicText( Event $event )
   {
 
-    $text = $event->getMessageText();
+    $text = $event->message()->text();
 
     if (!preg_match('@^(/spotify|!spotify|/mp4|!mp4)\b(.*)?$@ui', $text, $matches)) return;
 

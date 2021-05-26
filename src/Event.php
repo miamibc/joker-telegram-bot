@@ -8,13 +8,16 @@
 
 namespace Joker;
 
+use Joker\Parser\Base;
 use Joker\Parser\Message;
+use Joker\Parser\Update;
 
 class Event
 {
 
   private $bot;
   public  $data;
+  private $cache = [];
 
   public function __construct( Bot $bot, $data)
   {
@@ -112,51 +115,33 @@ class Event
     ];
   }
 
+  /**
+   * Get update object
+   * @return false|Update
+   */
+  public function update()
+  {
+    return $this->cache['update'] ?? $this->cache['update'] = new Update($this->data);
+  }
+
+  /**
+   * Get message object
+   * @return false|Message
+   */
   public function message()
   {
-    if (!isset($this->data['message'])) return false;
-    return new Message( $this->data['message'] );
+    return $this->update()->message();
   }
 
-  public function getMessageText()
+  /**
+   * Get edited message object
+   * @return false|Message
+   */
+  public function edited_message()
   {
-    $text = "";
-    if ( isset( $this->data['message']['text'] ))
-      $text = $this->data['message']['text'];
-    elseif ( isset( $this->data['message']['caption'] ))
-      $text = $this->data['message']['caption'];
-    return trim($text);
+    return $this->update()->edited_message();
   }
 
-
-  public function getMessageId()
-  {
-    return($this->data['message']['message_id']);
-  }
-
-  public function getMessageChatId()
-  {
-    return isset($this->data['message']['chat']['id']) ? $this->data['message']['chat']['id'] : null;
-  }
-
-  public function getMessageFromId()
-  {
-    return isset($this->data['message']['from']['id']) ? $this->data['message']['from']['id'] : null;
-  }
-
-  public function getMessageFrom()
-  {
-    if (isset($this->data['message']['from']['first_name'], $this->data['message']['from']['last_name']))
-      return trim( $this->data['message']['from']['first_name'] .' '. $this->data['message']['from']['last_name']);
-
-    if (isset($this->data['message']['from']['first_name']))
-      return trim( $this->data['message']['from']['first_name']);
-
-    if (isset($this->data['message']['from']['username']))
-      return trim( $this->data['message']['from']['username']);
-
-    return 'Unknown';
-  }
 
   public function getData()
   {
