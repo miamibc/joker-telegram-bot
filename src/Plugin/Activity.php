@@ -53,8 +53,8 @@ class Activity extends Plugin
       $custom = $user->getCustom();
 
       // add info
-      $custom->username         = $user->username();
-      $custom->name             = $user->name();
+      $custom->username         = $user->username() ? $user->username() : null;
+      $custom->name             = $user->name() ? $user->name() : null;
       $custom->last_messsage_at = $message->date();
       $custom->last_messsage_id = $message->id();
 
@@ -83,7 +83,7 @@ class Activity extends Plugin
     $custom = $chat->getCustom();
 
     $custom->pinned_message_id = $event->message()->id();
-    $custom->pinned_text = $event->message()->text();
+    $custom->pinned_text = $event->message()->pinned_message()->text();
 
     $chat->saveCustom();
   }
