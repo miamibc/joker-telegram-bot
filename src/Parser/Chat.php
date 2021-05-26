@@ -11,15 +11,20 @@ namespace Joker\Parser;
 use Joker\Database\Sqlite;
 
 /**
- * @method int id()
- * @method string type()
- * @method string title()
- * @method string username()
- * @method ChatPhoto photo()
- * @method string bio()
- * @method string description()
- * @method string invite_link()
- * @method Message pinned_message()
+ * This object represents a chat.
+ * @see https://core.telegram.org/bots/api#chat
+ *
+ * @method int id() Unique identifier for this chat. This number may have more than 32 significant bits and some programming languages may have difficulty/silent defects in interpreting it. But it has at most 52 significant bits, so a signed 64-bit integer or double-precision float type are safe for storing this identifier.
+ * @method string type() Type of chat, can be either “private”, “group”, “supergroup” or “channel”
+ * @method string title() Optional. Title, for supergroups, channels and group chats
+ * @method string username() Optional. Username, for private chats, supergroups and channels if available
+ * @method string first_name() Optional. First name of the other party in a private chat
+ * @method string last_name()  Optional. Last name of the other party in a private chat
+ * @method ChatPhoto photo() Optional. Chat photo. Returned only in getChat.
+ * @method string bio() Optional. Bio of the other party in a private chat. Returned only in getChat.
+ * @method string description() Optional. Description, for groups, supergroups and channel chats. Returned only in getChat.
+ * @method string invite_link() Optional. Primary invite link, for groups, supergroups and channel chats. Returned only in getChat.
+ * @method Message pinned_message() Optional. The most recent pinned message (by sending date). Returned only in getChat.
  */
 class Chat extends Base
 {

@@ -54,7 +54,7 @@ class Quote extends Plugin
    */
   public function onPrivateText( Event $event )
   {
-    $text = $event->getMessageText();
+    $text = $event->message()->text();
 
     if ( preg_match( $regexp = '#^(.*), \[([^]]+)\]\n(.*?)$#m', $text, $matches) )
     {
