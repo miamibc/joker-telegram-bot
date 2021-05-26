@@ -8,7 +8,6 @@
 
 namespace Joker;
 
-use Joker\Parser\Base;
 use Joker\Parser\Message;
 use Joker\Parser\Update;
 
