@@ -26,7 +26,11 @@ class UrlCollector extends Plugin
     // search for urls in public message entities
     foreach ($message->entities() as $entity)
     {
-      switch( $entity->type())
+
+      $url = '';
+
+      // there are two types of urls in entity
+      switch( $entity->type() )
       {
         case 'text_link':
           $url = $entity->url();
@@ -34,12 +38,14 @@ class UrlCollector extends Plugin
         case 'url':
           $url = $message->text()->substring( $entity->offset(), $entity->length() );
           break;
-        default:
-          continue;
       }
 
-      // append to the end of file
-      file_put_contents( $filename, $url . PHP_EOL, FILE_APPEND);
+      // append to the end of file, if url is found
+      if ($url)
+      {
+        file_put_contents( $filename, $url . PHP_EOL, FILE_APPEND);
+      }
+
     }
   }
 
