@@ -27,9 +27,9 @@ Plugins are well documented in inline comments, some interesting details will be
 * [Sticker Plugin](#sticker-plugin)
 * [Temp Plugin](#temp-plugin)
 * [Twitch Plugin](#twitch-plugin)
+* [UrlCollector Plugin](#urlcollector-plugin)
 
-Activity Plugin
------------
+## Activity Plugin
 
 Stores user activity from messages containing `from` field. Data will be stored in sqlite database, table `user`.
 
@@ -42,8 +42,7 @@ Stores user activity from messages containing `from` field. Data will be stored 
 Configuration options:
 - `sync_time` (integer, default 60) - seconds, how often to write data to database
 
-Bash Plugin
------------
+## Bash Plugin
 
 Random jokes from [Bash.im](https://bash.im/).
 
@@ -61,8 +60,7 @@ Bot will answer you with joke from bash
     Tellah: 
     or "scuko blya jjosh" for "awesome"
 
-Beer Plugin
------------
+## Beer Plugin
 
 Answers to message with beer thematics, by one of hardcoded joke. 
 
@@ -72,8 +70,7 @@ Answers to message with beer thematics, by one of hardcoded joke.
 Beer plugin is version of [Pasta Plugin](#pasta-plugin). 
 Thanks to [Dm!tro](https://github.com/Dm1tro-in-da-world) for this contribution.  
 
-Callback Plugin
----------------
+## Callback Plugin
 
 Plugin for fast prototyping. Allows to bind trigger and a callback as a parameters of plugin initialization.
 
@@ -88,8 +85,7 @@ $joker->plug([
 ]);
 ```
 
-Carma plugin
------------
+## Carma plugin
 
 Allows people to exchange carma between them by like and dislike their posts.
 
@@ -100,8 +96,7 @@ Options:
 
 Thanks for help in development to **D0b3rm4nN** and [AL^Raven](https://github.com/alravenbc).
 
-Corona Plugin
------------
+## Corona Plugin
 
 Corona worldwide virus stats for Joker.
 
@@ -151,8 +146,7 @@ Configuration options:
 
 Data from [COVID-19 Data Repository by the Center for Systems Science and Engineering (CSSE) at Johns Hopkins University](https://github.com/CSSEGISandData/COVID-19) repository.
 
-Cowsay Plugin
------------
+## Cowsay Plugin
 
 Classic [linux console fun](https://en.wikipedia.org/wiki/Cowsay) now is in Joker. Say
 
@@ -179,8 +173,7 @@ Configuration options:
 - `text_color` (string, optional, default #ffffff) - text color
 - `delete` (boolean, optional, default true) - delete generated image after sending
 
-Currency Plugin
------------
+## Currency Plugin
 
 Currency exchange rates for Joker (thanks ʎǝxǝl∀ for ide∀)
 
@@ -198,8 +191,7 @@ And receive information, something like
 
 Information requested from [Coinbase API](https://developers.coinbase.com/api/v2)
 
-Forwarder Plugin
-----------------
+## Forwarder Plugin
 
 Forwards messages from one chat to another. Rules can be added with configuration, example:
 
@@ -218,8 +210,7 @@ Each line of configuration consists of array:
 
 NB! Joker can't read and forward messages from another bots, because Telegram [does not allow to read bots messages with Telegram Bot API](https://core.telegram.org/bots/faq#why-doesnt-my-bot-see-messages-from-other-bots). If you need to read them, try to search implementations of another protocol - Mtproto. 
 
-Hello Plugin
------------
+## Hello Plugin
 
 Hello world plugin, small example of writing basic plugin for Joker.
 
@@ -235,15 +226,13 @@ Bot will answer you with standart greeting
     
     Read more: https://github.com/miamibc/joker-telegram-bot 
 
-Kicker Plugin
------------
+## Kicker Plugin
 
 If your channel is popular enough, you will constantly be attacked with bots with strange names containing emoji. 
 
 Add this plugin to kick such users.  
 
-Log Plugin
------------
+## Log Plugin
 
 Log all incoming messages to a file
 
@@ -252,8 +241,7 @@ Configuration options:
 * `screen` (boolean, default false) - log messages to the screen
 * `file` (string or false, default false) - log messages to file 
 
-Lurk Plugin
------------
+## Lurk Plugin
 
 Shows articles from [Lurkmore](https://lurkmore.to/) with use of [Mediawiki API](https://www.mediawiki.org/wiki/API).
 
@@ -288,8 +276,7 @@ Answer will be parsed from Wikimedia article (suddenly not the best quality)
     
     Как это обычно бывает у нас…
 
-Meme Plugin
------------
+## Meme Plugin
 
 Create meme with [Memegen.link](https://memegen.link/) project.
 
@@ -317,8 +304,7 @@ Learn what you don't.
 
 ![meme answer](https://api.memegen.link/images/rollsafe/Show_what_you_can./Learn_what_you_don't..jpg)
 
-Moderate Plugin
------------
+## Moderate Plugin
 
 Removes sticker flood in Group. Bot must be administrator.
 
@@ -326,15 +312,13 @@ Plugin counts amount of text between stickers. If user trying to flood with stic
 
 Parameter `characters_between` defaults to 255, can be set in plugin options. 
 
-Pasta Plugin
------------
+## Pasta Plugin
 
 Example plugin with custom text triggers.
 
 Parameter `minimum_time` can be used to set minimum time between triggering this plugin.
 
-Quote Plugin
------------
+## Quote Plugin
 
 Random joke from collection of our jokes.
 
@@ -388,8 +372,7 @@ Added: !tg 111 of 111: [01.11.20 21:58]
 <SHPONGIk> понятно)
 ```
 
-Server Plugin
------------
+## Server Plugin
 
 With this plugin you can communicate bot from outside.
 
@@ -417,8 +400,7 @@ Configuration options:
 - `port` (integer, optional, default 5566) - port number
 
 
-Spotify Plugin
------------
+## Spotify Plugin
 
 Random music track from Spotify API
 
@@ -441,13 +423,11 @@ TODO:
 - Publish result as audio message
 
 
-Sticker Plugin
------------
+## Sticker Plugin
 
 Send sticker to Joker private chat, he will answer with random sticker from same pack.
 
-Temp Plugin
------------
+## Temp Plugin
 
 Weather conditions worldwide. Commands to activate this:
 - !temp
@@ -486,8 +466,7 @@ Configuration options:
 
 Data source [Openweather API](http://api.openweathermap.org)
 
-Twitch Plugin
------------
+## Twitch Plugin
 
 This plugin allows you to search Twitch channels.
 
@@ -501,3 +480,11 @@ Configuration options:
 - `client_secret` (string, optional, default is env variable `TWITCH_CLIENT_SECRET`) - client secret of your Twitch API application
 
 Thanks for idea to **D0b3rm4nN**.
+
+## UrlCollector Plugin
+
+Collects URLS from public messages
+
+Configuration options:
+- `file` (string, oprional, default 'data/urls.txt') - file to save urls to
+
