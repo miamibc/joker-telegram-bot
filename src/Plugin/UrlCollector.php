@@ -26,11 +26,17 @@ class UrlCollector extends Plugin
     // search for urls in public message entities
     foreach ($message->entities() as $entity)
     {
-      // only url type is interesting for us
-      if ($entity->type() !== 'url') continue;
-
-      // extract from text
-      $url = $message->text()->substring( $entity->offset(), $entity->length() );
+      switch( $entity->type())
+      {
+        case 'text_link':
+          $url = $entity->url();
+          break;
+        case 'url':
+          $url = $message->text()->substring( $entity->offset(), $entity->length() );
+          break;
+        default:
+          continue;
+      }
 
       // append to the end of file
       file_put_contents( $filename, $url . PHP_EOL, FILE_APPEND);
