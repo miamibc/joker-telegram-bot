@@ -78,14 +78,14 @@ class Activity extends Plugin
 
   public function onPublicPin( Event $event)
   {
-    $chat = $event->message()->chat();
+    $message = $event->message();
+    $custom = $message->chat()->getCustom();
 
-    $custom = $chat->getCustom();
+    $custom->pinned_message_id  = $message->pinned_message()->id();
+    $custom->pinned_text = (string) $message->pinned_message()->text();
+    $custom->pinned_text_author = $message->pinned_message()->from()->id();
 
-    $custom->pinned_message_id = $event->message()->id();
-    $custom->pinned_text = $event->message()->pinned_message()->text();
-
-    $chat->saveCustom();
+    $message->chat()->saveCustom();
   }
 
 
