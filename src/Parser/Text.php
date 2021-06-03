@@ -51,4 +51,9 @@ class Text
     return $trigger;
   }
 
+  public function substring( $from, $length = null )
+  {
+    return substr( $this->text, $from, $length );
+  }
+
 }

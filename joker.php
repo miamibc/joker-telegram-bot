@@ -20,6 +20,7 @@ $bot->plug([
     ['from' => -343502518, 'text' => ['*покуп*'], 'to' => -343502518, ],
     ['from' => -343502518, 'text' => ['*прода*', '*сдаё*'], 'to' => -343502518, 'forward' => false ],
   ]),
+  new Joker\Plugin\UrlCollector(['file' => 'data/urls.txt']),
 
   // *** insert your plugins here, order is important ***
 
