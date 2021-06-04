@@ -25,7 +25,7 @@ class Text
 
   public function __toString()
   {
-    return $this->text;
+    return $this->text.'';
   }
 
   public function token( $from = 0, $to = null)
