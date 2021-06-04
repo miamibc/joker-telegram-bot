@@ -28,9 +28,13 @@ class TextTest extends TestCase
     $this->assertEquals("blb", $text->token(1,1));
     $this->assertEquals("lol\nrofl", $text->line(1));
 
+  }
 
-
-
+  public function testUnicode()
+  {
+    $text = new Text( "о, димас! хочешь прикол? а чего у тебя такие одинаковые проекты?) два из трёх https://github.com/dacaps" );
+    $this->assertEquals('о, димас! хочешь прикол? а чего у тебя такие одинаковые проекты?) два из трёх https://github.com/dacaps', (string) $text);
+    $this->assertEquals('https://github.com/dacaps', $text->substring(78,25));
   }
 
 }
