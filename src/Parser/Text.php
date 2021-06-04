@@ -15,9 +15,9 @@ namespace Joker\Parser;
 class Text
 {
 
-  protected $text = "", $data = [];
+  protected $text, $data = [];
 
-  public function __construct( $text )
+  public function __construct( string $text )
   {
     $this->data = preg_split("@\s+@imU", $text );
     $this->text = $text;
@@ -41,19 +41,20 @@ class Text
 
   public function trigger()
   {
-    $trigger    = strtolower( $this->token(0,1));
-    $first_char = substr( $trigger, 0, 1);
+    $trigger    = mb_strtolower( $this->token(0,1));
+    $first_char = mb_substr( $trigger, 0, 1);
 
     // remove first char, if it's ! or /
     if (in_array( $first_char, ['!', '/']))
-      $trigger = substr( $trigger, 1);
-
+    {
+      $trigger = mb_substr($trigger,1);
+    }
     return $trigger;
   }
 
   public function substring( $from, $length = null )
   {
-    return substr( $this->text, $from, $length );
+    return mb_substr( $this->text, $from, $length );
   }
 
 }
