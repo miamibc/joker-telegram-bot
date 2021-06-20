@@ -28,6 +28,7 @@ Plugins are well documented in inline comments, some interesting details will be
 * [Temp Plugin](#temp-plugin)
 * [Twitch Plugin](#twitch-plugin)
 * [UrlCollector Plugin](#urlcollector-plugin)
+* [Whynot Plugin](#whynot-plugin)
 
 ## Activity Plugin
 
@@ -488,3 +489,9 @@ Collects URLS from public messages
 Configuration options:
 - `file` (string, oprional, default 'data/urls.txt') - file to save urls to
 
+
+## Whynot Plugin
+
+Generate otmazki why not ...
+
+Idea from [lgg/excuse-generator](https://github.com/lgg/excuse-generator).
