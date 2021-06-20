@@ -42,6 +42,7 @@ $bot->plug([
   }]),
   new Joker\Plugin\Twitch(['client_id'=>getenv('TWITCH_CLIENT_ID'), 'secret'=>getenv('TWITCH_CLIENT_SECRET')]),
   new Joker\Plugin\Meme(),
+  new Joker\Plugin\Whynot(),
 
   // *** somethingg wide, without triggers, must stay in the end ***
 
