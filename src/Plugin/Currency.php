@@ -66,7 +66,7 @@ class Currency extends Plugin
     $url = self::RATE_URL . '?' . http_build_query(['currency'=>$from]);
 
     // return false, if no data comes in
-    if (!$content = file_get_contents( $url , false, $context)) return false;
+    if (!$content = @file_get_contents( $url , false, $context)) return false;
 
     // return false, if not possible to encode json
     if (!$result = json_decode( $content, true)) return false;

@@ -141,6 +141,16 @@ class Temp extends Plugin
       }
      */
 
+    //http://openweathermap.org/weather-conditions
+    $conditions     = [
+      'clear'        => ' ☀️',
+      'clouds'       => ' ☁️',
+      'rain'         => ' ☔',
+      'drizzle'      => ' ☔',
+      'thunderstorm' => ' ⚡️',
+      'snow'         => ' ❄️',
+    ];
+
     $result = [ round( $data['main']['temp'] , 1) . "°C" ];
 
     if (isset($data['main']['temp_min'], $data['main']['temp_max']) && $data['main']['temp_min'] !== $data['main']['temp_max'])
