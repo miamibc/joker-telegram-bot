@@ -154,11 +154,10 @@ class Whynot extends Plugin
   {
 
     $text = $event->message()->text();
-
     if ($text->trigger() !== 'whynot') return;
 
-    return $event->answerMessage( $this->generate() );
-
+    $event->answerMessage( $this->generate() );
+    return false;
   }
 
   public function generate( $name = false )
