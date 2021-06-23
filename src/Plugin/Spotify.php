@@ -1,12 +1,18 @@
 <?php
 /**
- * Random music track from Spotify, an API Plugin for Joker
+ * Spotify Plugin for Joker
  *
  * Ask random track or search:
  *   !spotify
  *   !spotify limp bizkit
  *
  * Bot will answer with random track from the top of results.
+ *
+ *    Listen track Take A Look Around by Limp Bizkit in Spotify
+ *
+ * Configuration options:
+ * - `client_id` (string, required) Spotify client ID
+ * - `secret`    (string, required) Spotify client secret
  *
  * Documentation:
  * - Spotify Search API https://developer.spotify.com/documentation/web-api/reference-beta/#category-search
@@ -63,7 +69,7 @@ class Spotify extends Plugin
     // get random track, extract information and answer
     $track  = $result['tracks']['items'][ mt_rand(0, count( $result['tracks']['items'] )-1) ];
     $answer = $this->getTrackInformation( $track );
-    $event->answerMessage( $answer , ['parse_mode' => 'MarkdownV2']);
+    $event->answerMessage( $answer , ['parse_mode' => 'HTML']);
     return false;
 
   }
@@ -132,15 +138,19 @@ class Spotify extends Plugin
 
   private function getTrackInformation($element )
   {
+    // get names of artists and join them together
     $artists = implode( ' & ', array_map(function ($artist){
       return $artist['name'];
     }, $element['artists']));
 
+    // preview_url found
     if (isset($element['preview_url']))
-      return "Listen to → [{$element['name']} by $artists]({$element['preview_url']})";
+      return "Listen track <b>{$element['name']}</b> by <b>$artists</b> → <a href='{$element['preview_url']}'>here</a>";
+    // external_urls.spotify found
     elseif (isset($element['external_urls']['spotify']))
-      return "Listen to → [{$element['name']} by $artists]({$element['external_urls']['spotify']})";
+      return "Listen track <b>{$element['name']}</b> by <b>$artists</b> in <a href='{$element['external_urls']['spotify']}'>Spotify</a>";
+    // no link found
     else
-      return "Found title without link to listen → {$element['name']} by $artists";
+      return "Found track <b>{$element['name']}</b> by <b>$artists</b> without link to listen";
   }
 }
