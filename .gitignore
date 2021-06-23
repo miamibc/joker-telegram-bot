@@ -1,5 +1,6 @@
 /.env
 /index.php
+/joker-test.php
 /vendor
 /sticker-protector.php
 /sticker-spamer.php

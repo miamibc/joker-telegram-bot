@@ -26,22 +26,32 @@ use Joker\Event;
 class Cowsay extends Plugin
 {
 
+  protected $options = [
+    'font_file'  => null,
+    'font_size'  => 20,
+    'padding'    => 100,
+    'bg_color'   => '#000000',
+    'text_color' => '#ffffff',
+    'delete'     => true,
+  ];
+
   /**
    * CowsayPlugin constructor.
    *
-   * @param array $options
-   *   font_file - default depends from ubuntu version
-   *   font_size - default 20
-   *   padding - default 5 x font_size
-   *   bg_color - default #000000
-   *   text_color - default #ffffff
-   *   delete - default true, delete generated image after sending
+   * Options can be:
+   *   `font_file`  (string, optional, default depends on ubuntu version) path to font file
+   *   `font_size`  (int, optional, default 20) font size in pixels
+   *   `padding`    (int, optional, default 100) padding
+   *   `bg_color`   (string, optional, default #000000) background color
+   *   `text_color` (string, optional, default #ffffff) text color
+   *   `delete`     (boolean, optional, default true) delete generated image after sending
    */
   public function __construct($options = [])
   {
+    // if font_file option is not defined
     if (!isset($options['font_file']))
     {
-      // find default font file.  Ubuntu 16 and 20 has different paths
+      // try to find font_file in system.  Ubuntu 16 and 20 has different paths
       if (file_exists($path = '/usr/share/fonts/truetype/ubuntu-font-family/UbuntuMono-R.ttf'))
         $options['font_file'] = $path;
       elseif (file_exists($path = '/usr/share/fonts/truetype/ubuntu/UbuntuMono-R.ttf' ))
@@ -54,13 +64,18 @@ class Cowsay extends Plugin
   public function onPublicText( Event $event )
   {
 
-    $message_text = $event->message()->text();
+    // if no font_file set, don't process request
+    // (without font we can't draw image)
+    if (!$this->getOption('font_file')) return;
 
-    if (!preg_match('@^([\/!](\w+)say)\s?(.*)$@ui', $message_text, $matches)) return;
+    $text    = $event->message()->text();
+    $trigger = $text->trigger();
 
-    $trigger = trim( $matches[1] ); // !cowsay
-    $animal  = ucfirst(trim( $matches[2] )); // Cow
-    $message = trim( $matches[3] ); // text
+    // trigger must end with 'say'
+    if (substr( $trigger, -3 ) !== 'say') return;
+
+    $animal  = ucfirst( substr($trigger, 0, -3));
+    $message = $text->token(1);
 
     if (in_array($animal, ['Cow', 'Dragon', 'Tux', 'Whale']))
       $class = '\\Cowsayphp\\Farm\\' . $animal;
@@ -95,8 +110,8 @@ class Cowsay extends Plugin
   private function createImage( $text )
   {
     $font_file = $this->getOption('font_file');
-    $font_size = $this->getOption('font_size', 20);
-    $padding   = $this->getOption('padding', $font_size*5);
+    $font_size = $this->getOption('font_size');
+    $padding   = $this->getOption('padding');
 
     // retrieve image size, needed for our message
     $bounding_box = imagettfbbox( $font_size , 0, $font_file, $text );
@@ -108,12 +123,12 @@ class Cowsay extends Plugin
     $image = imagecreatetruecolor($image_width, $image_height);
 
     // draw background
-    $rgb = $this->hex2rgb( $this->getOption( 'bg_color', '#000000'));
+    $rgb = $this->hex2rgb( $this->getOption( 'bg_color' ));
     $bg_color = imagecolorallocate($image, $rgb[0], $rgb[1], $rgb[2]);
     imagefill($image, 0, 0, $bg_color);
 
     // draw text
-    $rgb = $this->hex2rgb( $this->getOption( 'text_color', '#ffffff'));
+    $rgb = $this->hex2rgb( $this->getOption( 'text_color' ));
     $text_color = imagecolorallocate($image, $rgb[0], $rgb[1], $rgb[2]);
     imagettftext($image, $font_size, 0, $padding, $padding, $text_color, $font_file, $text);
 
