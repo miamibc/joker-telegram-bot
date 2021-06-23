@@ -166,12 +166,12 @@ After some time, we changed this output to be an image.
 ![Example image, cow saing Moo](https://raw.githubusercontent.com/miamibc/joker-telegram-bot/master/assets/cowsay9bS19a.png)
 
 Configuration options:
-- `font_file` (string, optional) - path to font to use. By default, depends on ubuntu version
-- `font_size` (integer, optional, default 20) - size of font 
-- `padding` (integer, optional, default 5 x font_size) - padding
-- `bg_color` (string, optional, default #000000) - background color
-- `text_color` (string, optional, default #ffffff) - text color
-- `delete` (boolean, optional, default true) - delete generated image after sending
+- `font_file`  (string, optional, default depends on ubuntu version) path to font file
+- `font_size`  (int, optional, default 20) font size in pixels
+- `padding`    (int, optional, default 100) padding
+- `bg_color`   (string, optional, default #000000) background color
+- `text_color` (string, optional, default #ffffff) text color
+- `delete`     (boolean, optional, default true) delete generated image after sending
 
 ## Currency Plugin
 
@@ -410,13 +410,19 @@ Ask random track or search:
 
 Bot will answer with random track from the top of results.
 
+```
+Listen track Take A Look Around by Limp Bizkit in [Spotify]
+``` 
+
+with link to [Take A Look Around by Limp Bizkit](https://open.spotify.com/track/1J1H9lKNHwT0waswoMf8yV)
+
 Configuration options:
-- `client_id` (string, required)
-- `secret` (string, required)
+- `client_id` (string, required) Spotify client ID
+- `secret` (string, required) Spotify client secret
 
 Documentation:
-- Spotify Search API https://developer.spotify.com/documentation/web-api/reference-beta/#category-search
-- Spotify Authorization https://developer.spotify.com/documentation/general/guides/authorization-guide/#client-credentials-flow
+- [Spotify Search API](https://developer.spotify.com/documentation/web-api/reference-beta/#category-search)
+- [Spotify Authorization](https://developer.spotify.com/documentation/general/guides/authorization-guide/#client-credentials-flow)
 
 TODO:
 - Add fade-in/out effect to audio track https://ffmpeg.org/ffmpeg-filters.html#afade-1
@@ -425,7 +431,7 @@ TODO:
 
 ## Sticker Plugin
 
-Send sticker to Joker private chat, he will answer with random sticker from same pack.
+Example sticker plugin. Send sticker to Joker private chat, he will answer with random sticker from same pack.
 
 ## Temp Plugin
 
