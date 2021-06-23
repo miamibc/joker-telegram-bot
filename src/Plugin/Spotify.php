@@ -36,13 +36,12 @@ class Spotify extends Plugin
   {
 
     $text = $event->message()->text();
+    $trigger = $text->trigger();
 
-    if (!preg_match('@^(/spotify|!spotify|/mp4|!mp4)\b(.*)?$@ui', $text, $matches)) return;
-
-    $trigger = trim( $matches[1] );
+    if (!in_array( $trigger, ['spotify', 'mp4', 'mp3', 'music'])) return;
 
     // if query is empty, generate random query
-    if (! $query = trim($matches[2]) )
+    if (! $query = trim( $text->token(1)) )
     {
       $query = $this->randomQuery();
     }
@@ -57,14 +56,14 @@ class Spotify extends Plugin
     $result = $this->doSearch($query);
     if (!isset( $result['tracks']['items']) )
     {
-      $event->answerMessage("$trigger: Nothing found :( Let's try again?");
+      $event->answerMessage("Nothing found :( Let's try again?");
       return false;
     }
 
     // get random track, extract information and answer
     $track  = $result['tracks']['items'][ mt_rand(0, count( $result['tracks']['items'] )-1) ];
     $answer = $this->getTrackInformation( $track );
-    $event->answerMessage( "$trigger: $answer" );
+    $event->answerMessage( $answer , ['parse_mode' => 'MarkdownV2']);
     return false;
 
   }
@@ -133,18 +132,15 @@ class Spotify extends Plugin
 
   private function getTrackInformation($element )
   {
-    $artists = [];
-    foreach ($element['artists'] as $artist)
-      $artists[] = $artist['name'];
-    $artists = implode( ' & ', $artists);
+    $artists = implode( ' & ', array_map(function ($artist){
+      return $artist['name'];
+    }, $element['artists']));
 
-    if     (isset($element['preview_url']))
-      $preview_url = $element['preview_url'];
+    if (isset($element['preview_url']))
+      return "Listen to → [{$element['name']} by $artists]({$element['preview_url']})";
     elseif (isset($element['external_urls']['spotify']))
-      $preview_url = $element['external_urls']['spotify'];
+      return "Listen to → [{$element['name']} by $artists]({$element['external_urls']['spotify']})";
     else
-      $preview_url = "No link, search by yourself :p";
-
-    return "Listen to $element[name] by $artists → $preview_url";
+      return "Found title without link to listen → {$element['name']} by $artists";
   }
 }
