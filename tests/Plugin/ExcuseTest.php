@@ -7,15 +7,15 @@
 
 namespace Tests\Plugin;
 
-use Joker\Plugin\Whynot;
+use Joker\Plugin\Excuse;
 use PHPUnit\Framework\TestCase;
 
-class WhynotTest extends TestCase
+class ExcuseTest extends TestCase
 {
 
   public function testGenerate()
   {
-    $plugin = new Whynot();
+    $plugin = new Excuse();
     $this->assertStringContainsString("MyName", $plugin->generate("MyName"));
     $this->assertEquals( 4, substr_count(  $plugin->generate(), '.'));
   }

@@ -13,6 +13,7 @@ Plugins are well documented in inline comments, some interesting details will be
 * [Corona Plugin](#corona-plugin)
 * [Cowsay Plugin](#cowsay-plugin)
 * [Currency Plugin](#currency-plugin)
+* [Excuse Plugin](#excuse-plugin)
 * [Forwarder Plugin](#forwarder-plugin)
 * [Hello Plugin](#hello-plugin)
 * [Kicker Plugin](#kicker-plugin)
@@ -191,6 +192,22 @@ And receive information, something like
 ```
 
 Information requested from [Coinbase API](https://developers.coinbase.com/api/v2)
+
+## Excuse Plugin
+
+Generate random exuses
+
+```
+!excuse
+```
+
+Bot will answer something like
+
+```
+Приятель, добрый день. Платеж на обработке. Смогу доделать в конце недели. Я бы с радостью уже все сделал.
+```
+
+Ported from [lgg/excuse-generator](https://github.com/lgg/excuse-generator)
 
 ## Forwarder Plugin
 
@@ -493,5 +510,15 @@ Configuration options:
 ## Whynot Plugin
 
 Generate otmazki why not ...
+
+```
+!whynot
+```
+
+Bot will answer something like
+
+```
+Товарищ, привет. Я потерял всё с чем обычно гуляю, поэтому сегодня не пойду. Смогу чуть позже. ;-]]]
+```
 
 Idea from [lgg/excuse-generator](https://github.com/lgg/excuse-generator).
