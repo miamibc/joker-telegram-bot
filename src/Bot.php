@@ -20,8 +20,8 @@ use Joker\Parser\User;
 class Bot
 {
 
-  const PLUGIN_NEXT   = 100500;
-  const PLUGIN_BREAK  = 100501;
+  const PLUGIN_NEXT   = true;
+  const PLUGIN_BREAK  = false;
 
   private
     $token = null,
