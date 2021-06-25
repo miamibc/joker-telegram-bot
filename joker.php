@@ -11,8 +11,6 @@ $bot->plug([
 
   // *** something, that must be executed everytime, must stay at top ***
 
-  // these plugins never stops processing of other plugins
-  // (never returns false or Joker\Bot::PLUGIN_BREAK)
   new Joker\Plugin\Log( ['file' =>'data/log/log.json'] ),
   new Joker\Plugin\Activity( ['sync_time' => 60] ),
   new Joker\Plugin\Kicker(),
@@ -42,6 +40,8 @@ $bot->plug([
   }]),
   new Joker\Plugin\Twitch(['client_id'=>getenv('TWITCH_CLIENT_ID'), 'secret'=>getenv('TWITCH_CLIENT_SECRET')]),
   new Joker\Plugin\Meme(),
+  new Joker\Plugin\Excuse(),
+  new Joker\Plugin\Whynot(),
 
   // *** somethingg wide, without triggers, must stay in the end ***
 
