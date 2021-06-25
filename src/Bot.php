@@ -24,8 +24,9 @@ class Bot
   const PLUGIN_BREAK  = 100501;
 
   private
-    $ch = null,
     $token = null,
+    $debug = false,
+    $ch = null,
     $buffer = [],
     $me = null,
     $last_update_id = 0,
