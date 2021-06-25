@@ -1,11 +1,12 @@
 <?php
 
 /**
- * Joker Bot
+ * Joker Telegram Bot
  *
- * Born in 2001'th this bot was entertainment chatbot made in miRCscript,
- * joking on channel #blackcrystal in Quakenet. Since that year many things
- * has been changed. Here's third rewrite of Joker on PHP and Telegram API.
+ * Born in 2001'th this bot was our entertainment chat bot made with miRCscript, joking on channel
+ * #blackcrystal in Quakenet.
+ *
+ * In 2019 we started to create new Joker for Telegram on PHP, with more flexibility and functionality added.
  *
  * @package joker-telegram-bot
  * @author Sergei Miami <miami@blackcrystal.net>
