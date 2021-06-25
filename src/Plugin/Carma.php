@@ -15,13 +15,12 @@
 
 namespace Joker\Plugin;
 
-use Joker\Event;
 use Joker\Parser\Message;
+use Joker\Parser\Update;
 use Joker\Parser\User;
-use Joker\Plugin;
 use RedbeanPHP\R;
 
-class Carma extends Plugin
+class Carma extends Base
 {
 
   protected
@@ -31,14 +30,13 @@ class Carma extends Plugin
   /**
    * Reply to /carma command with information (for now only rating available)
    *
-   * @param Event $event
-   *
+   * @param Update $update
    * @return false|void
    */
-  public function onPublicText( Event $event )
+  public function onPublicText( Update $update )
   {
 
-    $message = $event->message();
+    $message = $update->message();
     $userfrom = $message->from();
 
     // increment rating, 1 per megabyte of text
@@ -61,7 +59,7 @@ class Carma extends Plugin
         return $result;
       }, R::findAll('user', ' ORDER BY carma_rating DESC')));
       $answer[] = "Total: $sum";
-      $event->answerMessage( trim( implode(PHP_EOL, $answer)) );
+      $update->answerMessage( trim( implode(PHP_EOL, $answer)) );
       return false;
     }
 
@@ -106,36 +104,19 @@ class Carma extends Plugin
     $answer[] = "To give or steal carma, say + or - in reply to anybody's message. " .
                 "Amount of carma you share, depends on yours and other party powers.";
 
-    $event->answerMessage( trim( implode(PHP_EOL, $answer)) );
+    $update->answerMessage( trim( implode(PHP_EOL, $answer)) );
     return false;
   }
 
   /**
-   * Clean message after [clean_time] seconds
-   * @param Event $event
-   *
-   */
-  public function onEmpty( Event $event )
-  {
-    foreach ($this->messages_to_clean as $key => $message) /** @var Message $message */
-    {
-      if (time() >= $message->date() + $this->getOption('clean_time',10))
-      {
-        $event->getBot()->deleteMessage($message->chat()->id(),$message->message_id());
-        unset($this->messages_to_clean[$key]);
-      }
-    }
-  }
-
-  /**
    * Reply public chat with + or -
-   * @param Event $event
+   * @param Update $update
    *
    * @return false|void
    */
-  public function onPublicTextReply( Event $event )
+  public function onPublicTextReply( Update $update )
   {
-    $message  = $event->message();
+    $message  = $update->message();
     $userfrom = $message->from();
     $userto   = $message->reply_to_message()->from();
 
@@ -202,7 +183,7 @@ class Carma extends Plugin
       '%newto%'   => round( $r['to']['new'], 2),
     ]);
 
-    $answer = $event->answerMessage( $answer );
+    $answer = $update->answerMessage( $answer );
 
     // if clean_time option is set, put to array
     if ($this->getOption('clean_time'))
@@ -211,6 +192,23 @@ class Carma extends Plugin
     }
 
     return false;
+  }
+
+  /**
+   * Clean message after [clean_time] seconds
+   * @param Update $update
+   *
+   */
+  public function onEmpty( Update $update )
+  {
+    foreach ($this->messages_to_clean as $key => $message) /** @var Message $message */
+    {
+      if (time() >= $message->date() + $this->getOption('clean_time',10))
+      {
+        $update->bot()->deleteMessage($message->chat()->id(),$message->message_id());
+        unset($this->messages_to_clean[$key]);
+      }
+    }
   }
 
   /**

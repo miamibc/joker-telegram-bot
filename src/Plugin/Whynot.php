@@ -11,10 +11,9 @@
 
 namespace Joker\Plugin;
 
-use Joker\Plugin;
-use Joker\Event;
+use Joker\Parser\Update;
 
-class Whynot extends Plugin
+class Whynot extends Base
 {
 
   protected $options = [
@@ -104,13 +103,13 @@ class Whynot extends Plugin
 
   ];
 
-  public function onPublicText( Event $event )
+  public function onPublicText( Update $update )
   {
 
-    $text = $event->message()->text();
+    $text = $update->message()->text();
     if ($text->trigger() !== 'whynot') return;
 
-    $event->answerMessage( $this->generate() );
+    $update->answerMessage( $this->generate() );
     return false;
   }
 

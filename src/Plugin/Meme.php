@@ -10,19 +10,18 @@
 
 namespace Joker\Plugin;
 
-use Joker\Event;
-use Joker\Plugin;
+use Joker\Parser\Update;
 
-class Meme extends Plugin
+class Meme extends Base
 {
 
-  public function onPublicText( Event $event )
+  public function onPublicText( Update $update )
   {
     // process only if triggered by 'meme' trigger
-    if ($event->message()->text()->trigger() !== 'meme') return;
+    if ($update->message()->text()->trigger() !== 'meme') return;
 
     // selected meme
-    $name = $event->message()->text()->token(1,1);
+    $name = $update->message()->text()->token(1,1);
 
     // if nothing selected, or it's 'list'
     if ( empty($name) || $name == 'list')
@@ -34,7 +33,7 @@ class Meme extends Plugin
       }, json_decode( file_get_contents('https://api.memegen.link/images/'), true));
 
       // answer instrctions
-      $event->answerMessage("Usage: !meme <name>\nthen add one, or two lines of text.\nName can be selected from: " . implode(" ", $list));
+      $update->answerMessage("Usage: !meme <name>\nthen add one, or two lines of text.\nName can be selected from: ".implode(" ", $list));
       return false;
     }
 
@@ -44,7 +43,7 @@ class Meme extends Plugin
     // if no template received, no such meme
     if (!$template)
     {
-      $event->answerMessage("S0rry d0g, no such meme");
+      $update->answerMessage("S0rry d0g, no such meme");
       return false;
     }
 
@@ -52,7 +51,7 @@ class Meme extends Plugin
     $lines = $template['lines'];
 
     // process amount of lines from 1, replace special symbols and make a link
-    $text = trim( strtr( $event->message()->text()->line(1, $lines), [
+    $text = trim( strtr( $update->message()->text()->line(1, $lines), [
         "\n" => '/',
         ' ' => '_',
         '_' => '__',
@@ -68,7 +67,7 @@ class Meme extends Plugin
 
     if (empty($text))
     {
-      $event->answerMessage("Usage: !meme $name\n$lines lines of text");
+      $update->answerMessage("Usage: !meme $name\n$lines lines of text");
       return false;
     }
 
@@ -79,12 +78,12 @@ class Meme extends Plugin
     if ($image)
     {
       file_put_contents( 'data/tmp/meme.png', $image);
-      $event->answerPhoto( 'data/tmp/meme.png' );
+      $update->answerPhoto( 'data/tmp/meme.png' );
       unlink('data/tmp/meme.png' );
     }
     else
     {
-      $event->answerMessage("S0rry d0g, something went wrong");
+      $update->answerMessage("S0rry d0g, something went wrong");
     }
 
     return false;

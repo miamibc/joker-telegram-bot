@@ -11,18 +11,18 @@
 
 namespace Joker\Plugin;
 
+use Joker\Parser\Update;
 use Joker\Plugin;
-use Joker\Event;
 
-class Hello extends Plugin
+class Hello extends Base
 {
 
-  public function onPrivateText( Event $event )
+  public function onPrivateText( Update $update )
   {
 
-    if (!preg_match('@^(/start|hello|hi|yo)\b@ui', $event->message()->text())) return;
+    if (!preg_match('@^(/start|hello|hi|yo)\b@ui', $update->message()->text())) return;
 
-    $name = $event->message()->from()->name();
+    $name = $update->message()->from()->name();
 
     $message = <<<EOF
 Hello, $name. I'm Joker, the Telegram Bot.
@@ -32,7 +32,7 @@ Born in 2001, I was entertainment chatbot written in miRCscript. Now I'm a bit n
 Read more: https://github.com/miamibc/joker-telegram-bot
 EOF;
 
-    $event->answerMessage( $message );
+    $update->answerMessage( $message );
     return false;
   }
 

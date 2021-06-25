@@ -10,32 +10,31 @@
 
 namespace Joker\Plugin;
 
-use Joker\Plugin;
-use Joker\Event;
+use Joker\Parser\Update;
 
-class Kicker extends Plugin
+class Kicker extends Base
 {
 
-  public function onJoin( Event $event )
+  public function onJoin( Update $update )
   {
     // new chat member
-    $user = $event->message()->new_chat_member();
+    $user = $update->message()->new_chat_member();
 
     // check name for emoji
     if (self::containsEmoji($user->name()))
     {
 
       // quote from Predator
-      $event->answerMessage('If it bleeds, we can kill it ;p');
+      $update->answerMessage('If it bleeds, we can kill it ;p');
 
       // kick user
-      $event->customRequest('kickChatMember',[
-        'chat_id' => $event->message()->chat()->id(),
+      $update->customRequest('kickChatMember',[
+        'chat_id' => $update->message()->chat()->id(),
         'user_id' => $user->id(),
       ]);
 
       // delete message about join
-      $event->deleteMessage();
+      $update->deleteMessage();
 
     }
 

@@ -12,19 +12,18 @@
 
 namespace Joker\Plugin;
 
-use Joker\Plugin;
-use Joker\Event;
+use Joker\Parser\Update;
 
-class Quote extends Plugin
+class Quote extends Base
 {
 
   protected $options = [
     'dir' => false,
   ];
 
-  public function onPublicText( Event $event )
+  public function onPublicText( Update $update )
   {
-    $text = $event->message()->text();
+    $text = $update->message()->text();
 
     $chunk = preg_split('@\s+@', $text);
 
@@ -36,7 +35,7 @@ class Quote extends Plugin
     if (in_array( $command, [ '!list', '!help' ]) )
     {
       $help = $this->getHelp( $this->getOption("dir") );
-      $event->answerMessage( $help );
+      $update->answerMessage( $help );
       return false;
     }
 
@@ -44,17 +43,18 @@ class Quote extends Plugin
     if (!file_exists($filename)) return;
 
     $joke = $this->getJoke( $command, $params );
-    $event->answerMessage( $joke );
+    $update->answerMessage( $joke );
     return false;
   }
 
   /**
    * Listen to private message and add joke
-   * @param Event $event
+   *
+   * @param Update $update
    */
-  public function onPrivateText( Event $event )
+  public function onPrivateText( Update $update )
   {
-    $text = $event->message()->text();
+    $text = $update->message()->text();
 
     if ( preg_match( $regexp = '#^(.*), \[([^]]+)\]\n(.*?)$#m', $text, $matches) )
     {
@@ -91,7 +91,7 @@ class Quote extends Plugin
 
     // return last joke
     $joke = $this->getJoke( "!tg", "last" );
-    $event->answerMessage( "Added: $joke" );
+    $update->answerMessage( "Added: $joke" );
     return false;
   }
 

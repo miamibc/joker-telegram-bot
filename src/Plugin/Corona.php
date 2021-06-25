@@ -19,25 +19,24 @@
 
 namespace Joker\Plugin;
 
-use Joker\Plugin;
-use Joker\Event;
+use Joker\Parser\Update;
 
-class Corona extends Plugin
+class Corona extends Base
 {
 
   const LIST_URL = "https://api.github.com/repos/CSSEGISandData/COVID-19/contents/csse_covid_19_data/csse_covid_19_daily_reports?ref=master";
 
-  public function onPublicText( Event $event )
+  public function onPublicText( Update $update )
   {
-    $text = $event->message()->text();
-    if ($text->trigger() !== 'twitch') return;
+    $text = $update->message()->text();
+    if ($text->trigger() !== 'corona') return;
 
     $trigger = $text->trigger();
     $query   = $text->token(1);
 
     if (empty( $query ))
     {
-      $event->answerMessage("Usage: $trigger country, region\n\n$trigger Estonia\n$trigger Berlin, Germany");
+      $update->answerMessage("Usage: $trigger country, region\n\n$trigger Estonia\n$trigger Berlin, Germany");
       return false;
     }
 
@@ -52,7 +51,7 @@ class Corona extends Plugin
     // search in data file
     if (!$result = $this->search_csse_covid_19_data($query))
     {
-      $event->answerMessage("Can't find corona data for $query, please try with country name");
+      $update->answerMessage("Can't find corona data for $query, please try with country name");
       return false;
     }
 
@@ -76,12 +75,12 @@ class Corona extends Plugin
     // if array is not associative, this is suggestions
     if (isset($result[0]))
     {
-      $event->answerMessage("Try $trigger with more specific query:\n" . implode("\n", $result) );
+      $update->answerMessage("Try $trigger with more specific query:\n".implode("\n", $result) );
       return false;
     }
 
     // answer with result, don't process other plugins
-    $event->answerMessage( implode(PHP_EOL, [
+    $update->answerMessage( implode(PHP_EOL, [
       'Corona situation in '  . $result['Combined_Key'],
       'Incident rate: '       . round( $result['Incident_Rate'],2),
       'Case fatality ratio: ' . round( $result['Case_Fatality_Ratio'],2),

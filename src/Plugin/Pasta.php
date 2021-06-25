@@ -11,18 +11,17 @@
 
 namespace Joker\Plugin;
 
-use Joker\Plugin;
-use Joker\Event;
+use Joker\Parser\Update;
 
-class Pasta extends Plugin
+class Pasta extends Base
 {
 
   private $last_message = 0;
 
-  public function onPublicText( Event $event )
+  public function onPublicText( Update $update )
   {
 
-    $text = $event->message()->text();
+    $text = $update->message()->text();
 
     // once in hour
     if (time() < $this->last_message + $this->getOption('minimum_time', 60*60)) return;
@@ -40,15 +39,15 @@ class Pasta extends Plugin
     if ($answer)
     {
       $this->last_message = time();
-      $event->answerMessage($answer);
+      $update->answerMessage($answer);
       return false;
     }
 
   }
 
-  public function onPublicPhotoCaption( Event $event )
+  public function onPublicPhotoCaption( Update $update )
   {
-    return $this->onPublicText($event);
+    return $this->onPublicText($update);
   }
 
 

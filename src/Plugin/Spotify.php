@@ -28,20 +28,19 @@
 
 namespace Joker\Plugin;
 
-use Joker\Plugin;
-use Joker\Event;
+use Joker\Parser\Update;
 
-class Spotify extends Plugin
+class Spotify extends Base
 {
 
   const SPOTIFY_API_ENDPOINT  = 'https://api.spotify.com/v1';
   const SPOTIFY_AUTH_ENDPOINT = 'https://accounts.spotify.com/api/token';
   private $token, $token_expire_time;
 
-  public function onPublicText( Event $event )
+  public function onPublicText( Update $update )
   {
 
-    $text = $event->message()->text();
+    $text = $update->message()->text();
     $trigger = $text->trigger();
 
     if (!in_array( $trigger, ['spotify', 'mp4', 'mp3', 'music'])) return;
@@ -62,14 +61,14 @@ class Spotify extends Plugin
     $result = $this->doSearch($query);
     if (!isset( $result['tracks']['items']) )
     {
-      $event->answerMessage("Nothing found :( Let's try again?");
+      $update->answerMessage("Nothing found :( Let's try again?");
       return false;
     }
 
     // get random track, extract information and answer
     $track  = $result['tracks']['items'][ mt_rand(0, count( $result['tracks']['items'] )-1) ];
     $answer = $this->getTrackInformation( $track );
-    $event->answerMessage( $answer , ['parse_mode' => 'HTML']);
+    $update->answerMessage( $answer , ['parse_mode' => 'HTML']);
     return false;
 
   }

@@ -12,12 +12,14 @@ class Base
 {
 
   protected $data = [];    // incoming data array
+  protected $parent = null;   // parent element
   protected $cache = [];   // wrapped objects cache
   protected $wrapper = []; // array or wrappers
 
-  public function __construct( $data )
+  public function __construct( $data = null, $parent = null )
   {
     $this->data = $data;
+    $this->parent = $parent;
   }
 
   /**
@@ -45,13 +47,13 @@ class Base
     if (is_array( $data ) && array_keys($data) === range(0, count($data) - 1))
     {
       $result = array_map(function ( $item ) use ($wrapper){
-        return new $wrapper( $item );
+        return new $wrapper( $item , $this);
       }, $data);
     }
     // all other types of data, just wrap it
     else
     {
-      $result = new $wrapper($data);
+      $result = new $wrapper($data, $this);
     }
     return $this->cache[$key] = $result;
   }
@@ -69,7 +71,12 @@ class Base
    */
   public function wrapIn( string $classname )
   {
-    return new $classname($this->data);
+    return new $classname($this->data, $this);
+  }
+
+  public function parent()
+  {
+    return $this->parent;
   }
 
 }

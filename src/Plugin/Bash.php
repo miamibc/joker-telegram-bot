@@ -15,10 +15,9 @@
 
 namespace Joker\Plugin;
 
-use Joker\Plugin;
-use Joker\Event;
+use Joker\Parser\Update;
 
-class Bash extends Plugin
+class Bash extends Base
 {
 
   const RANDOM_ENDPOINT  = 'https://bash.im/random';
@@ -26,10 +25,10 @@ class Bash extends Plugin
 
   private $random_jokes = [];
 
-  public function onPublicText( Event $event )
+  public function onPublicText( Update $update )
   {
 
-    $text = $event->message()->text();
+    $text = $update->message()->text();
 
     if ( $text->trigger() !== 'bash') return;
 
@@ -48,7 +47,7 @@ class Bash extends Plugin
     }
 
     if (!$joke) $joke = "Joke not found :(";
-    $event->answerMessage( "$trigger $joke");
+    $update->answerMessage( "$trigger $joke");
     return false;
 
   }

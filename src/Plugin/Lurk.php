@@ -13,25 +13,24 @@
 
 namespace Joker\Plugin;
 
-use Joker\Plugin;
-use Joker\Event;
+use Joker\Parser\Update;
 
-class Lurk extends Plugin
+class Lurk extends Base
 {
 
   const API_URL  = 'https://lurkmore.to/api.php';
 
-  public function onPublicText( Event $event )
+  public function onPublicText( Update $update )
   {
 
-    $trigger =  $event->message()->text()->trigger();
+    $trigger =  $update->message()->text()->trigger();
     if ($trigger !== 'lurk') return;
 
-    $query = $event->message()->text()->token(1);
+    $query = $update->message()->text()->token(1);
 
     if (empty( $query ))
     {
-      $event->answerMessage("!$trigger usage: !$trigger topic");
+      $update->answerMessage("!$trigger usage: !$trigger topic");
       return false;
     }
 
@@ -43,12 +42,12 @@ class Lurk extends Plugin
       foreach ($results as $i => $result)
         $results[$i] = "$trigger $result";
 
-      $event->answerMessage("Please choose one:\n".implode("\n",$results));
+      $update->answerMessage("Please choose one:\n".implode("\n",$results));
       return false;
     }
 
     $page = $this->doParse( $query );
-    $event->answerMessage( $page );
+    $update->answerMessage( $page );
     return false;
   }
 

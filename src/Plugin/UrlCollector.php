@@ -12,16 +12,15 @@
 
 namespace Joker\Plugin;
 
-use Joker\Plugin;
-use Joker\Event;
+use Joker\Parser\Update;
 
-class UrlCollector extends Plugin
+class UrlCollector extends Base
 {
 
-  public function onPublicTextEntities( Event $event)
+  public function onPublicTextEntities( Update $update )
   {
     $filename = $this->getOption('file', 'data/urls.txt');
-    $message = $event->message();
+    $message = $update->message();
 
     // search for urls in public message entities
     foreach ($message->entities() as $entity)

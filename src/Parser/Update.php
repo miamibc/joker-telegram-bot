@@ -39,4 +39,106 @@ class Update extends Base
     return $this->update_id();
   }
 
+
+  /**
+   * Get all characteristics of update with true/false values
+   * @return array
+   */
+  public function getTags()
+  {
+    return [
+      'Private' => $private = (
+        isset($this->data['message']['chat']['type'])
+        && in_array( $this->data['message']['chat']['type'], ['private'])
+      ),
+      'Public'    => !$private,
+      'Group'     => isset($this->data['message']['chat']['type'])
+                     && in_array( $this->data['message']['chat']['type'], ['group', 'supergroup', 'channel']),
+      'Sticker'   => isset($this->data['message']['sticker']),
+      'Entities'  => isset($this->data['message']['entities']),
+      'Animation' => isset($this->data['message']['animation']),
+      'Audio'     => isset($this->data['message']['audio']),
+      'Document'  => isset($this->data['message']['document']),
+      'Video'     => isset($this->data['message']['video']),
+      'Voice'     => isset($this->data['message']['voice']),
+      'Contact'   => isset($this->data['message']['contact']),
+      'Dice'      => isset($this->data['message']['dice']),
+      'Game'      => isset($this->data['message']['game']),
+      'Photo'     => isset($this->data['message']['photo']),
+      'Caption'   => isset($this->data['message']['caption']),
+      'Text'      => isset($this->data['message']['text']),
+      'Reply'     => isset($this->data['message']['reply_to_message']),
+      'Forward'   => isset($this->data['message']['forward_from'])
+                     || isset($this->data['message']['forward_from_chat'])
+                     || isset($this->data['message']['forward_from_message_id'])
+                     || isset($this->data['message']['forward_date']),
+      'Poll'      => isset($this->data['poll']),
+      'Answer'    => isset($this->data['poll_answer']),
+      'Edit'      => isset($this->data['edited_message'])
+                     || isset($this->data['edited_channel_post']),
+      'Location'  => isset($this->data['message']['venue'])
+                     || isset($this->data['message']['location']),
+      'Join'      => isset($this->data['message']['new_chat_member'])
+                     || isset($this->data['message']['new_chat_members'])
+                     || isset($this->data['message']['new_chat_participant']),
+      'Leave'     => isset($this->data['message']['left_chat_member'])
+                     || isset($this->data['message']['left_chat_participant']),
+      'Pin'       => isset($this->data['message']['pinned_message']),
+      'Message'   => isset($this->data['message']),
+      'Empty'     => empty($this->data),
+      'Timer'     => empty($this->data),
+    ];
+  }
+
+  public function bot()
+  {
+    // in Update, parent is a bot
+    return $this->parent();
+  }
+
+  public function toJson()
+  {
+    return json_encode( $this->data );
+  }
+
+  public function sendMessage( $chat_id, $text, $options = [] )
+  {
+    return $this->bot()->sendMessage( $chat_id, $text, $options );
+  }
+
+  public function answerMessage( $text, $options = [] )
+  {
+    if (!isset($this->data['message']['chat']['id'])) return false;
+    return $this->bot()->sendMessage( $this->data['message']['chat']['id'], $text, $options );
+  }
+
+  public function deleteMessage()
+  {
+    if (!isset($this->data['message']['chat']['id'], $this->data['message']['message_id'])) return false;
+    return $this->bot()->deleteMessage( $this->data['message']['chat']['id'], $this->data['message']['message_id'] );
+  }
+
+  public function answerSticker( $file_id, $options = [] )
+  {
+    if (!isset($this->data['message']['chat']['id'])) return false;
+    return $this->bot()->sendSticker( $this->data['message']['chat']['id'], $file_id, $options );
+  }
+
+  public function answerPhoto( $file, $options = [])
+  {
+    if (!isset($this->data['message']['chat']['id'])) return false;
+    return $this->bot()->sendPhoto( $this->data['message']['chat']['id'], $file, $options );
+  }
+
+  public function forwardMessage( $chat_id , $options = [])
+  {
+    if (!isset($this->data['message']['chat']['id'], $this->data['message']['message_id'])) return false;
+    return $this->bot()->forwardMessage( $chat_id, $this->data['message']['chat']['id'], $this->data['message']['message_id'], $options );
+  }
+
+  public function customRequest( $method, $data = [])
+  {
+    return $this->bot()->customRequest($method, $data);
+  }
+
 }

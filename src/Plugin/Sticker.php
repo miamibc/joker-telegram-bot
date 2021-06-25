@@ -9,19 +9,18 @@
 
 namespace Joker\Plugin;
 
-use Joker\Plugin;
-use Joker\Event;
+use Joker\Parser\Update;
 
-class Sticker extends Plugin
+class Sticker extends Base
 {
 
-  public function onPrivateSticker( Event $event )
+  public function onPrivateSticker( Update $update )
   {
 
-    $sticker = $event->message()->sticker();
+    $sticker = $update->message()->sticker();
 
     // request stickers in this pack
-    $result = $event->customRequest('getStickerSet', ['name'=> $sticker->set_name()]);
+    $result = $update->customRequest('getStickerSet', ['name' => $sticker->set_name()]);
 
     // error or no stickers in set?
     if (!isset($result['stickers'])) return;
@@ -34,7 +33,7 @@ class Sticker extends Plugin
 
     // random sticker from collected, or same if nothing there
     $answer = count($ids) ? $ids[ mt_rand(0, count($ids)-1) ] : $sticker->file_id();
-    $event->answerSticker( $answer );
+    $update->answerSticker( $answer );
     return false;
 
   }

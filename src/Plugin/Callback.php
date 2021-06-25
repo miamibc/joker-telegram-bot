@@ -20,19 +20,18 @@
 
 namespace Joker\Plugin;
 
-use Joker\Plugin;
-use Joker\Event;
+use Joker\Parser\Update;
 
-class Callback extends Plugin
+class Callback extends Base
 {
 
-  public function onPublicText( Event $event )
+  public function onPublicText( Update $update )
   {
     $trigger = strtolower( $this->getOption('trigger') );
-    if ($event->message()->text()->trigger() === $trigger)
+    if ($update->message()->text()->trigger() === $trigger)
     {
       // process callback and return it's result
-      return call_user_func( $this->getOption('callback'), $event );
+      return call_user_func( $this->getOption('callback'), $update );
     }
 
   }

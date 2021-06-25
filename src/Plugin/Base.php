@@ -7,9 +7,9 @@
  * @author Sergei Miami <miami@blackcrystal.net>
  */
 
-namespace Joker;
+namespace Joker\Plugin;
 
-abstract class Plugin
+abstract class Base
 {
 
   protected $options = [];

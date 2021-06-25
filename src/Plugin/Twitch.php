@@ -12,28 +12,27 @@
 
 namespace Joker\Plugin;
 
-use Joker\Event;
-use Joker\Plugin;
+use Joker\Parser\Update;
 
-class Twitch extends Plugin
+class Twitch extends Base
 {
 
   protected $access_token, $expires_at;
 
-  public function onPublicText( Event $event )
+  public function onPublicText( Update $update )
   {
-    $text = $event->message()->text();
+    $text = $update->message()->text();
     if ($text->trigger() !== 'twitch') return;
 
     if (empty($text = trim( $text->token(1, null) )))
     {
-      $event->answerMessage('Usage: !twitch searchtext');
+      $update->answerMessage('Usage: !twitch searchtext');
       return false;
     }
 
     ($result = $this->searchChannels($text))
-      ? $event->answerMessage( $result, ['parse_mode'=>'HTML', 'disable_web_page_preview'=>true] )
-      : $event->answerMessage('Nothing found :(')
+      ? $update->answerMessage( $result, ['parse_mode' =>'HTML','disable_web_page_preview' =>true] )
+      : $update->answerMessage('Nothing found :(')
     ;
 
     return false;

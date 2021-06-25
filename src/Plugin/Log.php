@@ -8,10 +8,9 @@
 
 namespace Joker\Plugin;
 
-use Joker\Plugin;
-use Joker\Event;
+use Joker\Parser\Update;
 
-class Log extends Plugin
+class Log extends Base
 {
 
   protected $options = [
@@ -20,13 +19,13 @@ class Log extends Plugin
     'file'   => false, // log to file
   ];
 
-  public function onEmpty( Event $update )
+  public function onEmpty( Update $update )
   {
     if ($this->getOption('empty'))
       echo $this->getOption('empty');
   }
 
-  public function onMessage(Event $update)
+  public function onMessage( Update $update )
   {
 
     $json = $update->toJson();

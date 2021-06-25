@@ -9,10 +9,9 @@
 
 namespace Joker\Plugin;
 
-use Joker\Plugin;
-use Joker\Event;
+use Joker\Parser\Update;
 
-class Moderate extends Plugin
+class Moderate extends Base
 {
 
   protected $options = [
@@ -23,17 +22,18 @@ class Moderate extends Plugin
 
   /**
    * Listen to public text message and increase counter
-   * @param Event $event
+   *
+   * @param Update $update
    */
-  public function onPublicText( Event $event )
+  public function onPublicText( Update $update )
   {
-    $id = $event->message()->from()->id();
+    $id = $update->message()->from()->id();
 
     // if no counter yet, create it with normal number of messages
     if (!isset( $this->counter[ $id ] ))
       $this->counter[ $id ] = $this->getOption('characters_between');
 
-    $length = mb_strlen( $event->message()->text() , 'utf-8' );
+    $length = mb_strlen($update->message()->text() , 'utf-8' );
 
     // for cheaters like edson
     if ($length > $this->getOption('characters_between'))
@@ -45,13 +45,13 @@ class Moderate extends Plugin
   /**
    * Listen to public sticker and delete it, if counter less than allowed
    *
-   * @param Event $event
+   * @param Update $update
    *
    * @return int|void
    */
-  public function onPublicSticker( Event $event)
+  public function onPublicSticker( Update $update )
   {
-    $message = $event->message();
+    $message = $update->message();
 
     $id   = $message->from()->id();
     $name = $message->from()->name();
@@ -64,7 +64,7 @@ class Moderate extends Plugin
     if ($this->counter[ $id ] < $this->getOption('characters_between'))
     {
       // delete it
-      $event->deleteMessage();
+      $update->deleteMessage();
 
       // say something
       $need = $this->getOption('characters_between') - $this->counter[ $id ];
@@ -73,7 +73,7 @@ class Moderate extends Plugin
         "$name, you're little damn flooder. Need $need more chars to post sticker.",
         "No sh1t, $name m4n. Need $need more chars to post sticker.",
       ];
-      $event->answerMessage( $answer[ array_rand($answer) ]);
+      $update->answerMessage( $answer[ array_rand($answer) ]);
     }
     else
     {
