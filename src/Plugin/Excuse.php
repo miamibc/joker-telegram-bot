@@ -11,10 +11,9 @@
 
 namespace Joker\Plugin;
 
-use Joker\Plugin;
-use Joker\Event;
+use Joker\Parser\Update;
 
-class Excuse extends Plugin
+class Excuse extends Base
 {
 
   protected $options = [
@@ -154,13 +153,13 @@ class Excuse extends Plugin
 
   ];
 
-  public function onPublicText( Event $event )
+  public function onPublicText( Update $update )
   {
 
-    $text = $event->message()->text();
+    $text = $update->message()->text();
     if ($text->trigger() !== 'excuse') return;
 
-    $event->answerMessage( $this->generate() );
+    $update->answerMessage( $this->generate() );
     return false;
   }
 

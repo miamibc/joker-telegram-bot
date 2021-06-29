@@ -15,18 +15,17 @@
 
 namespace Joker\Plugin;
 
-use Joker\Plugin;
-use Joker\Event;
+use Joker\Parser\Update;
 
-class Currency extends Plugin
+class Currency extends Base
 {
 
   const RATE_URL = "https://api.coinbase.com/v2/exchange-rates";
 
-  public function onPublicText( Event $event )
+  public function onPublicText( Update $update )
   {
 
-    $text = $event->message()->text();
+    $text = $update->message()->text();
 
     // trigger without parameters, show help message
     if ($text->trigger() !== 'currency') return;
@@ -34,14 +33,14 @@ class Currency extends Plugin
     // token 1 and 2 required. If not set, answer with help message
     if (!$text->token(2,1))
     {
-      $event->answerMessage("Usage: /currency [from] [to]\nExample: /currency EUR USD");
+      $update->answerMessage("Usage: /currency [from] [to]\nExample: /currency EUR USD");
       return false;
     }
 
     $from = strtoupper( $text->token(1,1) );
     $to   = strtoupper( $text->token(2,1) );
     $result = $this->getExchangeRate($from,$to);
-    $event->answerMessage( $result ? "1 $from = $result $to" : "Can't find exchange rate from $from to $to");
+    $update->answerMessage( $result ? "1 $from = $result $to" : "Can't find exchange rate from $from to $to");
     return false;
   }
 

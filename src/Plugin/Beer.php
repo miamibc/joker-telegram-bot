@@ -10,18 +10,17 @@
 
 namespace Joker\Plugin;
 
-use Joker\Plugin;
-use Joker\Event;
+use Joker\Parser\Update;
 
-class Beer extends Plugin
+class Beer extends Base
 {
 
   private $last_message = 0;
 
-  public function onPublicText( Event $event )
+  public function onPublicText( Update $update )
   {
 
-    $text = $event->message()->text();
+    $text = $update->message()->text();
 
     // if no trigger, skip to next plugin
     if (!preg_match('@\b(пиво|пива|пивк|пивчан)@ui',$text,$matches)) return;
@@ -152,7 +151,7 @@ class Beer extends Plugin
     // pick random element from list of jokes
     $rand = mt_rand( 0, count( $beer ) - 1 );
     $answer = $beer[$rand];
-    $event->answerMessage($answer);
+    $update->answerMessage($answer);
 
     // save last message time
     $this->last_message = time();
@@ -162,9 +161,9 @@ class Beer extends Plugin
 
   }
 
-  public function onPublicPhotoCaption( Event $event )
+  public function onPublicPhotoCaption( Update $update )
   {
-    return $this->onPublicText($event);
+    return $this->onPublicText( $update );
   }
 
 

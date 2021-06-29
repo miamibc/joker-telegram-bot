@@ -14,30 +14,29 @@
 
 namespace Joker\Plugin;
 
-use Joker\Plugin;
-use Joker\Event;
+use Joker\Parser\Update;
 
-class Temp extends Plugin
+class Temp extends Base
 {
 
   const API_URL = 'http://api.openweathermap.org/data/2.5/weather';
 
-  public function onPublicText( Event $event )
+  public function onPublicText( Update $update )
   {
 
     // process only if api_key defined
     if (!$api_key = $this->getOption('api_key')) return;
 
     // process only trigger messages
-    $trigger = $event->message()->text()->trigger();
+    $trigger = $update->message()->text()->trigger();
 
     if (!in_array( $trigger , ['temp', 'еуьз'])) return;
 
-    $author  = $event->message()->from();
+    $author  = $update->message()->from();
     $custom  = $author->getCustom();
 
     // try to get query from token1
-    if (!$query = $event->message()->text()->token(1))
+    if (!$query = $update->message()->text()->token(1))
       // try to get query from database
       if (!$query = $custom->temp_query)
         // get default from options
@@ -83,7 +82,7 @@ class Temp extends Plugin
 
     if (!$json = @file_get_contents( $url ))
     {
-      $event->answerMessage( "!$trigger: oops... can't find thermometer there :/" );
+      $update->answerMessage( "!$trigger: oops... can't find thermometer there :/" );
       return false;
     }
 
@@ -91,7 +90,7 @@ class Temp extends Plugin
 
     if (!isset( $data['main']['temp'], $data['name'] ))
     {
-      $event->answerMessage( "!$trigger: uh... sorry, thermometer is broken there" );
+      $update->answerMessage( "!$trigger: uh... sorry, thermometer is broken there" );
       return false;
     }
 
@@ -177,7 +176,7 @@ class Temp extends Plugin
 
     $message = "!$trigger: ". trim( implode(', ', $result) ) . " in {$place}";
 
-    $event->answerMessage( $message );
+    $update->answerMessage( $message );
     return false;
   }
 

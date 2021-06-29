@@ -16,16 +16,15 @@
 
 namespace Joker\Plugin;
 
-use Joker\Event;
-use Joker\Plugin;
+use Joker\Parser\Update;
 
-class Forwarder extends Plugin
+class Forwarder extends Base
 {
 
-  public function onMessageText( Event $event )
+  public function onMessageText( Update $update )
   {
 
-    $text = $event->message()->text();
+    $text = $update->message()->text();
 
     foreach ($this->getOptions() as $item)
     {
@@ -34,7 +33,7 @@ class Forwarder extends Plugin
       $item = $this->normalizeItem($item);
 
       // skip if not from needed chat
-      if (!in_array( $event->message()->chat()->id(), $item['from'])) continue;
+      if (!in_array( $update->message()->chat()->id(), $item['from'])) continue;
 
       // check all patterns, skip if nothing found
       $found = false;
@@ -49,9 +48,9 @@ class Forwarder extends Plugin
 
         // copy message, or forward it
         if ($item['forward'])
-          $event->forwardMessage( $chat_id );
+          $update->forwardMessage( $chat_id );
         else
-          $event->sendMessage($chat_id,$text);
+          $update->sendMessage($chat_id,$text);
       }
 
     }

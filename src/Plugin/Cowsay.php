@@ -20,10 +20,9 @@
 namespace Joker\Plugin;
 
 use Cowsayphp\Farm;
-use Joker\Plugin;
-use Joker\Event;
+use Joker\Parser\Update;
 
-class Cowsay extends Plugin
+class Cowsay extends Base
 {
 
   protected $options = [
@@ -61,14 +60,14 @@ class Cowsay extends Plugin
     parent::__construct($options);
   }
 
-  public function onPublicText( Event $event )
+  public function onPublicText( Update $update )
   {
 
     // if no font_file set, don't process request
     // (without font we can't draw image)
     if (!$this->getOption('font_file')) return;
 
-    $text    = $event->message()->text();
+    $text    = $update->message()->text();
     $trigger = $text->trigger();
 
     // trigger must end with 'say'
@@ -86,7 +85,7 @@ class Cowsay extends Plugin
 
     if (!$message)
     {
-      $event->answerMessage("Usage: $trigger text");
+      $update->answerMessage("Usage: $trigger text");
       return false;
     }
 
@@ -98,7 +97,7 @@ class Cowsay extends Plugin
     $image  = $this->createImage( $result );
 
     // send photo and remove
-    $event->answerPhoto( $image );
+    $update->answerPhoto( $image );
 
     // delete photo after
     if ( $this->getOption('delete', true) ) unlink($image);

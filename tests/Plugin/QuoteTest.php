@@ -8,8 +8,7 @@
 
 namespace Tests\Plugin;
 
-use Joker\Bot;
-use Joker\Event;
+use Joker\Parser\Update;
 use Joker\Plugin\Quote;
 use PHPUnit\Framework\TestCase;
 
@@ -21,7 +20,6 @@ class QuoteTest extends TestCase
 
   public function testTelegramQuoteConverter()
   {
-    $joker = new Bot(false, true);
     $text = <<<EOF
 Artyom Lukin:
 кто чо делает в этот прекрасный вечер?)))
@@ -48,9 +46,8 @@ Ilja:
 Все посмотрели?
 EOF;
 
-    $event = new Event($joker, ['message'=>['text'=>$text]]);
     $plugin = new Quote(['dir' => $dir = dirname(__FILE__) . '/../data']);
-    $this->assertEquals(null, $result = $plugin->onPrivateText($event) );
+    $this->assertEquals(null, $plugin->onPrivateText( new Update(['message'=>['text'=>$text]])) );
     $this->assertFileExists( $file = "$dir/!tg.txt");
     $this->assertStringEqualsFile($file, "\n" . '<Artyom Lukin> кто чо делает в этот прекрасный вечер?)))\n<Viktor Overdoze> Фейерверки смотрим\nХуле еще делать\n<Sergei Miami> Фейверки смотрю. Хуль ещё делать\n<Eduard Zagrijev> Фейверки смотрю. Хуль ещё делать\n<Artyom Lukin> Фейверки смотрю. Хуль ещё делать\nИ я))\n<Ilja> Запустил с сыном сегодня фейерверки\nВсе посмотрели?');
     unlink($file);

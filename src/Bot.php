@@ -1,16 +1,15 @@
 <?php
 
 /**
- * Joker Bot
+ * Joker Telegram Bot
  *
- * Born in 2001'th this bot was entertainment chatbot made in miRCscript,
- * joking on channel #blackcrystal in Quakenet. Since that year many things
- * has been changed. Here's third rewrite of Joker on PHP and Telegram API.
+ * Born in 2001'th this bot was our entertainment chat bot made with miRCscript, joking on channel
+ * #blackcrystal in Quakenet.
+ *
+ * In 2019 we started to create new Joker for Telegram on PHP, with more flexibility and functionality added.
  *
  * @package joker-telegram-bot
  * @author Sergei Miami <miami@blackcrystal.net>
- *
- * @property  Plugin $plugin
  */
 
 namespace Joker;
@@ -22,17 +21,18 @@ use Joker\Parser\User;
 class Bot
 {
 
-  const PLUGIN_NEXT   = 100500;
-  const PLUGIN_BREAK  = 100501;
+  const PLUGIN_NEXT   = true;
+  const PLUGIN_BREAK  = false;
 
   private
+    $token = null,
     $debug = false,
     $ch = null,
-    $token = null,
     $buffer = [],
     $me = null,
     $last_update_id = 0,
-    $plugins = [];
+    $plugins = []
+  ;
 
   public function __construct( $token, $debug = false )
   {
@@ -125,122 +125,52 @@ class Bot
     $this->log( $method . ' '. json_encode($data) . ' => ' . $plain_response );
 
     if (!isset($result['ok']) || !$result['ok'])
-      throw new Exception("Something went wrong");
+      // throw new Exception("Something went wrong");
+      return false;
 
     return isset($result['result']) ? $result['result'] : false;
   }
 
   public function loop()
   {
-
-    // request new updates
-    try { $this->requestUpdates(); }
-    catch ( Exception $exception){ $this->log($exception); }
-
-    $event = new Event( $this, array_shift($this->buffer) );
-    try { $this->processEvent( $event ); }
-    catch ( Exception $exception)   { $this->log($exception); }
-
-    $event = null;
-    unset($event);
-
-    // sleep a bit
-    $time = count($this->buffer) ? 2 : 4;
-    sleep($time);
-  }
-
-  /**
-   * Perform custom request to Telegram API
-   * @param $method
-   * @param $data
-   *
-   * @return array|bool
-   * @throws Exception
-   */
-  public function customRequest( $method, $data )
-  {
-    return $this->_request( $method, $data );
-  }
-
-  /**
-   * @throws Exception
-   */
-  private function requestUpdates()
-  {
-    foreach ($this->_request("getUpdates", ['offset' =>$this->last_update_id]) as $item)
+    // if empty buffer, request updates
+    if (empty($this->buffer))
     {
-      $this->buffer[] = $item;
-      $this->last_update_id = $item['update_id']+1;
+      foreach ($this->getUpdates($this->last_update_id) as $item)
+      {
+        $this->buffer[] = new Update( $item, $this );
+        $this->last_update_id = $item['update_id'] + 1;
+      }
     }
-  }
 
-  public function getMe()
-  {
-    $data = $this->_request('getMe');
-    return new User( $data );
-  }
+    // get top update from buffer, or create empty update
+    $update = empty($this->buffer) ? new Update( null, $this) : array_shift( $this->buffer );
+    $tags   = $update->getTags();
 
-  public function sendMessage( $chat_id, $text, $options = [])
-  {
-    $result = $this->_request("sendMessage", array_merge(["chat_id" =>$chat_id,"text" =>$text], $options) );
-    return new Message( $result );
-  }
-
-  public function sendSticker( $chat_id, $file_id, $options = [])
-  {
-    $result = $this->_request("sendSticker", array_merge(["chat_id" =>$chat_id,"sticker" =>$file_id], $options) );
-    return new Message( $result );
-  }
-
-  public function deleteMessage( $chat_id, $message_id)
-  {
-    $result = $this->_request("deleteMessage", ["chat_id" =>$chat_id,"message_id" =>$message_id] );
-    return (bool)$result;
-  }
-
-
-  public function sendPhoto( $chat_id, $file, $options = [] )
-  {
-    if (!file_exists($file)) return false;
-    $result = $this->_requestMultipart( 'sendPhoto', array_merge( [ 'chat_id'=>$chat_id, 'photo'=>new \CURLFile( $file ) ], $options ));
-    return new Message( $result );
-  }
-
-  public function forwardMessage( $chat_id, $from_chat_id, $message_id, $options = [] )
-  {
-    $result = $this->_request( 'forwardMessage', array_merge( [ 'chat_id'=>$chat_id, 'from_chat_id'=>$from_chat_id, 'message_id' => $message_id ], $options ));
-    return new Message( $result );
-  }
-
-  private function processEvent(Event $event )
-  {
-    // get event tags
-    $tags = $event->getTags();
-
+    // scan all plugins
     foreach ( $this->plugins as $plugin )
     {
+      // iterate plugin public methods
       foreach ( get_class_methods($plugin) as $method )
       {
         // make array of pieces, splitted by Uppercase letter
         // f.e. onSomeMethod => [ on, Some, Method ]
         $pieces = preg_split('/(?=[A-Z])/',$method);
 
-        // method must start from on, and other parts
+        // method must start from 'on', and must have other parts
         if (array_shift($pieces) !== 'on' || count($pieces) == 0) continue;
 
         // count score to know, do we need to execute this method
         $score = 0;
         foreach ( $pieces as $piece)
-        {
-          // cleanup and normalize piece
-          $piece = strtolower( trim( $piece, ' _'));
-          if (isset($tags[$piece]) && $tags[$piece]) $score++;
-        }
+          if (isset($tags[$piece]) && $tags[$piece])
+            $score++;
+
         // if score doesnt match number of pieces, we skip this method
         if ($score !== count($pieces)) continue;
 
         // at last, execute it
-        $result = call_user_func( [$plugin,$method], $event );
+        $result = call_user_func( [$plugin,$method], $update );
 
         // check return value to change plugin processing behaviour if needed
         if     ($result === Bot::PLUGIN_NEXT)  { break 1; }
@@ -249,6 +179,8 @@ class Bot
         elseif ($result === false) { break 2; }
       }
     }
+
+    sleep(1);
   }
 
   public function log( $message )
@@ -270,6 +202,61 @@ class Bot
   {
     $this->plugins = $plugins;
     return $this;
+  }
+
+
+  public function getMe()
+  {
+    $data = $this->_request('getMe');
+    return new User( $data );
+  }
+
+  /**
+   * Perform custom request to Telegram API
+   * @param $method
+   * @param $data
+   *
+   * @return array|bool
+   */
+  public function customRequest( $method, $data )
+  {
+    return $this->_request( $method, $data );
+  }
+
+  public function getUpdates( $offset )
+  {
+    return $this->_request("getUpdates",['offset' => $offset]);
+  }
+
+  public function sendMessage( $chat_id, $text, $options = [])
+  {
+    $result = $this->_request("sendMessage", array_merge(["chat_id" =>$chat_id,"text" =>$text], $options) );
+    return new Message( $result );
+  }
+
+  public function sendSticker( $chat_id, $file_id, $options = [])
+  {
+    $result = $this->_request("sendSticker", array_merge(["chat_id" =>$chat_id,"sticker" =>$file_id], $options) );
+    return new Message( $result );
+  }
+
+  public function deleteMessage( $chat_id, $message_id)
+  {
+    $result = $this->_request("deleteMessage", ["chat_id" =>$chat_id,"message_id" =>$message_id] );
+    return (bool)$result;
+  }
+
+  public function sendPhoto( $chat_id, $file, $options = [] )
+  {
+    if (!file_exists($file)) return false;
+    $result = $this->_requestMultipart( 'sendPhoto', array_merge( [ 'chat_id'=>$chat_id, 'photo'=>new \CURLFile( $file ) ], $options ));
+    return new Message( $result );
+  }
+
+  public function forwardMessage( $chat_id, $from_chat_id, $message_id, $options = [] )
+  {
+    $result = $this->_request( 'forwardMessage', array_merge( [ 'chat_id'=>$chat_id, 'from_chat_id'=>$from_chat_id, 'message_id' => $message_id ], $options ));
+    return new Message( $result );
   }
 
 }

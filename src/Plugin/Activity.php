@@ -9,26 +9,23 @@
 
 namespace Joker\Plugin;
 
-use Joker\Plugin;
-use Joker\Event;
-use Joker\Parser\Message;
+use Joker\Parser\Update;
 
-class Activity extends Plugin
+class Activity extends Base
 {
 
-  /** @var Message[] */
   private $pool = [];
 
   /** @var integer */
   private $sync;
 
-  public function onPublicMessage( Event $event)
+  public function onPublicMessage( Update $update )
   {
     // add messages to the pool
-    $this->pool[] = $event->message();
+    $this->pool[] = $update;
   }
 
-  public function onEmpty( Event $event )
+  public function onEmpty( Update $update )
   {
     // no sync time, set it
     if (!$this->sync)
@@ -44,8 +41,10 @@ class Activity extends Plugin
     }
 
     // time to sync, read pool messages
-    foreach ( $this->pool as $message ) /** @var Message $message */
+    foreach ( $this->pool as $update ) /** @var Update $update */
     {
+      $message = $update->message();
+
       // process only messages having `from` field
       if ( !$user = $message->from() ) continue;
 
@@ -76,9 +75,9 @@ class Activity extends Plugin
     $this->sync = false;
   }
 
-  public function onPublicPin( Event $event)
+  public function onPublicPin( Update $update )
   {
-    $message = $event->message();
+    $message = $update->message();
     $custom = $message->chat()->getCustom();
 
     $custom->pinned_message_id  = $message->pinned_message()->id();

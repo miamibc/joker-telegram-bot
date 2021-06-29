@@ -21,10 +21,9 @@
 
 namespace Joker\Plugin;
 
-use Joker\Event;
-use Joker\Plugin;
+use Joker\Parser\Update;
 
-class Server extends Plugin
+class Server extends Base
 {
 
   private $sock;
@@ -42,7 +41,7 @@ class Server extends Plugin
     $this->sock = $sock;
   }
 
-  public function onEmpty( Event $event)
+  public function onEmpty( Update $update)
   {
 
     $conn = socket_accept($this->sock);
@@ -68,7 +67,7 @@ class Server extends Plugin
         return;
     }
 
-    $response = $event->getBot()->customRequest( $method , $request);
+    $response = $update->bot()->customRequest( $method , $request);
     $response = json_encode($response);
     $raw = "HTTP/1.1 200 OK\nContent-Length: " . strlen($response) . "\r\n\r\n" . $response ;
     socket_write($conn, $raw, strlen($raw) );
