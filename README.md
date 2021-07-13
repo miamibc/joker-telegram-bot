@@ -116,15 +116,16 @@ I'll be glad to see your plugins and help with implementations.
 - Reboot counter
 - Restart plugins without lose their state
 - Reload plugins without actual restart
-- Add onTimer event type, to process events by time
+- ~~Add onTimer event type, to process events by time~~
 - Add CommandPlugin base class, to simplify adding new commands
-- Database implementations: Redis, Mysql, Simplesql and nosql
+- ~~Database implementations: Redis, Mysql, Simplesql and nosql~~
 - Audio processing with ffmpeg and sending with sendAudio/sendVoice
 - ~~CowsayPlugin post image instead of text~~ done
 - Improved admin of jokes
 - Implement [Payments](https://core.telegram.org/bots/payments)
 - ~~Currency rates~~ (thanks ʎǝxǝl∀ for ide∀)
 - ~~Corona plugin~~
+- Chpocker HTML5 game
 - More cool plugins
 
 Please send your ideas into the [issues](https://github.com/miamibc/joker-telegram-bot/issues)
