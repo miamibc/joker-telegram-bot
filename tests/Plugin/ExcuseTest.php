@@ -17,6 +17,6 @@ class ExcuseTest extends TestCase
   {
     $plugin = new Excuse();
     $this->assertStringContainsString("MyName", $plugin->generate("MyName"));
-    $this->assertEquals( 4, substr_count(  $plugin->generate(), '.'));
+    $this->assertTrue(  substr_count(  $plugin->generate(), '.') >= 4 );
   }
 }
