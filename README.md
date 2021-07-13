@@ -6,6 +6,8 @@ Since that time many things has been changed. Here is third rewrite of Joker, ma
 
 Currently this bot is used in telegram channel [@blackcrystalnet](https://t.me/blackcrystalnet)
 
+![Why so serous](https://raw.githubusercontent.com/miamibc/joker-telegram-bot/master/assets/why-so-serious.jpg)
+
 ## Installation and start
 
 <details>
