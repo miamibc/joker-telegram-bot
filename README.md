@@ -104,7 +104,7 @@ For example, `onPrivateSticker` or `onStickerPrivate` will be called when both `
 
 Parameter of this method `Joker\Parser\Update $update` is used to access different parts of updates and react. 
 
-All details is described in `Joker\Parser` classes, to get information from update use methods with same names as in [Telegram API types](https://core.telegram.org/bots/api#available-types) on $update object, for example `$update->message()->chat()->username()`. 
+All details is described in `Joker\Parser` classes, to get information from update use methods with same names as in [Telegram API types](https://core.telegram.org/bots/api#available-types) on $update object, for example `$update->message()->chat()->username()` will return username of chat, where message was sent to. 
 
 Actions can be called from update, for example `$update->answerMessage()` or `$update->answerSticker()` is a shortcut to answer same channel or private user, by message or sticker. Other actions can be found in `Joker\Parser\Update` class.
 
