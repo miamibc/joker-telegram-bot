@@ -8,7 +8,7 @@ Currently this bot is used in telegram channel [@blackcrystalnet](https://t.me/b
 
 ![Why so serous](https://raw.githubusercontent.com/miamibc/joker-telegram-bot/master/assets/why-so-serious.jpg)
 
-[Joker history](https://blackcrystal.net/project/joker/)
+[Joker history (Russian)](https://blackcrystal.net/project/joker/)
 
 ## Installation and start
 
