@@ -20,6 +20,9 @@ namespace Joker\Parser;
  * ...
  * @method Poll poll() Optional. New poll state. Bots receive only updates about stopped polls and polls, which are sent by the bot
  * @method PollAnswer poll_answer() Optional. A user changed their answer in a non-anonymous poll. Bots receive new votes only in polls that were sent by the bot itself.
+ * @method CallbackQuery callback_query() Optional. New incoming callback query
+ * @method InlineQuery inline_query() Optional. New incoming inline query
+ * @method ShippingQuery shipping_query() Optional. New incoming shipping query. Only for invoices with flexible price
  * ...
  */
 class Update extends Base
@@ -32,6 +35,9 @@ class Update extends Base
     'edited_channel_post' => Message::class,
     'poll' => Poll::class,
     'poll_answer' => PollAnswer::class,
+    'callback_query' => CallbackQuery::class,
+    'inline_query' => InlineQuery::class,
+    'shipping_query' => ShippingQuery::class,
   ];
 
   public function id()
@@ -87,6 +93,9 @@ class Update extends Base
       'Message'   => isset($this->data['message']),
       'Empty'     => empty($this->data),
       'Timer'     => empty($this->data),
+      'Callback'  => isset($this->data['callback_query']),
+      'Inline'    => isset($this->data['inline_query']),
+      'Shipping'  => isset($this->data['shipping_query']),
     ];
   }
 
