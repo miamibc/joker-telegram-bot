@@ -22,11 +22,6 @@ use Joker\Parser\Update;
 class Game extends Base
 {
 
-  protected $options = [
-    'trigger' => 'chpocker',
-    'url' => 'https://blackcrystal.dev/chpocker/',
-  ];
-
   /**
    * Listen to public and private chat text message
    * with trigger !chpocker, and answers with our game
@@ -36,7 +31,10 @@ class Game extends Base
    */
   public function onMessageText( Update $update )
   {
-    $trigger = $this->getOption('trigger');
+    // if no trigger or url defined, do not process
+    if (!$trigger = $this->getOption('trigger')) return;
+    if (!$url = $this->getOption('url')) return;
+
     if ($update->message()->text()->trigger() !== $trigger) return;
     $update->bot()->customRequest('sendGame', [
       'chat_id' => $update->message()->chat()->id(),
@@ -52,15 +50,17 @@ class Game extends Base
    */
   public function onCallback( Update $update )
   {
+    // if no trigger or url defined, do not process
+    if (!$trigger = $this->getOption('trigger')) return;
+    if (!$url = $this->getOption('url')) return;
 
-    if ($update->callback_query()->game_short_name() !== $this->getOption('trigger')) return;
+    if ($update->callback_query()->game_short_name() !== $trigger) return;
 
     $update->callback_query()->answer([
-      'url' => $this->getOption('url'),
+      'url' => $url,
     ]);
 
     return false;
-
   }
 
 }

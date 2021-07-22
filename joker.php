@@ -42,7 +42,7 @@ $bot->plug([
   new Joker\Plugin\Meme(),
   new Joker\Plugin\Excuse(),
   new Joker\Plugin\Whynot(),
-  new Joker\Plugin\Game(),
+  new Joker\Plugin\Game( [ 'trigger' => 'chpocker', 'url' => 'https://blackcrystal.dev/chpocker/']),
   new Joker\Plugin\QuoteInline( ['dir' =>'data/jokes', 'limit' => 10, 'trigger' => 'tg'] ),
 
   // *** somethingg wide, without triggers, must stay in the end ***
