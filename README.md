@@ -71,7 +71,7 @@ Use `screen` command, to run bot in background.
 
 By default bot does nothing, [plugins](https://github.com/miamibc/joker-telegram-bot/tree/master/src/Plugin) is used to extend functionality and interact with users.  We made few classic plugins for Joker, like [Hello](https://github.com/miamibc/joker-telegram-bot/blob/master/src/Plugin/Hello.php) and more complex one [Temp](https://github.com/miamibc/joker-telegram-bot/blob/master/src/Plugin/Temp.php), feel free to use them and add new. 
 
-To add plugin, create new class extending `Joker\Plugin` and connect it with `$joker->plug( array )` command before main loop. Add methods like `on[Action][Action]( Joker\Event $event )`. These methods will be called when all actions is found in request. Actions can be:
+To add plugin, create new class extending `Joker\Plugin` and connect it with `$joker->plug( array )` command before main loop. Add methods like `on[Action][Action]( Joker\Parser\Update $update )`. These methods will be called when all actions is found in request. Actions can be:
 
 - `Public` - public requests
 - `Private` - non-public requests
@@ -98,15 +98,16 @@ To add plugin, create new class extending `Joker\Plugin` and connect it with `$j
 - `Leave` - user leaves the chat
 - `Pin` - new pinned message
 - `Entities` - has entities attached  
+- `Viabot` - message is sent via bot
 - `Empty` - empty requests, you can use this for processing timers
 
 For example, `onPrivateSticker` or `onStickerPrivate` will be called when both `sticker` and `private` is found in request.
 
 Parameter of this method `Joker\Parser\Update $update` is used to access different parts of updates and react. 
 
-All details is described in `Joker\Parser` classes, to get information from update use methods with same names as in [Telegram API types](https://core.telegram.org/bots/api#available-types) on $update object, for example `$update->message()->chat()->username()` will return username of chat, where message was sent to. 
+All details are described in `Joker\Parser` classes, to get information from update use methods with same names as in [Telegram API types](https://core.telegram.org/bots/api#available-types) on $update object, for example `$update->message()->chat()->username()` will return username of chat, where message was sent to. 
 
-Actions can be called from update, for example `$update->answerMessage()` or `$update->answerSticker()` is a shortcut to answer same channel or private user, by message or sticker. Other actions can be found in `Joker\Parser\Update` class.
+Actions can be called from update, for example `$update->answerMessage()` or `$update->answerSticker()` is a shortcut to answer same channel or private user, by message or sticker. Other actions can be found in `Joker\Parser\Update` class and others.
 
 Return value of plugin method can be:
 
@@ -131,7 +132,8 @@ I'll be glad to see your plugins and help with implementations.
 - Implement [Payments](https://core.telegram.org/bots/payments)
 - ~~Currency rates~~ (thanks ʎǝxǝl∀ for ide∀)
 - ~~Corona plugin~~
-- Chpocker HTML5 game
+- ~~Chpocker HTML5 game~~
+- ~~Inline quote plugin~~
 - More cool plugins
 
 Please send your ideas into the [issues](https://github.com/miamibc/joker-telegram-bot/issues)
