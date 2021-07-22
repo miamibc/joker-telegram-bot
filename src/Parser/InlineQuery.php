@@ -28,4 +28,16 @@ class InlineQuery extends Base
     'location' => Location::class,
   ];
 
+  public function answer( $data )
+  {
+    if (!$update = $this->parent()) return false;
+    if (!$bot = $update->parent()) return false;
+
+    $data = array_merge( $data, [
+      'inline_query_id' => $this->id(),
+    ]);
+
+    return $bot->customRequest('answerInlineQuery', $data);
+  }
+
 }

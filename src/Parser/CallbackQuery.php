@@ -28,4 +28,17 @@ class CallbackQuery extends Base
     'message' => Message::class,
   ];
 
+  public function answer( $data )
+  {
+
+    if (!$update = $this->parent()) return false;
+    if (!$bot = $update->parent()) return false;
+
+    $data = array_merge( $data, [
+      'callback_query_id' => $this->id(),
+    ]);
+
+    return $bot->customRequest('answerCallbackQuery', $data);
+
+  }
 }

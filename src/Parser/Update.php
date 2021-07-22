@@ -8,6 +8,8 @@
 
 namespace Joker\Parser;
 
+use Joker\Bot;
+
 /**
  * This object represents an incoming update.
  * @see https://core.telegram.org/bots/api#update
@@ -91,6 +93,7 @@ class Update extends Base
                      || isset($this->data['message']['left_chat_participant']),
       'Pin'       => isset($this->data['message']['pinned_message']),
       'Message'   => isset($this->data['message']),
+      'Viabot'    => isset($this->data['message']['via_bot']),
       'Empty'     => empty($this->data),
       'Timer'     => empty($this->data),
       'Callback'  => isset($this->data['callback_query']),
@@ -99,6 +102,9 @@ class Update extends Base
     ];
   }
 
+  /**
+   * @return Bot
+   */
   public function bot()
   {
     // in Update, parent is a bot
