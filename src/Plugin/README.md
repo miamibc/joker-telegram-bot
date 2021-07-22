@@ -241,7 +241,11 @@ Ask bot for a game with it's name, for example, `chpocker`
 !chpocker
 ```
 
-Bot will send you a game. By clicking Play Chpocker button your telegram will navigate to the game.
+Bot will send you a game. 
+
+![Chpocker](https://raw.githubusercontent.com/miamibc/joker-telegram-bot/master/assets/chpocker.png)
+
+By clicking **Play Chpocker** button, your telegram will navigate to [the game](https://blackcrystal.dev/chpocker/).
 
 Configuration options:
 - `trigger` (string, required) - short name of a game, will be used to request game by typing !trigger in private or public chat
