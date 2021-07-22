@@ -15,6 +15,7 @@ Plugins are well documented in inline comments, some interesting details will be
 * [Currency Plugin](#currency-plugin)
 * [Excuse Plugin](#excuse-plugin)
 * [Forwarder Plugin](#forwarder-plugin)
+* [Game Plugin](#game-plugin)
 * [Hello Plugin](#hello-plugin)
 * [Kicker Plugin](#kicker-plugin)
 * [Log Plugin](#log-plugin)
@@ -23,12 +24,14 @@ Plugins are well documented in inline comments, some interesting details will be
 * [Moderate Plugin](#moderate-plugin)
 * [Pasta Plugin](#pasta-plugin)
 * [Quote Plugin](#quote-plugin)
+* [QuoteInline Plugin](#quoteinline-plugin)
 * [Server Plugin](#server-plugin)
 * [Spotify Plugin](#spotify-plugin)
 * [Sticker Plugin](#sticker-plugin)
 * [Temp Plugin](#temp-plugin)
 * [Twitch Plugin](#twitch-plugin)
 * [UrlCollector Plugin](#urlcollector-plugin)
+* [Viabot Plugin](#viabot-plugin)
 * [Whynot Plugin](#whynot-plugin)
 
 ## Activity Plugin
@@ -228,6 +231,26 @@ Each line of configuration consists of array:
 
 NB! Joker can't read and forward messages from another bots, because Telegram [does not allow to read bots messages with Telegram Bot API](https://core.telegram.org/bots/faq#why-doesnt-my-bot-see-messages-from-other-bots). If you need to read them, try to search implementations of another protocol - Mtproto. 
 
+## Game Plugin
+
+This plugin allows you to publish HTML5 game with a bot. Game need to be registered in BotFather, and inline mode must be enabled. [Read more](https://core.telegram.org/bots/api#games). 
+
+Ask bot for a game with it's name, for example, `chpocker`
+
+```
+!chpocker
+```
+
+Bot will send you a game. 
+
+![Chpocker](https://raw.githubusercontent.com/miamibc/joker-telegram-bot/master/assets/chpocker.png)
+
+By clicking **Play Chpocker** button, your telegram will navigate to [the game](https://blackcrystal.dev/chpocker/).
+
+Configuration options:
+- `trigger` (string, required) - short name of a game, will be used to request game by typing !trigger in private or public chat
+- `url`     (string, required) - URL of a game
+
 ## Hello Plugin
 
 Hello world plugin, small example of writing basic plugin for Joker.
@@ -390,6 +413,19 @@ Added: !tg 111 of 111: [01.11.20 21:58]
 <SHPONGIk> понятно)
 ```
 
+## QuoteInline Plugin
+
+Type bot's @username with text to search in jokes
+
+Then select any joke from list, this will post a joke via the bot.
+
+This functionality available for bots with `inline mode` enabled. Read more about enabling it [here](https://core.telegram.org/bots/api#inline-mode).
+
+Configuration options:
+- `dir` (string, optional, default data/jokes) directory with jokes
+- `limit` (integer, optional, default 10) maximum number of jokes to display in suggestion block
+- `trigger` (string, required) for now this plugin allows to serve only one file with jokes, type it's name here
+
 ## Server Plugin
 
 With this plugin you can communicate bot from outside.
@@ -512,6 +548,12 @@ Collects URLS from public messages
 Configuration options:
 - `file` (string, oprional, default 'data/urls.txt') - file to save urls to
 
+## Viabot Plugin
+
+Blocks messages sent via bot.
+
+Add this plugin to Joker Bot after Log Plugin, to log via_bot messages and skip future processing. 
+This is useful when you wish to allow your users to post inline messages via bot.
 
 ## Whynot Plugin
 

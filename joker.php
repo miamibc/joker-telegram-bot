@@ -19,6 +19,7 @@ $bot->plug([
     ['from' => -343502518, 'text' => ['*прода*', '*сдаё*'], 'to' => -343502518, 'forward' => false ],
   ]),
   new Joker\Plugin\UrlCollector(['file' => 'data/urls.txt']),
+  new Joker\Plugin\Viabot(),
 
   // *** insert your plugins here, order is important ***
 
@@ -31,20 +32,22 @@ $bot->plug([
   new Joker\Plugin\Hello(),
   new Joker\Plugin\Sticker(),
   new Joker\Plugin\Carma(['clean_time' => false, 'power_time' => 600,'start_carma' => 10]),
-  new Joker\Plugin\Quote( ['dir' =>'data/jokes'] ),
   new Joker\Plugin\Corona( ['file' => 'data/corona/today.csv', 'update_hours'=>3]),
   new Joker\Plugin\Currency(),
-  new Joker\Plugin\Callback(['trigger'=>'callbacktest', 'callback' => function(Joker\Event $event){
-    $event->answerMessage('test ok');
+  new Joker\Plugin\Callback(['trigger'=>'callbacktest', 'callback' => function(Joker\Parser\Update $update){
+    $update->answerMessage('test ok');
     return false;
   }]),
   new Joker\Plugin\Twitch(['client_id'=>getenv('TWITCH_CLIENT_ID'), 'secret'=>getenv('TWITCH_CLIENT_SECRET')]),
   new Joker\Plugin\Meme(),
   new Joker\Plugin\Excuse(),
   new Joker\Plugin\Whynot(),
+  new Joker\Plugin\Game( [ 'trigger' => 'chpocker', 'url' => 'https://blackcrystal.dev/chpocker/']),
+  new Joker\Plugin\QuoteInline( ['dir' =>'data/jokes', 'limit' => 10, 'trigger' => 'tg'] ),
 
   // *** somethingg wide, without triggers, must stay in the end ***
 
+  new Joker\Plugin\Quote( ['dir' =>'data/jokes'] ),
   new Joker\Plugin\Pasta( ['minimum_time' => 60 * 60] ),
   new Joker\Plugin\Beer( ['minimum_time'=>15*60] ),
 
