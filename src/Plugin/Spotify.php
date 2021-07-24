@@ -59,7 +59,7 @@ class Spotify extends Base
 
     // perform search
     $result = $this->doSearch($query);
-    if (!isset( $result['tracks']['items']) )
+    if (!isset( $result['tracks']['items']) || !count($result['tracks']['items']) )
     {
       $update->answerMessage("Nothing found :( Let's try again?");
       return false;
@@ -137,6 +137,9 @@ class Spotify extends Base
 
   private function getTrackInformation($element )
   {
+
+    if (!$element) return false;
+
     // get names of artists and join them together
     $artists = implode( ' & ', array_map(function ($artist){
       return $artist['name'];
