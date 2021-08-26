@@ -27,8 +27,12 @@ class Kicker extends Base
     $user = $update->message()->new_chat_member();
     $chat = $update->message()->chat();
 
-    // check name for emoji, if so set timeout to kick to 0, otherwise add 600 seconds
-    $seconds = self::containsEmoji($user->name()) ? 0 : 600;
+    // check name for emoji
+    $seconds = self::containsEmoji($user->name())
+      ? $this->getOption('seconds_with_emoji',0)
+      : $this->getOption('seconds_without_emoji',600);
+
+    // add user to kicklist
     $this->to_kick[] = [ time()+$seconds, $chat->id(), $user->id() ];
   }
 
