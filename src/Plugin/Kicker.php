@@ -15,31 +15,66 @@ use Joker\Parser\Update;
 class Kicker extends Base
 {
 
+  private $to_kick = [];
+
+  /**
+   * Listen to JOIN event, add to array with time, when to kick this user
+   * @param Update $update
+   */
   public function onJoin( Update $update )
   {
     // new chat member
     $user = $update->message()->new_chat_member();
+    $chat = $update->message()->chat();
 
-    // check name for emoji
-    if (self::containsEmoji($user->name()))
+    // check name for emoji, if so set timeout to kick to 0, otherwise add 600 seconds
+    $seconds = self::containsEmoji($user->name()) ? 0 : 600;
+    $this->to_kick[] = [ time()+$seconds, $chat->id(), $user->id() ];
+  }
+
+  /**
+   * Listen to text messages from user and remove from kick list
+   * @param Update $update
+   */
+  public function onPublicText( Update $update )
+  {
+    // new chat member
+    $message = $update->message();
+    foreach ($this->to_kick as $i=>$item)
+    {
+      list($time, $chat_id, $user_id ) = $item;
+      if (
+        $chat_id == $message->chat()->id() &&
+        $user_id == $message->from()->id()
+      )  unset($this->to_kick[$i]);
+    }
+  }
+
+  /**
+   * Timer for kicking users from kicklist
+   * @param Update $update
+   */
+  public function onEmpty( Update $update)
+  {
+
+    foreach ($this->to_kick as $i => $item)
     {
 
-      // quote from Predator
-      $update->answerMessage('If it bleeds, we can kill it ;p');
+      list($time, $chat_id, $user_id ) = $item;
+
+      if (time() < $time) continue;
 
       // kick user
       $update->customRequest('kickChatMember',[
-        'chat_id' => $update->message()->chat()->id(),
-        'user_id' => $user->id(),
+        'chat_id' => $chat_id,
+        'user_id' => $user_id,
       ]);
 
-      // delete message about join
-      $update->deleteMessage();
+      unset($this->to_kick[$i]);
 
     }
 
   }
-
   /**
    * Check text contains emoji.
    * Full list got from https://unicode.org/emoji/charts/full-emoji-list.html
