@@ -53,12 +53,23 @@ class Carma extends Base
       $answer = ['Debug carma info:'];
       $sum = array_sum( array_map(function ($user) use (&$answer){
         $rating = round( $result = $user->carma_rating ?? $this->getOption('start_carma', 10) , 2);
-        $power  = $user->carma_updated ? (time() - $user->carma_updated) / $this->getOption('power_time', 600) : 1.0;
+        $power  = round( $user->carma_updated ? (time() - $user->carma_updated) / $this->getOption('power_time', 600) : 1.0 , 2);
         $name   = $user->name ?? $user->username;
         $answer[] = "- $name has $rating carma and $power power";
         return $result;
       }, R::findAll('user', ' ORDER BY carma_rating DESC')));
       $answer[] = "Total: $sum";
+      $update->answerMessage( trim( implode(PHP_EOL, $answer)) );
+      return false;
+    }
+
+    elseif ($message->text()->token(1) === 'top')
+    {
+      $answer = array_map(function ($user) {
+        $rating = round( $user->carma_rating ?? $this->getOption('start_carma', 10) , 2);
+        $name   = $user->name ?? $user->username;
+        return "- $name has $rating carma";
+      }, R::findAll('user', ' ORDER BY carma_rating DESC LIMIT 30'));
       $update->answerMessage( trim( implode(PHP_EOL, $answer)) );
       return false;
     }
