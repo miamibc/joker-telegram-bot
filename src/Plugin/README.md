@@ -554,7 +554,7 @@ Configuration options:
 
 ## Viabot Plugin
 
-Blocks messages sent via bot.
+Blocks processing of messages sent via bot.
 
 Add this plugin to Joker Bot after Log Plugin, to log via_bot messages and skip future processing. 
 This is useful when you wish to allow your users to post inline messages via bot.

@@ -2,7 +2,7 @@
 /**
  * Viabot plugin for Joker
  *
- * Blocks messages sent via bot
+ * Blocks processing of messages sent via bot
  *
  * @package joker-telegram-bot
  * @author Sergei Miami <miami@blackcrystal.net>
