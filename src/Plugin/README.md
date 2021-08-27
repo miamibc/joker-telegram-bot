@@ -98,6 +98,7 @@ Options:
 - `clean_time` (false|integer, optional, default 10)  - false, or seconds to remove mana exchange message
 - `power_time` (integer, optional, default 600) - number of seconds to have full power (1)
 - `start_carma` (integer, optional, default 10)  - points you start with
+- `limit` (integer, optional, default 30)  - number of results in carma top
 
 Thanks for help in development to **D0b3rm4nN** and [AL^Raven](https://github.com/alravenbc).
 
