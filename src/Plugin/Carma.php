@@ -24,8 +24,10 @@ class Carma extends Base
 {
 
   protected
+    $options = ['clean_time' => false, 'power_time' => 600,'start_carma' => 10, 'limit' => 30], // defaults
     $messages_to_clean = [], // array with messages that must be cleaned
     $users = [];    // array of username/user
+
 
   /**
    * Reply to /carma command with information (for now only rating available)
@@ -52,11 +54,11 @@ class Carma extends Base
     {
       $answer = ['Debug carma info:'];
       $sum = array_sum( array_map(function ($user) use (&$answer){
-        $rating = round( $this->getRating($user) , 2);
+        $rating = round( $result = $this->getRating($user) , 2);
         $power  = round( $this->getPower($user) , 2);
         $name   = $user->name ?? $user->username;
         $answer[] = "- $name has $rating carma and $power power";
-        return $rating;
+        return $result;
       }, R::findAll('user', ' ORDER BY carma_rating DESC')));
       $answer[] = "Total: $sum";
       $update->answerMessage( trim( implode(PHP_EOL, $answer)) );
@@ -69,7 +71,7 @@ class Carma extends Base
         $rating = round( $this->getRating($user) , 2);
         $name   = $user->name ?? $user->username;
         return "- $name has $rating carma";
-      }, R::findAll('user', ' ORDER BY carma_rating DESC LIMIT 30'));
+      }, R::findAll('user', ' ORDER BY carma_rating DESC LIMIT ' . $this->getOption('limit')));
       $update->answerMessage( trim( implode(PHP_EOL, $answer)) );
       return false;
     }
@@ -91,10 +93,10 @@ class Carma extends Base
       }, $entities));
 
       // make answer from request to database
-      foreach (R::find('user', ' username IN (' . R::genSlots( $usernames ) . ') ORDER BY carma_rating DESC ', $usernames) as $user)
+      foreach (R::find('user', ' username IN (' . R::genSlots( $usernames ) . ') ORDER BY carma_rating DESC', $usernames) as $user)
       {
-        $rating = round( $result = $user->carma_rating ?? $this->getOption('start_carma', 10) , 2);
-        $power  = round( $user->carma_updated ? (time() - $user->carma_updated) / $this->getOption('power_time', 600) : 1.0 , 2);
+        $rating = round( $this->getRating($user) , 2);
+        $power  = round( $this->getPower($user), 2);
         $name   = $user->name ?? $user->username;
         $answer[] = "- $name has $rating carma and $power power";
       }
@@ -106,7 +108,7 @@ class Carma extends Base
     {
       $user   = $message->from();
       $rating = round( $this->getRating( $user ), 2 );
-      $power  = round( $this->getPower( $user ), 1 );
+      $power  = round( $this->getPower( $user ), 2 );
       $answer[] = "$user, you have $rating carma available, your power is $power";
     }
 
