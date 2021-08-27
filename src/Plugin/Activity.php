@@ -45,29 +45,46 @@ class Activity extends Base
     {
       $message = $update->message();
 
-      // process only messages having `from` field
+      // process only messages having `from`and chat field
       if ( !$user = $message->from() ) continue;
+      if ( !$chat = $message->chat() ) continue;
 
       // get custom data for this user from sqlite
-      $custom = $user->getCustom();
+      $userCustom = $user->getCustom();
+      $chatCustom = $chat->getCustom();
 
       // add info
-      $custom->username         = $user->username() ? $user->username() : null;
-      $custom->name             = $user->name() ? $user->name() : null;
-      $custom->last_messsage_at = $message->date();
-      $custom->last_messsage_id = $message->id();
+      $userCustom->username         = $user->username() ? $user->username() : null;
+      $userCustom->name             = $user->name() ? $user->name() : null;
+
+      $userCustom->last_messsage_at =
+      $chatCustom->last_messsage_at = $message->date();
+
+      $userCustom->last_messsage_id =
+      $chatCustom->last_messsage_id = $message->id();
 
       if ($message->chat())
-        $custom->last_messsage_chat_id = $message->chat()->id();
+      {
+        $userCustom->last_messsage_chat_id =
+        $chatCustom->last_messsage_chat_id = $message->chat()->id();
+      }
 
       if ($message->text())
-        $custom->all_text_length = $custom->all_text_length + strlen( $message->text().'' );
+      {
+        $userCustom->all_text_length += strlen($message->text().'');
+        $chatCustom->all_text_length += strlen($message->text().'');
+      }
 
       if ($message->caption())
-        $custom->all_text_length = $custom->all_text_length + strlen( $message->caption().'' );
+      {
+        $userCustom->all_text_length += strlen($message->caption().'');
+        $chatCustom->all_text_length += strlen($message->caption().'');
+      }
 
       // save customer data to sqlite
       $user->saveCustom();
+      $chat->saveCustom();
+
     }
 
     // clean pool and sync time
