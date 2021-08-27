@@ -15,7 +15,12 @@ use Joker\Parser\Update;
 class Kicker extends Base
 {
 
-  private $to_kick = [];
+  protected $options = [
+    'secons_with_emoji' => 0,
+    'secons_without_emoji' => 600,
+  ];
+
+  private $waiting_list = [];
 
   /**
    * Listen to JOIN event, add to array with time, when to kick this user
@@ -28,29 +33,28 @@ class Kicker extends Base
     $chat = $update->message()->chat();
 
     // check name for emoji
-    $seconds = self::containsEmoji($user->name())
-      ? $this->getOption('seconds_with_emoji',0)
-      : $this->getOption('seconds_without_emoji',600);
+    $option  = self::containsEmoji($user->name()) ? 'seconds_with_emoji' : 'seconds_without_emoji';
+    $seconds = $this->getOption( $option );
 
-    // add user to kicklist
-    $this->to_kick[] = [ time()+$seconds, $chat->id(), $user->id() ];
+    // add user to waiting list
+    $this->waiting_list[] = [time() + $seconds, $chat->id(), $user->id() ];
   }
 
   /**
-   * Listen to text messages from user and remove from kick list
+   * Listen to text messages from user and remove from waiting list
    * @param Update $update
    */
   public function onPublicText( Update $update )
   {
     // new chat member
     $message = $update->message();
-    foreach ($this->to_kick as $i=>$item)
+    foreach ($this->waiting_list as $i=>$item)
     {
       list($time, $chat_id, $user_id ) = $item;
       if (
         $chat_id == $message->chat()->id() &&
         $user_id == $message->from()->id()
-      )  unset($this->to_kick[$i]);
+      )  unset($this->waiting_list[$i]);
     }
   }
 
@@ -61,7 +65,7 @@ class Kicker extends Base
   public function onEmpty( Update $update)
   {
 
-    foreach ($this->to_kick as $i => $item)
+    foreach ($this->waiting_list as $i => $item)
     {
 
       list($time, $chat_id, $user_id ) = $item;
@@ -74,7 +78,7 @@ class Kicker extends Base
         'user_id' => $user_id,
       ]);
 
-      unset($this->to_kick[$i]);
+      unset($this->waiting_list[$i]);
 
     }
 
