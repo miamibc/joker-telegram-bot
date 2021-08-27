@@ -13,38 +13,70 @@
 namespace Joker\Plugin;
 
 use Joker\Parser\Update;
+use RedBeanPHP\R;
 
 class Quote extends Base
 {
 
-  protected $options = [
-    'dir' => false,
-  ];
+  private $triggers = [], $counter = 0;
+
+  public function __construct($options = [])
+  {
+    parent::__construct($options);
+    $this->loadTriggers();
+  }
+
 
   public function onPublicText( Update $update )
   {
     $text = $update->message()->text();
+    $trigger = $text->trigger();
 
-    $chunk = preg_split('@\s+@', $text);
-
-    if ($chunk[0][0] !== '!') return;
-
-    $command = '!' . $text->trigger();
-    $params  = $text->token(1);
-
-    if (in_array( $command, [ '!list', '!help' ]) )
+    // answer to !help and !list
+    if (in_array( $trigger, [ 'help', 'list'] ))
     {
-      $help = $this->getHelp( $this->getOption("dir") );
-      $update->answerMessage( $help );
+      $instructions = implode( PHP_EOL, [
+        "Type <b>!topic</b> to find random quote",
+        "Type <b>!topic search string</b> to search in topic and receive random joke",
+        "Type <b>!topic number</b> to get specific quote by it's number",
+      ]);
+      $triggers = implode(' ', array_map(function($item){
+        return "!$item";
+      }, $this->triggers));
+      $update->answerMessage("$instructions\n\nList of topics: $triggers.", ['parse_mode' => 'HTML']);
       return false;
     }
 
-    $filename =  $this->getOption('dir') . "/$command.txt";
-    if (!file_exists($filename)) return;
+    if (!in_array( $trigger, $this->triggers)) return;
 
-    $joke = $this->getJoke( $command, $params );
-    $update->answerMessage( $joke );
-    return false;
+    // no query
+    if (empty($query = $text->token(1)))
+    {
+      $num = "rnd";
+      $count = R::count('joke', " trigger = ? ", [ $trigger ] );
+      $joke = R::findOne('joke', " trigger = ? ORDER BY random() LIMIT 1 ", [ $trigger ] );
+    }
+    // numeric query
+    elseif (is_numeric( $query))
+    {
+      $num = $query;
+      $count = R::count('joke', " trigger = ? ", [ $trigger ] );
+      $joke = R::findOne('joke', " trigger = ? ORDER BY id LIMIT $query,1 ", [ $trigger ] );
+    }
+    // string query
+    else
+    {
+      $num = "rnd";
+      $count = R::count('joke', " trigger = ? AND joke LIKE ? ", [ $trigger, "%$query%" ] );
+      $joke = R::findOne('joke', " trigger = ? AND joke LIKE ? ORDER BY random() LIMIT 1 ", [ $trigger, "%$query%" ] );
+    }
+
+    if ($joke)
+    {
+      $update->answerMessage( "!$trigger $num of $count: $joke->joke" );
+      return false;
+    }
+
   }
 
   /**
@@ -95,67 +127,15 @@ class Quote extends Base
     return false;
   }
 
-
-  private  function getHelp( $dir )
+  private function loadTriggers()
   {
-    $topics = [];
-    foreach ( glob( "$dir/*.txt" ) as $filename)
+    $this->triggers = [];
+    // list all active triggers
+    foreach ( R::getAll('SELECT DISTINCT(trigger) FROM joke') as $item)
     {
-      if (pathinfo($filename, PATHINFO_EXTENSION) !== 'txt') continue;
-      $topics[] = basename( $filename, '.txt');
+      $this->triggers[] = $item['trigger'];
     }
-    return "List of " . basename($dir) . ": " . implode(" ", $topics);
   }
 
-  private function getJoke( $command, $params )
-  {
 
-    $filename =  $this->getOption('dir') . "/$command.txt";
-
-    $file = file($filename);
-    if (empty( $params))
-    {
-      // random
-      $count  = count($file);
-      $rand   = mt_rand(1, $count);
-      $prefix = "$command $rand of $count";
-    }
-    elseif ( is_numeric( $params ) || $params[0] === '#' ){
-      // number
-      $rand   = preg_replace('@[^\d]+@', "", $params)*1;
-      $count  = count($file);
-      $prefix = "$command $rand of $count";
-    }
-    elseif ( $params === 'last'){
-      // number
-      $count  = count($file);
-      $rand   = $count;
-      $prefix = "$command $rand of $count";
-    }
-    else {
-
-      // exact match
-      $found = array_filter( $file, function ($value) use ($params) {
-        return preg_match('#\b'.preg_quote( $params ).'\b#iu', $value);
-      });
-
-      // relaxed match
-      if (!count($found))
-      {
-        $found = array_filter( $file, function ($value) use ($params) {
-          return preg_match('#'.preg_quote( $params ).'#iu', $value);
-        });
-      }
-
-      $count  = count( $found );
-      $rand   = $count ? array_rand($found) + 1 : 0;
-      $prefix = $count ? "$command $rand of $count" : "$command";
-    }
-
-    $joke = $count && isset( $file[$rand-1] )
-            ? strtr($file[$rand-1], ['\n'=>"\n"])
-            : "Joke not found :(";
-
-    return "$prefix: $joke";
-  }
 }
