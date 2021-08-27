@@ -271,7 +271,11 @@ Bot will answer you with standart greeting
 
 If your channel is popular enough, you will constantly be attacked with bots with strange names containing emoji. 
 
-Add this plugin to kick such users.  
+This plugin will remove users with emojis in their name instantly, and others after 10 minutes of inactivity after join.
+
+Options:
+- `secons_with_emoji` integer, optional, default is 0 - wait time before remove user with emoji in name
+- `secons_without_emoji` integer, optional, default is 600 - wait time before remove user without emoji in name
 
 ## Log Plugin
 

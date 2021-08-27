@@ -2,7 +2,11 @@
 /**
  * Kicker plugin for Joker Telegram Bot
  *
- * Checks joined person and kicks if emoji found in nickname.
+ * This plugin will remove users with emojis in their name instantly, and others after 10 minutes of inactivity after join.
+ *
+ * Options:
+ * - `secons_with_emoji` integer, optional, default is 0 - wait time before remove user with emoji in name
+ * - `secons_without_emoji` integer, optional, default is 600 - wait time before remove user without emoji in name
  *
  * @package joker-telegram-bot
  * @author Sergei Miami <miami@blackcrystal.net>
@@ -76,6 +80,11 @@ class Kicker extends Base
       $update->customRequest('kickChatMember',[
         'chat_id' => $chat_id,
         'user_id' => $user_id,
+      ]);
+
+      $update->customRequest('sendMessage', [
+        'chat_id' => $chat_id,
+        'text' => 'If it bleeds, we can kill it ;p',
       ]);
 
       unset($this->waiting_list[$i]);
