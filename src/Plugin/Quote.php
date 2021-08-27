@@ -84,7 +84,7 @@ class Quote extends Base
    *
    * @param Update $update
    */
-  public function onPrivateText( Update $update )
+  public function onPrivateTextDisabled( Update $update )
   {
     $text = $update->message()->text();
 
