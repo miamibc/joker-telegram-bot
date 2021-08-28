@@ -47,7 +47,14 @@ class Quote extends Base
       return false;
     }
 
+    // now only triggers is acceptable
     if (!in_array( $trigger, $this->triggers)) return;
+
+    // every 100 requests reload triggers
+    if (++$this->counter % 100 === 0)
+    {
+      $this->loadTriggers();
+    }
 
     // no query
     if (empty($query = $text->token(1)))
