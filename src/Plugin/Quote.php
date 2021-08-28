@@ -52,30 +52,29 @@ class Quote extends Base
     // no query
     if (empty($query = $text->token(1)))
     {
-      $num = "rnd";
       $count = R::count('joke', " trigger = ? ", [ $trigger ] );
+      $prefix = "!$trigger $count total";
       $joke = R::findOne('joke', " trigger = ? ORDER BY random() LIMIT 1 ", [ $trigger ] );
     }
     // numeric query
     elseif (is_numeric( $query))
     {
-      $num = $query;
+      $offset = $query-1;
       $count = R::count('joke', " trigger = ? ", [ $trigger ] );
+      $prefix = "!$trigger $query of $count";
       $joke = R::findOne('joke', " trigger = ? ORDER BY id LIMIT $query,1 ", [ $trigger ] );
     }
     // string query
     else
     {
-      $num = "rnd";
-      $count = R::count('joke', " trigger = ? AND joke LIKE ? ", [ $trigger, "%$query%" ] );
-      $joke = R::findOne('joke', " trigger = ? AND joke LIKE ? ORDER BY random() LIMIT 1 ", [ $trigger, "%$query%" ] );
+      $query = '%' . strtr( mb_strtolower($query), [' ' => '%']) . '%';
+      $count = R::count('joke', " trigger = ? AND search LIKE ? ", [ $trigger, $query ] );
+      $prefix = "!$trigger $count found";
+      $joke = R::findOne('joke', " trigger = ? AND search LIKE ? ORDER BY random() LIMIT 1 ", [ $trigger, $query ] );
     }
 
-    if ($joke)
-    {
-      $update->answerMessage( "!$trigger $num of $count: $joke->joke" );
-      return false;
-    }
+    $update->answerMessage( $joke ? "$prefix: $joke->joke" : "!$trigger: Sorry bro, nothing found :p");
+    return false;
 
   }
 
