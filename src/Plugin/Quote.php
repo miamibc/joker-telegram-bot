@@ -62,7 +62,7 @@ class Quote extends Base
       $offset = $query-1;
       $count = R::count('joke', " trigger = ? ", [ $trigger ] );
       $prefix = "!$trigger $query of $count";
-      $joke = R::findOne('joke', " trigger = ? ORDER BY id LIMIT $query,1 ", [ $trigger ] );
+      $joke = R::findOne('joke', " trigger = ? ORDER BY id LIMIT $offset,1 ", [ $trigger ] );
     }
     // string query
     else
