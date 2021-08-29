@@ -23,7 +23,7 @@ class Quote extends Base
   public function __construct($options = [])
   {
     parent::__construct($options);
-    $this->loadTriggers();
+    $this->triggers = self::jokeTriggers();
   }
 
 
@@ -53,7 +53,7 @@ class Quote extends Base
     // every 100 requests reload triggers
     if (++$this->counter % 100 === 0)
     {
-      $this->loadTriggers();
+      $this->triggers = self::jokeTriggers();
     }
 
     $query = $text->token(1);
@@ -86,63 +86,19 @@ class Quote extends Base
 
   }
 
+
   /**
-   * Listen to private message and add joke
-   *
-   * @param Update $update
+   * List all active joke triggers
+   * @return array
    */
-  public function onPrivateTextDisabled( Update $update )
+  public static function jokeTriggers()
   {
-    $text = $update->message()->text();
-
-    if ( preg_match( $regexp = '#^(.*), \[([^]]+)\]\n(.*?)$#m', $text, $matches) )
-    {
-      // multi-line telegram-x format
-      $text = preg_replace($regexp,'<\1> \3',$text); // make <name> text lines
-      $text = preg_replace('#\n+#m','\n',$text);     // change newlines to special newline
-      $text = '['.$matches[2].']\n'.trim($text);     // add date
-    }
-    elseif (preg_match_all('#^(.*):#m', $text, $matches, PREG_OFFSET_CAPTURE))
-    {
-      // multi-line telegram format
-      $result = [];
-      foreach ($matches[1] as $num => $match)
-      {
-        $start = strlen($match[0])+2+$match[1];  // calculate start of message by adding length of name to start offset
-        $message = isset($matches[1][$num+1][1]) // if next match exists
-                  ? substr( $text, $start, $matches[1][$num+1][1] - $start) // get text from start to next offset
-                  : substr( $text, $start) // otherwise get all
-                  ;
-        $message = preg_replace('#\n+#m','\n',trim( $message )); // replace newlines with special newline
-        $result[] = "<$match[0]> $message";
-      }
-      $text = implode('\n', $result);
-    }
-    else
-    {
-      // old-school, IRC-joker format
-      $text = trim($text);
-      $text = preg_replace('#\n+#m','\n',$text); // replace newlines with special newlines
-      $text = preg_replace('#\s+#m',' ',$text);  // replace long spaces to normal spaces
-    }
-
-    file_put_contents( $this->getOption('dir') . '/!tg.txt', PHP_EOL.$text, FILE_APPEND);
-
-    // return last joke
-    $joke = $this->getJoke( "!tg", "last" );
-    $update->answerMessage( "Added: $joke" );
-    return false;
-  }
-
-  private function loadTriggers()
-  {
-    $this->triggers = [];
-    // list all active triggers
+    $result = [];
     foreach ( R::getAll('SELECT DISTINCT(trigger) FROM joke') as $item)
     {
-      $this->triggers[] = $item['trigger'];
+      $result[] = $item['trigger'];
     }
+    return $result;
   }
-
 
 }
