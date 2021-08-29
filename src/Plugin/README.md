@@ -24,6 +24,7 @@ Plugins are well documented in inline comments, some interesting details will be
 * [Moderate Plugin](#moderate-plugin)
 * [Pasta Plugin](#pasta-plugin)
 * [Quote Plugin](#quote-plugin)
+* [QuoteAdmin Plugin](#quoteadmin-plugin)
 * [QuoteInline Plugin](#quoteinline-plugin)
 * [Server Plugin](#server-plugin)
 * [Spotify Plugin](#spotify-plugin)
@@ -417,6 +418,16 @@ Added: !tg 111 of 111: [01.11.20 21:58]
 <QQSKA> концентрацептивачто?
 <SHPONGIk> понятно)
 ```
+
+## QuoteAdmin Plugin
+
+Separate plugin made for administration of quotes. Allows to add, list, remove jokes from database.
+
+Send private message to the bot, `login` after this you'll see list of commands available for you. 
+- `cd [trigger]` - to change trigger
+- `ls` - to list jokes
+- `add` - to add joke
+- `rm [number]` - to remove joke
 
 ## QuoteInline Plugin
 

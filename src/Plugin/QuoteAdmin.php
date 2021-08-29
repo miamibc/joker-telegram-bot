@@ -31,10 +31,10 @@ Hi, {$update->message()->from()->name()} you are logged in now.
 You can work with triggers:
 
 Commands:
-<pre>cd <trigger></pre> - to change trigger
-`ls` - to list jokes
-`add` - to add joke
-`rm` - to remove joke
+<pre>cd [trigger]</pre> - to change trigger
+<pre>ls</pre> - to list jokes
+<pre>add</pre> - to add joke
+<pre>rm</pre> - to remove joke
 EOF;
       $update->answerMessage( $message , ['parse_mode' => 'HTML']);
     }
