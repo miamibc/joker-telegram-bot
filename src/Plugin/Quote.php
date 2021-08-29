@@ -56,28 +56,29 @@ class Quote extends Base
       $this->loadTriggers();
     }
 
+    $query = $text->token(1);
     // no query
-    if (empty($query = $text->token(1)))
+    if (empty( $query ))
     {
-      $count = R::count('joke', " trigger = ? ", [ $trigger ] );
+      $count  = R::count('joke', " trigger = ? ", [ $trigger ] );
+      $joke   = R::findOne('joke', " trigger = ? ORDER BY random() LIMIT 1 ", [ $trigger ] );
       $prefix = "!$trigger $count total";
-      $joke = R::findOne('joke', " trigger = ? ORDER BY random() LIMIT 1 ", [ $trigger ] );
     }
     // numeric query
-    elseif (is_numeric( $query))
+    elseif (is_numeric( $query ))
     {
       $offset = $query-1;
-      $count = R::count('joke', " trigger = ? ", [ $trigger ] );
+      $count  = R::count('joke', " trigger = ? ", [ $trigger ] );
+      $joke   = R::findOne('joke', " trigger = ? ORDER BY id LIMIT $offset,1 ", [ $trigger ] );
       $prefix = "!$trigger $query of $count";
-      $joke = R::findOne('joke', " trigger = ? ORDER BY id LIMIT $offset,1 ", [ $trigger ] );
     }
     // string query
     else
     {
-      $query = '%' . strtr( mb_strtolower($query), [' ' => '%']) . '%';
-      $count = R::count('joke', " trigger = ? AND search LIKE ? ", [ $trigger, $query ] );
+      $query  = '%' . strtr( mb_strtolower($query), [' ' => '%']) . '%';
+      $count  = R::count('joke', " trigger = ? AND search LIKE ? ", [ $trigger, $query ] );
+      $joke   = R::findOne('joke', " trigger = ? AND search LIKE ? ORDER BY random() LIMIT 1 ", [ $trigger, $query ] );
       $prefix = "!$trigger $count found";
-      $joke = R::findOne('joke', " trigger = ? AND search LIKE ? ORDER BY random() LIMIT 1 ", [ $trigger, $query ] );
     }
 
     $update->answerMessage( $joke ? "$prefix: $joke->joke" : "!$trigger: Sorry bro, nothing found :p");
