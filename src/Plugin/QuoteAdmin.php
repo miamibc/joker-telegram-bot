@@ -1,6 +1,7 @@
 <?php
 /**
  * Joker Quote Admin Plugin
+ * Started in the sky, flight from Berlin to Tallinn 29 aug
  *
  * @package joker-telegram-bot
  * @author Sergei Miami <miami@blackcrystal.net>
