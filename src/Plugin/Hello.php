@@ -20,7 +20,7 @@ class Hello extends Base
   public function onPrivateText( Update $update )
   {
 
-    if (!preg_match('@^(/start|hello|hi|yo)\b@ui', $update->message()->text())) return;
+    if (!in_array($update->message()->text()->trigger(), ['start','hello','hi','yo'])) return;
 
     $name = $update->message()->from()->name();
 
