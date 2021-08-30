@@ -48,6 +48,7 @@ $bot->plug([
   // *** somethingg wide, without triggers, must stay in the end ***
 
   new Joker\Plugin\Quote(),
+  new Joker\Plugin\QuoteAdmin(),
   new Joker\Plugin\Pasta( ['minimum_time' => 60 * 60] ),
   new Joker\Plugin\Beer( ['minimum_time'=>15*60] ),
 
