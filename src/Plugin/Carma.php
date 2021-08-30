@@ -8,6 +8,7 @@
  * - `clean_time` (false|integer, optional, default 10)  - false, or seconds to remove carma exchange message
  * - `power_time` (integer, optional, default 600) - number of seconds to have full power (1)
  * - `start_carma` (integer, optional, default 10)  - points you start with
+ * - `limit` (integer, optional, default 30)  - number of results in carma top
  *
  * @package joker-telegram-bot
  * @author Sergei Miami <miami@blackcrystal.net>
@@ -24,8 +25,10 @@ class Carma extends Base
 {
 
   protected
+    $options = ['clean_time' => false, 'power_time' => 600,'start_carma' => 10, 'limit' => 30], // defaults
     $messages_to_clean = [], // array with messages that must be cleaned
     $users = [];    // array of username/user
+
 
   /**
    * Reply to /carma command with information (for now only rating available)
@@ -52,13 +55,24 @@ class Carma extends Base
     {
       $answer = ['Debug carma info:'];
       $sum = array_sum( array_map(function ($user) use (&$answer){
-        $rating = round( $result = $user->carma_rating ?? $this->getOption('start_carma', 10) , 2);
-        $power  = $user->carma_updated ? (time() - $user->carma_updated) / $this->getOption('power_time', 600) : 1.0;
+        $rating = round( $result = $this->getRating($user) , 2);
+        $power  = round( $this->getPower($user) , 2);
         $name   = $user->name ?? $user->username;
         $answer[] = "- $name has $rating carma and $power power";
         return $result;
       }, R::findAll('user', ' ORDER BY carma_rating DESC')));
       $answer[] = "Total: $sum";
+      $update->answerMessage( trim( implode(PHP_EOL, $answer)) );
+      return false;
+    }
+
+    elseif ($message->text()->token(1) === 'top')
+    {
+      $answer = ['Carma top:'] + array_map(function ($user) {
+        $rating = round( $this->getRating($user) , 2);
+        $name   = $user->name ?? $user->username;
+        return "- $name has $rating carma";
+      }, R::findAll('user', ' ORDER BY carma_rating DESC LIMIT ' . $this->getOption('limit')));
       $update->answerMessage( trim( implode(PHP_EOL, $answer)) );
       return false;
     }
@@ -80,10 +94,10 @@ class Carma extends Base
       }, $entities));
 
       // make answer from request to database
-      foreach (R::find('user', ' username IN (' . R::genSlots( $usernames ) . ') ORDER BY carma_rating DESC ', $usernames) as $user)
+      foreach (R::find('user', ' username IN (' . R::genSlots( $usernames ) . ') ORDER BY carma_rating DESC', $usernames) as $user)
       {
-        $rating = round( $result = $user->carma_rating ?? $this->getOption('start_carma', 10) , 2);
-        $power  = round( $user->carma_updated ? (time() - $user->carma_updated) / $this->getOption('power_time', 600) : 1.0 , 2);
+        $rating = round( $this->getRating($user) , 2);
+        $power  = round( $this->getPower($user), 2);
         $name   = $user->name ?? $user->username;
         $answer[] = "- $name has $rating carma and $power power";
       }
@@ -95,7 +109,7 @@ class Carma extends Base
     {
       $user   = $message->from();
       $rating = round( $this->getRating( $user ), 2 );
-      $power  = round( $this->getPower( $user ), 1 );
+      $power  = round( $this->getPower( $user ), 2 );
       $answer[] = "$user, you have $rating carma available, your power is $power";
     }
 
@@ -217,9 +231,10 @@ class Carma extends Base
    *
    * @return float
    */
-  private function getPower(User $user ): float
+  private function getPower($user ): float
   {
-    $time = $user->getCustom()->carma_updated;
+    if ($user instanceof User) $user = $user->getCustom();
+    $time = $user->carma_updated;
     $power = is_null($time)
       ? 1.0
       : (time() - $time) / $this->getOption('power_time', 600)
@@ -229,13 +244,14 @@ class Carma extends Base
 
   /**
    * Get rating of user
-   * @param User $user
+   * @param User|RedBeanPHP\OODBBean  $user
    *
    * @return float
    */
-  private function getRating( User $user ) : float
+  private function getRating( $user ) : float
   {
-    $rating = $user->getCustom()->carma_rating;
+    if ($user instanceof User) $user = $user->getCustom();
+    $rating = $user->carma_rating;
     return is_null($rating)
       ? (float) $this->getOption('start_carma', 10)
       : (float) $rating;
@@ -243,17 +259,17 @@ class Carma extends Base
 
   /**
    * Save rating with updated_date
-   * @param User $user
+   * @param User|RedBeanPHP\OODBBean $user
    * @param $value
    *
    * @throws \RedBeanPHP\RedException\SQL
    */
-  private function setRating( User $user, $value )
+  private function setRating( $user, $value )
   {
-    $data = $user->getCustom();
+    $data = $user instanceof User ? $user->getCustom() : $user;
     $data->carma_rating = $value;
     $data->carma_updated = time();
-    $user->saveCustom();
+    if ($user instanceof $user) $user->saveCustom();
   }
 
 }

@@ -28,15 +28,15 @@ class Text
     return $this->text.'';
   }
 
-  public function token( $from = 0, $to = null)
+  public function token($from = 0, $length = null)
   {
-    return implode( " ", array_slice($this->data, $from, $to));
+    return implode( " ", array_slice($this->data, $from, $length));
   }
 
-  public function line( $from, $to = null )
+  public function line($from = 0, $length = null )
   {
     $text = explode("\n", $this->text);
-    return implode( "\n", array_slice($text, $from, $to));
+    return implode( "\n", array_slice($text, $from, $length));
   }
 
   public function trigger()

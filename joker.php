@@ -13,7 +13,7 @@ $bot->plug([
 
   new Joker\Plugin\Log( ['file' =>'data/log/log.json'] ),
   new Joker\Plugin\Activity( ['sync_time' => 60] ),
-  new Joker\Plugin\Kicker(),
+  new Joker\Plugin\Kicker(['secons_with_emoji' => 0, 'secons_without_emoji' => 600]),
   new Joker\Plugin\Forwarder( [
     ['from' => -343502518, 'text' => ['*покуп*'], 'to' => -343502518, ],
     ['from' => -343502518, 'text' => ['*прода*', '*сдаё*'], 'to' => -343502518, 'forward' => false ],
@@ -47,7 +47,8 @@ $bot->plug([
 
   // *** somethingg wide, without triggers, must stay in the end ***
 
-  new Joker\Plugin\Quote( ['dir' =>'data/jokes'] ),
+  new Joker\Plugin\Quote(),
+  new Joker\Plugin\QuoteAdmin(),
   new Joker\Plugin\Pasta( ['minimum_time' => 60 * 60] ),
   new Joker\Plugin\Beer( ['minimum_time'=>15*60] ),
 
