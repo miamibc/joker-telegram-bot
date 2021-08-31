@@ -10,7 +10,7 @@
  *   !trigger params params
  *   /trigger params params
  *
- * $options is associative array with keys:trigger and a value:function with Joker\Parser\Update parameter
+ * Options is associative array with keys:trigger and a value:function with Joker\Parser\Update parameter
  *
  * @package joker-telegram-bot
  * @author Sergei Miami <miami@blackcrystal.net>
