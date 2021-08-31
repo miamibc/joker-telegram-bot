@@ -406,6 +406,7 @@ Send private message to the bot, `login` after this you'll see list of commands 
 - `ls [number]` - to list last [number] jokes in current trigger
 - `add [joke]` - to add joke to current trigger
 - `rm [number]` - to remove joke by number
+- `logout` - to log out from admin
 
 When you add joke, text will be converted from Telegram client copy message, from Telegram Mobile client, Telegram X client, or from other source. 
 
