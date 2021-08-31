@@ -42,13 +42,14 @@ $bot->plug([
   new Joker\Plugin\Meme(),
   new Joker\Plugin\Excuse(),
   new Joker\Plugin\Whynot(),
+  new Joker\Plugin\Uptime(),
   new Joker\Plugin\Game( [ 'trigger' => 'chpocker', 'url' => 'https://blackcrystal.dev/chpocker/']),
   new Joker\Plugin\QuoteInline( ['dir' =>'data/jokes', 'limit' => 10, 'trigger' => 'tg'] ),
+  new Joker\Plugin\QuoteAdmin(),
 
   // *** somethingg wide, without triggers, must stay in the end ***
 
   new Joker\Plugin\Quote(),
-  new Joker\Plugin\QuoteAdmin(),
   new Joker\Plugin\Pasta( ['minimum_time' => 60 * 60] ),
   new Joker\Plugin\Beer( ['minimum_time'=>15*60] ),
 
