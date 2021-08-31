@@ -10,9 +10,7 @@
  *   !trigger params params
  *   /trigger params params
  *
- * Constructor $options
- *   trigger  - (required) trigger
- *   callback - (required) callback with Joker\Event parameter
+ * $options is associative array with keys:trigger and a value:function with Joker\Parser\Update parameter
  *
  * @package joker-telegram-bot
  * @author Sergei Miami <miami@blackcrystal.net>
@@ -31,9 +29,8 @@ class Callback extends Base
     $trigger  = $update->message()->text()->trigger();
     if (in_array($trigger, $triggers))
     {
-      return call_user_func( $this->getOption($trigger), $update );
+      return call_user_func($this->getOption($trigger),$update);
     }
-
   }
 
 }

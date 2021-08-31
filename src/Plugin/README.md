@@ -84,8 +84,11 @@ Example:
 
 ```
 $joker->plug([
-  new Joker\Plugin\Callback(['callbacktest' => function(Joker\Event $event){
-    $event->answerMessage('test ok');
+  new Joker\Plugin\Callback(['callbacktest' => function(Joker\Parser\Update $update){
+    $update->answerMessage('callbacktest success');
+    return false;
+  },'anothertest' => function(Joker\Parser\Update $update){
+    $update->answerMessage('anothertest success');
     return false;
   }]),
 ]);
