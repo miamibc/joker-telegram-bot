@@ -78,13 +78,13 @@ Thanks to [Dm!tro](https://github.com/Dm1tro-in-da-world) for this contribution.
 
 ## Callback Plugin
 
-Plugin for fast prototyping. Allows to bind trigger and a callback as a parameters of plugin initialization.
+Plugin for fast prototyping. Pass associative array of trigger => callback as options and you'll get different action for different triggers.
 
 Example:
 
 ```
 $joker->plug([
-  new Joker\Plugin\Callback(['trigger'=>'callbacktest', 'callback' => function(Joker\Event $event){
+  new Joker\Plugin\Callback(['callbacktest' => function(Joker\Event $event){
     $event->answerMessage('test ok');
     return false;
   }]),

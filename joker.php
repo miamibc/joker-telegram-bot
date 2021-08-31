@@ -34,7 +34,7 @@ $bot->plug([
   new Joker\Plugin\Carma(['clean_time' => false, 'power_time' => 600,'start_carma' => 10]),
   new Joker\Plugin\Corona( ['file' => 'data/corona/today.csv', 'update_hours'=>3]),
   new Joker\Plugin\Currency(),
-  new Joker\Plugin\Callback(['trigger'=>'callbacktest', 'callback' => function(Joker\Parser\Update $update){
+  new Joker\Plugin\Callback(['callbacktest' => function(Joker\Parser\Update $update){
     $update->answerMessage('test ok');
     return false;
   }]),

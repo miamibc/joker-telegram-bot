@@ -27,11 +27,11 @@ class Callback extends Base
 
   public function onPublicText( Update $update )
   {
-    $trigger = strtolower( $this->getOption('trigger') );
-    if ($update->message()->text()->trigger() === $trigger)
+    $triggers = array_keys($this->getOptions());
+    $trigger  = $update->message()->text()->trigger();
+    if (in_array($trigger, $triggers))
     {
-      // process callback and return it's result
-      return call_user_func( $this->getOption('callback'), $update );
+      return call_user_func( $this->getOption($trigger), $update );
     }
 
   }
