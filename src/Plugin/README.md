@@ -78,14 +78,17 @@ Thanks to [Dm!tro](https://github.com/Dm1tro-in-da-world) for this contribution.
 
 ## Callback Plugin
 
-Plugin for fast prototyping. Allows to bind trigger and a callback as a parameters of plugin initialization.
+Plugin for fast prototyping. Pass associative array of trigger => callback as options and you'll get different action for different triggers.
 
 Example:
 
 ```
 $joker->plug([
-  new Joker\Plugin\Callback(['trigger'=>'callbacktest', 'callback' => function(Joker\Event $event){
-    $event->answerMessage('test ok');
+  new Joker\Plugin\Callback(['callbacktest' => function(Joker\Parser\Update $update){
+    $update->answerMessage('callbacktest success');
+    return false;
+  },'anothertest' => function(Joker\Parser\Update $update){
+    $update->answerMessage('anothertest success');
     return false;
   }]),
 ]);
@@ -403,6 +406,7 @@ Send private message to the bot, `login` after this you'll see list of commands 
 - `ls [number]` - to list last [number] jokes in current trigger
 - `add [joke]` - to add joke to current trigger
 - `rm [number]` - to remove joke by number
+- `logout` - to log out from admin
 
 When you add joke, text will be converted from Telegram client copy message, from Telegram Mobile client, Telegram X client, or from other source. 
 

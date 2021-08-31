@@ -65,8 +65,8 @@ class QuoteAdmin extends Base
       $update->message()->from()->saveCustom();
     }
 
-    $update->answerMessage( "Hi, {$update->message()->from()->name()} you are logged in now. Triggers you can work with: {$custom->admin_triggers}. Current trigger is {$custom->admin_current_trigger}" , ['parse_mode' => 'HTML']);
-    return $this->help($update);
+    $update->answerMessage( "Hi, <b>{$update->message()->from()->name()}</b> you are logged in as admin. Triggers you can work with: <b>{$custom->admin_triggers}</b>. Current trigger is {$custom->admin_current_trigger}. Tyoe <code>help</code> for available commands." , ['parse_mode' => 'HTML']);
+    return false;
   }
 
 
@@ -89,10 +89,12 @@ class QuoteAdmin extends Base
   {
     $message = <<<EOF
 Commands:
+<code>login</code> - to log in as admin
 <code>cd [trigger]</code> - to change trigger
 <code>ls [number]</code> - to list last [number] jokes in current trigger
 <code>add [joke]</code> - to add joke to current trigger
 <code>rm [number]</code> - to remove joke by number
+<code>logout</code> - to log out from admin
 EOF;
     $update->answerMessage( $message , ['parse_mode' => 'HTML']);
     return false;
