@@ -20,8 +20,8 @@ class Kicker extends Base
 {
 
   protected $options = [
-    'secons_with_emoji' => 0,
-    'secons_without_emoji' => 600,
+    'seconds_with_emoji' => 0,
+    'seconds_without_emoji' => 600,
   ];
 
   private $waiting_list = [];
@@ -37,7 +37,7 @@ class Kicker extends Base
     $chat = $update->message()->chat();
 
     // check name for emoji
-    $option  = self::containsEmoji($user->name()) ? 'secons_with_emoji' : 'secons_without_emoji';
+    $option  = self::containsEmoji($user->name()) ? 'seconds_with_emoji' : 'seconds_without_emoji';
     $seconds = $this->getOption( $option, 600 );
 
     // add user to waiting list
