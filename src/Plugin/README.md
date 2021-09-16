@@ -29,6 +29,7 @@ Plugins are well documented in inline comments, some interesting details will be
 * [Server Plugin](#server-plugin)
 * [Spotify Plugin](#spotify-plugin)
 * [Sticker Plugin](#sticker-plugin)
+* [StickerFun Plugin](#stickerfun-plugin)
 * [Temp Plugin](#temp-plugin)
 * [Twitch Plugin](#twitch-plugin)
 * [UrlCollector Plugin](#urlcollector-plugin)
@@ -508,6 +509,16 @@ TODO:
 ## Sticker Plugin
 
 Example sticker plugin. Send sticker to Joker private chat, he will answer with random sticker from same pack.
+
+## StickerFun Plugin
+
+Send random sticker from previously posted, when people started to send lots of stickers
+
+Options:
+- `stickers_per_minute` integer, default 3 - stickers per minute to activate joker
+- `users_in_range` integer, default 2 - number of users in this range
+
+
 
 ## Temp Plugin
 
