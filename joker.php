@@ -13,7 +13,7 @@ $bot->plug([
 
   new Joker\Plugin\Log( ['file' =>'data/log/log.json'] ),
   new Joker\Plugin\Activity( ['sync_time' => 60] ),
-  new Joker\Plugin\Kicker(),
+  new Joker\Plugin\Kicker(['seconds_with_emoji' => 0, 'seconds_without_emoji' => 600]),
   new Joker\Plugin\Forwarder( [
     ['from' => -343502518, 'text' => ['*покуп*'], 'to' => -343502518, ],
     ['from' => -343502518, 'text' => ['*прода*', '*сдаё*'], 'to' => -343502518, 'forward' => false ],
@@ -34,7 +34,7 @@ $bot->plug([
   new Joker\Plugin\Carma(['clean_time' => false, 'power_time' => 600,'start_carma' => 10]),
   new Joker\Plugin\Corona( ['file' => 'data/corona/today.csv', 'update_hours'=>3]),
   new Joker\Plugin\Currency(),
-  new Joker\Plugin\Callback(['trigger'=>'callbacktest', 'callback' => function(Joker\Parser\Update $update){
+  new Joker\Plugin\Callback(['callbacktest' => function(Joker\Parser\Update $update){
     $update->answerMessage('test ok');
     return false;
   }]),
@@ -42,12 +42,14 @@ $bot->plug([
   new Joker\Plugin\Meme(),
   new Joker\Plugin\Excuse(),
   new Joker\Plugin\Whynot(),
+  new Joker\Plugin\Uptime(),
   new Joker\Plugin\Game( [ 'trigger' => 'chpocker', 'url' => 'https://blackcrystal.dev/chpocker/']),
   new Joker\Plugin\QuoteInline( ['dir' =>'data/jokes', 'limit' => 10, 'trigger' => 'tg'] ),
+  new Joker\Plugin\QuoteAdmin(),
 
   // *** somethingg wide, without triggers, must stay in the end ***
 
-  new Joker\Plugin\Quote( ['dir' =>'data/jokes'] ),
+  new Joker\Plugin\Quote(),
   new Joker\Plugin\Pasta( ['minimum_time' => 60 * 60] ),
   new Joker\Plugin\Beer( ['minimum_time'=>15*60] ),
 

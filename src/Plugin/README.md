@@ -24,6 +24,7 @@ Plugins are well documented in inline comments, some interesting details will be
 * [Moderate Plugin](#moderate-plugin)
 * [Pasta Plugin](#pasta-plugin)
 * [Quote Plugin](#quote-plugin)
+* [QuoteAdmin Plugin](#quoteadmin-plugin)
 * [QuoteInline Plugin](#quoteinline-plugin)
 * [Server Plugin](#server-plugin)
 * [Spotify Plugin](#spotify-plugin)
@@ -77,14 +78,17 @@ Thanks to [Dm!tro](https://github.com/Dm1tro-in-da-world) for this contribution.
 
 ## Callback Plugin
 
-Plugin for fast prototyping. Allows to bind trigger and a callback as a parameters of plugin initialization.
+Plugin for fast prototyping. Pass associative array of trigger => callback as options and you'll get different action for different triggers.
 
 Example:
 
 ```
 $joker->plug([
-  new Joker\Plugin\Callback(['trigger'=>'callbacktest', 'callback' => function(Joker\Event $event){
-    $event->answerMessage('test ok');
+  new Joker\Plugin\Callback(['callbacktest' => function(Joker\Parser\Update $update){
+    $update->answerMessage('callbacktest success');
+    return false;
+  },'anothertest' => function(Joker\Parser\Update $update){
+    $update->answerMessage('anothertest success');
     return false;
   }]),
 ]);
@@ -98,6 +102,7 @@ Options:
 - `clean_time` (false|integer, optional, default 10)  - false, or seconds to remove mana exchange message
 - `power_time` (integer, optional, default 600) - number of seconds to have full power (1)
 - `start_carma` (integer, optional, default 10)  - points you start with
+- `limit` (integer, optional, default 30)  - number of results in carma top
 
 Thanks for help in development to **D0b3rm4nN** and [AL^Raven](https://github.com/alravenbc).
 
@@ -271,7 +276,11 @@ Bot will answer you with standart greeting
 
 If your channel is popular enough, you will constantly be attacked with bots with strange names containing emoji. 
 
-Add this plugin to kick such users.  
+This plugin will remove users with emojis in their name instantly, and others after 10 minutes of inactivity after join.
+
+Options:
+- `seconds_with_emoji` integer, optional, default is 0 - wait time before remove user with emoji in name
+- `seconds_without_emoji` integer, optional, default is 600 - wait time before remove user without emoji in name
 
 ## Log Plugin
 
@@ -361,11 +370,9 @@ Parameter `minimum_time` can be used to set minimum time between triggering this
 
 ## Quote Plugin
 
-Random joke from collection of our jokes.
+You can request for random joke from trigger, get joke by number or search by text.
 
-Jokes are kept in files, saved in `dir` directory. File name must be `!<trigger>.txt`
-
-When bot founds file, he will answer by random joke from that file, or specific joke by id (number) or performs search. Example:
+Example:
 
 ```
 !irc
@@ -384,15 +391,30 @@ To get list of all triggers available, ask this:
 !list
 ```
 
-Bot will look jokes directory and answers:
+Bot will list all available triggers:
 
 ```
 List of jokes: !2alsmom !2forsedad !al !anek !cyberzx !ep !fly !fun !gorkiy !hmage !irc !ircnet !joke !jokerquery !kod !lancer !matpac !mind !morg !mt !onliner !patriot !peni !pore !romes !say !test !tg !trigger !ua !vou !wolf
 ```
 
-To add new joke, you can send it to Joker private chat.
+## QuoteAdmin Plugin
+
+Separate plugin made for administration of quotes. Allows to add, list, remove jokes from database.
+
+Send private message to the bot, `login` after this you'll see list of commands available for you. 
+- `cd [trigger]` - to change trigger
+- `ls [number]` - to list last [number] jokes in current trigger
+- `add [joke]` - to add joke to current trigger
+- `rm [number]` - to remove joke by number
+- `logout` - to log out from admin
+
+When you add joke, text will be converted from Telegram client copy message, from Telegram Mobile client, Telegram X client, or from other source. 
+
+Example messages copied from Telegram Desktop client:  
 
 ```
+add
+
 SHPONGIk, [01.11.20 21:58]
 Димас, ты с концентраторами от моника к ПС знаком?
 
@@ -404,7 +426,7 @@ SHPONGIk, [01.11.20 21:59]
 
 ```
 
-If joke is from Telegram chat, it will be converted to well-formed format with date and parsed lines, otherwise will be added as is.
+Will be transformed to:
 
 ```
 Added: !tg 111 of 111: [01.11.20 21:58]
@@ -550,7 +572,7 @@ Configuration options:
 
 ## Viabot Plugin
 
-Blocks messages sent via bot.
+Blocks processing of messages sent via bot.
 
 Add this plugin to Joker Bot after Log Plugin, to log via_bot messages and skip future processing. 
 This is useful when you wish to allow your users to post inline messages via bot.

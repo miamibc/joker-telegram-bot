@@ -18,6 +18,8 @@ use Joker\Parser\Message;
 use Joker\Parser\Update;
 use Joker\Parser\User;
 
+declare(ticks=1);
+
 class Bot
 {
 
@@ -52,6 +54,10 @@ class Bot
       throw new Exception("Wrong or inactive Telegram API token. More info https://core.telegram.org/bots#6-botfather");
     }
     echo "\nBot started: "; print_r( $this->me->getData() );
+
+    // intercept ctrl+c
+    pcntl_signal(SIGINT, [$this,'quit']);
+    pcntl_signal(SIGTERM, [$this,'quit']);
 
   }
 
@@ -202,6 +208,19 @@ class Bot
   {
     $this->plugins = $plugins;
     return $this;
+  }
+
+  /** ctrl-c and ctrl+break event processing */
+  public function quit( $event = null )
+  {
+    foreach ($this->plugins as $i=>$plugin)
+    {
+      $this->log("Unloading " . get_class($plugin));
+      unset($this->plugins[$i]);
+    }
+
+    echo "\nBuj :p";
+    exit();
   }
 
 
