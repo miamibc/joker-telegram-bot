@@ -1,10 +1,10 @@
 <?php
 /**
  * Joker Quote Plugin
- * - Quotes from file in specified directory
+ * - Quotes from sqlite database
  * - Random quote
  * - Quote by number
- * - Seach quote
+ * - Search quote
  *
  * @package joker-telegram-bot
  * @author Sergei Miami <miami@blackcrystal.net>
