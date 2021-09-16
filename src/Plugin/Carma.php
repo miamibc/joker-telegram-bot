@@ -53,6 +53,11 @@ class Carma extends Base
     // !carma debug, lists all registered users
     if ($message->text()->token(1) === 'debug')
     {
+
+      // only allowed users
+      $channels = explode(' ', $userfrom->getCustom()->admin_channels);
+      if (!in_array($channels, $message->chat()->name())) return;
+
       $answer = ['Debug carma info:'];
       $sum = array_sum( array_map(function ($user) use (&$answer){
         $rating = round( $result = $this->getRating($user) , 2);
