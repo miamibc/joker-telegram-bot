@@ -29,6 +29,7 @@ Plugins are well documented in inline comments, some interesting details will be
 * [Server Plugin](#server-plugin)
 * [Spotify Plugin](#spotify-plugin)
 * [Sticker Plugin](#sticker-plugin)
+* [StickerFun Plugin](#stickerfun-plugin)
 * [Temp Plugin](#temp-plugin)
 * [Twitch Plugin](#twitch-plugin)
 * [UrlCollector Plugin](#urlcollector-plugin)
@@ -279,8 +280,8 @@ If your channel is popular enough, you will constantly be attacked with bots wit
 This plugin will remove users with emojis in their name instantly, and others after 10 minutes of inactivity after join.
 
 Options:
-- `secons_with_emoji` integer, optional, default is 0 - wait time before remove user with emoji in name
-- `secons_without_emoji` integer, optional, default is 600 - wait time before remove user without emoji in name
+- `seconds_with_emoji` integer, optional, default is 0 - wait time before remove user with emoji in name
+- `seconds_without_emoji` integer, optional, default is 600 - wait time before remove user without emoji in name
 
 ## Log Plugin
 
@@ -508,6 +509,16 @@ TODO:
 ## Sticker Plugin
 
 Example sticker plugin. Send sticker to Joker private chat, he will answer with random sticker from same pack.
+
+## StickerFun Plugin
+
+Send random sticker from previously posted, when people started to send lots of stickers
+
+Options:
+- `stickers_per_minute` integer, default 3 - stickers per minute to activate joker
+- `users_in_range` integer, default 2 - number of users in this range
+
+
 
 ## Temp Plugin
 

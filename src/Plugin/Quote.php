@@ -1,10 +1,10 @@
 <?php
 /**
  * Joker Quote Plugin
- * - Quotes from file in specified directory
+ * - Quotes from sqlite database
  * - Random quote
  * - Quote by number
- * - Seach quote
+ * - Search quote
  *
  * @package joker-telegram-bot
  * @author Sergei Miami <miami@blackcrystal.net>
@@ -39,6 +39,7 @@ class Quote extends Base
         "Type <b>!topic</b> to find random quote",
         "Type <b>!topic search string</b> to search in topic and receive random joke",
         "Type <b>!topic number</b> to get specific quote by it's number",
+        "Type <b>!topic last</b> to get last quote",
       ]);
       $triggers = implode(' ', array_map(function($item){
         return "!$item";
@@ -65,10 +66,10 @@ class Quote extends Base
       $prefix = "!$trigger $count total";
     }
     // numeric query
-    elseif (is_numeric( $query ))
+    elseif (is_numeric( $query ) || $query == 'last')
     {
-      $offset = $query-1;
       $count  = R::count('joke', " trigger = ? ", [ $trigger ] );
+      $offset = is_numeric($query) ? $query-1 : $count-1;
       $joke   = R::findOne('joke', " trigger = ? ORDER BY id LIMIT $offset,1 ", [ $trigger ] );
       $prefix = "!$trigger $query of $count";
     }

@@ -20,8 +20,8 @@ class Kicker extends Base
 {
 
   protected $options = [
-    'secons_with_emoji' => 0,
-    'secons_without_emoji' => 600,
+    'seconds_with_emoji' => 0,
+    'seconds_without_emoji' => 600,
   ];
 
   private $waiting_list = [];
@@ -38,7 +38,7 @@ class Kicker extends Base
 
     // check name for emoji
     $option  = self::containsEmoji($user->name()) ? 'seconds_with_emoji' : 'seconds_without_emoji';
-    $seconds = $this->getOption( $option );
+    $seconds = $this->getOption( $option, 600 );
 
     // add user to waiting list
     $this->waiting_list[] = [time() + $seconds, $chat->id(), $user->id() ];
@@ -69,26 +69,29 @@ class Kicker extends Base
   public function onEmpty( Update $update)
   {
 
+    $now = time();
     foreach ($this->waiting_list as $i => $item)
     {
 
       list($time, $chat_id, $user_id ) = $item;
 
-      if (time() < $time) continue;
+      if ( $now > $time )
+      {
 
-      // kick user
-      $update->customRequest('kickChatMember',[
-        'chat_id' => $chat_id,
-        'user_id' => $user_id,
-      ]);
+        // kick user
+        $update->customRequest('kickChatMember',[
+          'chat_id' => $chat_id,
+          'user_id' => $user_id,
+        ]);
 
-      $update->customRequest('sendMessage', [
-        'chat_id' => $chat_id,
-        'text' => 'If it bleeds, we can kill it ;p',
-      ]);
+        $update->customRequest('sendMessage',[
+          'chat_id' => $chat_id,
+          'text'    => 'If it bleeds, we can kill it ;p',
+        ]);
 
-      unset($this->waiting_list[$i]);
+        unset($this->waiting_list[$i]);
 
+      }
     }
 
   }

@@ -13,7 +13,7 @@ $bot->plug([
 
   new Joker\Plugin\Log( ['file' =>'data/log/log.json'] ),
   new Joker\Plugin\Activity( ['sync_time' => 60] ),
-  new Joker\Plugin\Kicker(['secons_with_emoji' => 0, 'secons_without_emoji' => 600]),
+  new Joker\Plugin\Kicker(['seconds_with_emoji' => 0, 'seconds_without_emoji' => 600]),
   new Joker\Plugin\Forwarder( [
     ['from' => -343502518, 'text' => ['*покуп*'], 'to' => -343502518, ],
     ['from' => -343502518, 'text' => ['*прода*', '*сдаё*'], 'to' => -343502518, 'forward' => false ],
@@ -31,6 +31,7 @@ $bot->plug([
   new Joker\Plugin\Cowsay( ['bg_color' =>'#222222','text_color' =>'#dadada']),
   new Joker\Plugin\Hello(),
   new Joker\Plugin\Sticker(),
+  new Joker\Plugin\StickerFun(['range_seconds' => 60, 'stickers_in_range' => 3, 'users_in_range' => 2]),
   new Joker\Plugin\Carma(['clean_time' => false, 'power_time' => 600,'start_carma' => 10]),
   new Joker\Plugin\Corona( ['file' => 'data/corona/today.csv', 'update_hours'=>3]),
   new Joker\Plugin\Currency(),

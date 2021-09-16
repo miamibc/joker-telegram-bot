@@ -53,6 +53,11 @@ class Carma extends Base
     // !carma debug, lists all registered users
     if ($message->text()->token(1) === 'debug')
     {
+
+      // only allowed users
+      $channels = explode(' ', $userfrom->getCustom()->admin_channels.'');
+      if (!in_array($channels, $message->chat()->name())) return;
+
       $answer = ['Debug carma info:'];
       $sum = array_sum( array_map(function ($user) use (&$answer){
         $rating = round( $result = $this->getRating($user) , 2);
@@ -138,7 +143,7 @@ class Carma extends Base
     if ($userfrom->id() === $userto->id() ) return false;
 
     // cannot share carma with bot
-    if ( $userfrom->isBot() || $userto->isBot() ) return false;
+    if ( $userfrom->is_bot() || $userto->is_bot() ) return false;
 
     // get ratings
     $r = [
@@ -227,11 +232,11 @@ class Carma extends Base
 
   /**
    * Calculate power of user (amount of hours, since last change of his rating), maximum 1
-   * @param User $user
+   * @param User|RedBeanPHP\OODBBean $user
    *
    * @return float
    */
-  private function getPower($user ): float
+  private function getPower( $user ): float
   {
     if ($user instanceof User) $user = $user->getCustom();
     $time = $user->carma_updated;
@@ -261,15 +266,13 @@ class Carma extends Base
    * Save rating with updated_date
    * @param User|RedBeanPHP\OODBBean $user
    * @param $value
-   *
-   * @throws \RedBeanPHP\RedException\SQL
    */
   private function setRating( $user, $value )
   {
     $data = $user instanceof User ? $user->getCustom() : $user;
     $data->carma_rating = $value;
     $data->carma_updated = time();
-    if ($user instanceof $user) $user->saveCustom();
+    if ($user instanceof User) $user->saveCustom();
   }
 
 }

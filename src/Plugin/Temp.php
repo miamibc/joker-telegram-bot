@@ -170,7 +170,7 @@ class Temp extends Base
     foreach ( $data['weather'] as $w)
       $result[] = $w['description'];
 
-    $place = isset($data['name']) && $data['name']
+    $place = isset($data['name'], $data['sys']['country']) && $data['name'] && $data['sys']['country']
       ? "{$data['name']}, {$data['sys']['country']}"
       : "this place";
 

@@ -201,7 +201,7 @@ class Bot
   }
 
   /**
-   * @param Plugin[] $plugins
+   * @param Plugin\Base[] $plugins
    * @return $this
    */
   public function plug( array $plugins )
