@@ -2,7 +2,11 @@
 /**
  * Kicker plugin for Joker Telegram Bot
  *
- * Checks joined person and kicks if emoji found in nickname.
+ * This plugin will remove users with emojis in their name instantly, and others after 10 minutes of inactivity after join.
+ *
+ * Options:
+ * - `secons_with_emoji` integer, optional, default is 0 - wait time before remove user with emoji in name
+ * - `secons_without_emoji` integer, optional, default is 600 - wait time before remove user without emoji in name
  *
  * @package joker-telegram-bot
  * @author Sergei Miami <miami@blackcrystal.net>
@@ -15,31 +19,82 @@ use Joker\Parser\Update;
 class Kicker extends Base
 {
 
+  protected $options = [
+    'secons_with_emoji' => 0,
+    'secons_without_emoji' => 600,
+  ];
+
+  private $waiting_list = [];
+
+  /**
+   * Listen to JOIN event, add to array with time, when to kick this user
+   * @param Update $update
+   */
   public function onJoin( Update $update )
   {
     // new chat member
     $user = $update->message()->new_chat_member();
+    $chat = $update->message()->chat();
 
     // check name for emoji
-    if (self::containsEmoji($user->name()))
+    $option  = self::containsEmoji($user->name()) ? 'secons_with_emoji' : 'secons_without_emoji';
+    $seconds = $this->getOption( $option, 600 );
+
+    // add user to waiting list
+    $this->waiting_list[] = [time() + $seconds, $chat->id(), $user->id() ];
+  }
+
+  /**
+   * Listen to text messages from user and remove from waiting list
+   * @param Update $update
+   */
+  public function onPublicText( Update $update )
+  {
+    // new chat member
+    $message = $update->message();
+    foreach ($this->waiting_list as $i=>$item)
+    {
+      list($time, $chat_id, $user_id ) = $item;
+      if (
+        $chat_id == $message->chat()->id() &&
+        $user_id == $message->from()->id()
+      )  unset($this->waiting_list[$i]);
+    }
+  }
+
+  /**
+   * Timer for kicking users from kicklist
+   * @param Update $update
+   */
+  public function onEmpty( Update $update)
+  {
+
+    $now = time();
+    foreach ($this->waiting_list as $i => $item)
     {
 
-      // quote from Predator
-      $update->answerMessage('If it bleeds, we can kill it ;p');
+      list($time, $chat_id, $user_id ) = $item;
 
-      // kick user
-      $update->customRequest('kickChatMember',[
-        'chat_id' => $update->message()->chat()->id(),
-        'user_id' => $user->id(),
-      ]);
+      if ( $now > $time )
+      {
 
-      // delete message about join
-      $update->deleteMessage();
+        // kick user
+        $update->customRequest('kickChatMember',[
+          'chat_id' => $chat_id,
+          'user_id' => $user_id,
+        ]);
 
+        $update->customRequest('sendMessage',[
+          'chat_id' => $chat_id,
+          'text'    => 'If it bleeds, we can kill it ;p',
+        ]);
+
+        unset($this->waiting_list[$i]);
+
+      }
     }
 
   }
-
   /**
    * Check text contains emoji.
    * Full list got from https://unicode.org/emoji/charts/full-emoji-list.html
