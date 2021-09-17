@@ -55,8 +55,8 @@ class Carma extends Base
     {
 
       // only allowed users
-      $channels = explode(' ', $userfrom->getCustom()->admin_channels.'');
-      if (!in_array($channels, $message->chat()->name())) return;
+      $channels = explode(' ', $userfrom->getCustom()->admin_channels);
+      if (!in_array( $message->chat()->name(), $channels)) return;
 
       $answer = ['Debug carma info:'];
       $sum = array_sum( array_map(function ($user) use (&$answer){
