@@ -31,7 +31,7 @@ namespace Joker\Parser;
  * @method Sticker sticker() Optional. Message is a sticker, information about the sticker
  * @method Video video() Optional. Message is a video, information about the video
  * @method Voice voice() Optional. Message is a voice message, information about the file
- * @method string caption() Optional. Caption for the animation, audio, document, photo, video or voice, 0-1024 characters
+ * @method Text caption() Optional. Caption for the animation, audio, document, photo, video or voice, 0-1024 characters
  * @method Contact contact() Optional. Message is a shared contact, information about the contact
  * @method Dice dice() Optional. Message is a dice with random value
  * @method Game game() Optional. Message is a game, information about the game.
@@ -59,6 +59,7 @@ class Message extends Base
     'audio' => Audio::class,
     'document' => Document::class,
     'photo' => PhotoSize::class,
+    'caption' => Text::class,
     'sticker' => Sticker::class,
     'video' => Video::class,
     'voice' => Voice::class,
