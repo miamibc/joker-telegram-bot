@@ -32,7 +32,8 @@ Plugins are well documented in inline comments, some interesting details will be
 * [StickerFun Plugin](#stickerfun-plugin)
 * [Temp Plugin](#temp-plugin)
 * [Twitch Plugin](#twitch-plugin)
-* [UrlCollector Plugin](#urlcollector-plugin)
+* [Uptime Plugin](#uptme-plugin)
+* [UrlCollector Plugin](#urlcollector-plugin)]
 * [Viabot Plugin](#viabot-plugin)
 * [Whynot Plugin](#whynot-plugin)
 
@@ -572,6 +573,10 @@ Configuration options:
 - `client_secret` (string, optional, default is env variable `TWITCH_CLIENT_SECRET`) - client secret of your Twitch API application
 
 Thanks for idea to **D0b3rm4nN**.
+
+## Uptime Plugin
+
+Shows amount of time bot was up.
 
 ## UrlCollector Plugin
 
