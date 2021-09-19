@@ -44,9 +44,9 @@ class Carma extends Base
 
     // increment rating, 1 per megabyte of text
     $rating = $this->getRating( $userfrom );
-    $length = $message->text()->length() + $message->caption()->length();
+    $length = $message->text()->length();
     if ($length > 255) $length = 0; // skip very large messages
-    $userfrom->getCustom()->carma_rating = $rating + $length / 1024 / 1024;
+    $userfrom->getCustom()->carma_rating = $rating + $length / 1024;
     $userfrom->saveCustom();
 
     // do not process, if trigger is not carma
