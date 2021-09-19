@@ -57,4 +57,9 @@ class Text
     return mb_substr( $this->text, $from, $length );
   }
 
+  public function length()
+  {
+    return mb_strlen( $this->text );
+  }
+
 }

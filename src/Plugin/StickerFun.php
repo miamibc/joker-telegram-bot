@@ -62,9 +62,14 @@ class StickerFun extends Base
       return;
     }
 
+    // choose random sticker
     $file_id = $result['stickers'][ mt_rand(0, count($result['stickers'])-1) ]['file_id'];
 
+    // send it
     $update->answerSticker( $file_id );
+
+    // clean timeline
+    $this->timeline = [];
     return false;
 
   }
