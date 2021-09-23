@@ -4,7 +4,7 @@
  * Send random sticker from previously posted, when people started to send lots of stickers
  *
  * Options:
- * - `range_seconds` integer, optional, default 600 - defines a time frame (seconds) to search stickers activity in
+ * - `range` integer, optional, default 600 - defines a time frame (seconds) to search stickers activity in
  * - `chance` integer, optional, default 10 - more here, less chance to send sticker
  *
  * @package joker-telegram-bot
@@ -19,7 +19,7 @@ class StickerFun extends Base
 {
 
   protected $options = [
-    'range_seconds' => 600,  // timeframe to check stickers
+    'range'  => 600,         // timeframe to check stickers
     'chance' => 10,          // more here, less chance to send sticker
   ];
   protected $sets_used = []; // remember all used sticker sets
@@ -39,7 +39,7 @@ class StickerFun extends Base
     $this->timeline[] = [ $now, $update->message()->from()->id() ];
 
     // filter off old records
-    $time = $now-$this->getOption('range_seconds');
+    $time = $now-$this->getOption('range');
     $users = [];
     $this->timeline = array_filter( $this->timeline, function ($item) use (&$users, $time){
       if ($item[0] > $time) { $users[] = $item[1]; return true; }
