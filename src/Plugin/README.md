@@ -517,7 +517,6 @@ Send random sticker from previously posted, when people started to send lots of 
 
 Options:
 - `range` integer, optional, default 600 - defines a time frame (seconds) to search stickers activity in
-- `chance` integer, optional, default 10 - more here, less chance to send sticker
 
 ## Temp Plugin
 

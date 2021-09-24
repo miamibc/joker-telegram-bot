@@ -5,7 +5,6 @@
  *
  * Options:
  * - `range` integer, optional, default 600 - defines a time frame (seconds) to search stickers activity in
- * - `chance` integer, optional, default 10 - more here, less chance to send sticker
  *
  * @package joker-telegram-bot
  * @author Sergei Miami <miami@blackcrystal.net>
@@ -20,7 +19,6 @@ class StickerFun extends Base
 
   protected $options = [
     'range'  => 600,         // timeframe to check stickers
-    'chance' => 10,          // more here, less chance to send sticker
   ];
   protected $sets_used = []; // remember all used sticker sets
   protected $timeline  = []; // record sticker activity
@@ -49,7 +47,7 @@ class StickerFun extends Base
     if (!count($this->timeline)) return;
 
     // simple math with number of stickers and number of users in range
-    $chance = ceil($this->getOption('chance')/count($this->timeline)/count(array_unique($users)));
+    $chance = ceil($this->getOption('range')/10/(count($this->timeline)*2)/(count(array_unique($users))*5));
 
     // send sticker if random is exactly 0
     if (mt_rand(0, $chance)) return;
