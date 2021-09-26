@@ -516,7 +516,7 @@ Example sticker plugin. Send sticker to Joker private chat, he will answer with 
 Send random sticker from previously posted, when people started to send lots of stickers
 
 Options:
-- `range` integer, optional, default 600 - defines a time frame (seconds) to search stickers activity in
+- `range` integer, optional, default 300 - defines a time frame (seconds) to search stickers activity in
 
 ## Temp Plugin
 

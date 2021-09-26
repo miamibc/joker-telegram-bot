@@ -18,7 +18,7 @@ class StickerFun extends Base
 {
 
   protected $options = [
-    'range'  => 600,         // timeframe to check stickers
+    'range'  => 300,         // timeframe to check stickers
   ];
   protected $sets_used = []; // remember all used sticker sets
   protected $timeline  = []; // record sticker activity

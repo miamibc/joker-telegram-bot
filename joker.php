@@ -31,7 +31,7 @@ $bot->plug([
   new Joker\Plugin\Cowsay( ['bg_color' =>'#222222','text_color' =>'#dadada']),
   new Joker\Plugin\Hello(),
   new Joker\Plugin\Sticker(),
-  new Joker\Plugin\StickerFun(['range' => 600]),
+  new Joker\Plugin\StickerFun(['range' => 300]),
   new Joker\Plugin\Carma(['clean_time' => false, 'power_time' => 600,'start_carma' => 10]),
   new Joker\Plugin\Corona( ['file' => 'data/corona/today.csv', 'update_hours'=>3]),
   new Joker\Plugin\Currency(),
