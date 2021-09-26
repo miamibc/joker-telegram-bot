@@ -4,7 +4,7 @@
  * Send random sticker from previously posted, when people started to send lots of stickers
  *
  * Options:
- * - `range` integer, optional, default 600 - defines a time frame (seconds) to search stickers activity in
+ * - `range` integer, optional, default 300 - defines a time frame (seconds) to search stickers activity in
  *
  * @package joker-telegram-bot
  * @author Sergei Miami <miami@blackcrystal.net>
