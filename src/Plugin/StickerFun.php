@@ -4,9 +4,7 @@
  * Send random sticker from previously posted, when people started to send lots of stickers
  *
  * Options:
- * - `range_seconds` integer, optional, default 60 - defines a time window to search activity in
- * - `stickers_in_range` integer, optional, default 3 - number of stickers to find in range
- * - `users_in_range` integer, optional, default 2 - number of users to find in range
+ * - `range` integer, optional, default 300 - defines a time frame (seconds) to search stickers activity in
  *
  * @package joker-telegram-bot
  * @author Sergei Miami <miami@blackcrystal.net>
@@ -20,9 +18,7 @@ class StickerFun extends Base
 {
 
   protected $options = [
-    'range_seconds' => 60,
-    'stickers_in_range' => 3,
-    'users_in_range' => 2,
+    'range'  => 300,         // timeframe to check stickers
   ];
   protected $sets_used = []; // remember all used sticker sets
   protected $timeline  = []; // record sticker activity
@@ -41,14 +37,20 @@ class StickerFun extends Base
     $this->timeline[] = [ $now, $update->message()->from()->id() ];
 
     // filter off old records
-    $time = $now-$this->getOption('range_seconds');
+    $time = $now-$this->getOption('range');
     $users = [];
     $this->timeline = array_filter( $this->timeline, function ($item) use (&$users, $time){
       if ($item[0] > $time) { $users[] = $item[1]; return true; }
     });
 
-    if ( count($this->timeline) < $this->getOption('stickers_in_range')
-      || count(array_unique($users)) < $this->getOption('users_in_range') ) return;
+    // no stickers in range, nothing to do
+    if (!count($this->timeline)) return;
+
+    // simple math with number of stickers and number of users in range
+    $chance = ceil($this->getOption('range')/10/(count($this->timeline)*2)/(count(array_unique($users))*5));
+
+    // send sticker if random is exactly 0
+    if (mt_rand(0, $chance)) return;
 
     // request stickers from random pack
     $sets   = array_keys($this->sets_used);
