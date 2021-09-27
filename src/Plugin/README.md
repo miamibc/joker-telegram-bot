@@ -35,6 +35,7 @@ Plugins are well documented in inline comments, some interesting details will be
 * [Uptime Plugin](#uptme-plugin)
 * [UrlCollector Plugin](#urlcollector-plugin)]
 * [Viabot Plugin](#viabot-plugin)
+* [Vkmusic Plugin](#vkmusic-plugin)
 * [Whynot Plugin](#whynot-plugin)
 
 ## Activity Plugin
@@ -589,6 +590,10 @@ Blocks processing of messages sent via bot.
 
 Add this plugin to Joker Bot after Log Plugin, to log via_bot messages and skip future processing. 
 This is useful when you wish to allow your users to post inline messages via bot.
+
+## Vkmusic Plugin
+
+Music from Vkontakte (in progress...)
 
 ## Whynot Plugin
 
