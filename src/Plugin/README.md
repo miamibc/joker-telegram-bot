@@ -610,3 +610,7 @@ Bot will answer something like
 ```
 
 Idea from [lgg/excuse-generator](https://github.com/lgg/excuse-generator).
+
+## Ytmusic Plugin
+
+Music from Youtube (in progress...)
