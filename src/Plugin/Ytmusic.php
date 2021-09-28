@@ -7,7 +7,7 @@
  *
  * Options:
  * - `api_key` string, optional, default from env variable GOOGLE_API_KEY - Google API key with Youtube API v3 enabled.
- * - `dir` string, optional, default data/ytmusic - directory to save mp3 files to
+ * - `dir` string, optional, default data/ytmusic - directory to store mp3 files
  *
  * @package joker-telegram-bot
  * @author Sergei Miami <miami@blackcrystal.net>
@@ -43,12 +43,19 @@ class Ytmusic extends Base
         'part'          => 'snippet',
         'type'          => 'video',
         // 'videoDuration' => 'short',
+        // 'maxResults'    => 3,
         'order'         => 'viewCount',
         'key'           => $this->getOption('api_key',getenv('GOOGLE_API_KEY')),
       ]);
 
     $result = $client->get($url);
     $array = json_decode($result->getBody(),true);
+
+    if (!isset($array['items']))
+    {
+      $update->answerMessage('Something went wrong :(');
+      return false;
+    }
 
     // create directory for downloading files
     $dir = $this->getOption('dir');
