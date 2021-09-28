@@ -38,6 +38,7 @@ class Ytmusic extends Base
         'part'          => 'snippet',
         'type'          => 'video',
         'videoDuration' => 'short',
+        'order'         => 'viewCount',
         'key'           => $this->getOption('api_key',getenv('GOOGLE_API_KEY')),
       ]);
 

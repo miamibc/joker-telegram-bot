@@ -27,7 +27,6 @@ class YtmusicTest extends TestCase
     $this->assertSame('my-favourite-video-from-youtube', Ytmusic::slugify('My favourite video from Youtube'));
     $this->assertSame('my-favourite-video-from-youtube', Ytmusic::slugify('My  favourite  video  from  Youtube'));
     $this->assertSame('moye-lyubimoye-video-iz-yutyuba', Ytmusic::slugify('Моё любимое видео из ютюба'));
-
-
+    $this->assertSame('n-a', Ytmusic::slugify(''));
   }
 }
