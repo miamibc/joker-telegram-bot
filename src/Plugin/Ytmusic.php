@@ -37,7 +37,7 @@ class Ytmusic extends Base
         'q'             => $query,
         'part'          => 'snippet',
         'type'          => 'video',
-        'videoDuration' => 'short',
+        // 'videoDuration' => 'short',
         'order'         => 'viewCount',
         'key'           => $this->getOption('api_key',getenv('GOOGLE_API_KEY')),
       ]);
@@ -74,6 +74,12 @@ class Ytmusic extends Base
     if (!file_exists($filename))
     {
       $update->answerMessage("Cannot download audio from $url :(");
+      return false;
+    }
+
+    if (filesize($filename) > 50*1024*1024) // 50 mb is a Telegram limit
+    {
+      $update->answerMessage("File too large to upload, sorry :(");
       return false;
     }
 
