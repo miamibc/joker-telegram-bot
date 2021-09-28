@@ -24,11 +24,13 @@ class Ytmusic extends Base
   {
 
     if ($update->message()->text()->trigger() !== 'ytmusic') return;
+
     $client = new Client();
     $result = $client->get("https://www.googleapis.com/youtube/v3/search?".http_build_query([
         'q'    => $query = $update->message()->text()->token(1),
         'part' => 'snippet',
         'type' => 'video',
+        'videoDuration' => 'short',
         'key'  => $this->getOption('api_key',getenv('GOOGLE_API_KEY')),
       ]))->getBody();
     $array = json_decode($result,true);
