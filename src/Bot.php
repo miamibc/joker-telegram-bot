@@ -200,6 +200,14 @@ class Bot
     return $message;
   }
 
+  public function console( $message )
+  {
+    $timestamp = date("Y-m-d H:i:s");
+    $json = is_string($message) ? $message : json_encode($message, JSON_PRETTY_PRINT);
+    echo "\n[$timestamp] $json";
+    return $message;
+  }
+
   /**
    * @param Plugin\Base[] $plugins
    * @return $this
@@ -269,6 +277,13 @@ class Bot
   {
     if (!file_exists($file)) return false;
     $result = $this->_requestMultipart( 'sendPhoto', array_merge( [ 'chat_id'=>$chat_id, 'photo'=>new \CURLFile( $file ) ], $options ));
+    return new Message( $result );
+  }
+
+  public function sendAudio( $chat_id, $file, $options = [] )
+  {
+    if (!file_exists($file)) return false;
+    $result = $this->_requestMultipart( 'sendAudio', array_merge( [ 'chat_id'=>$chat_id, 'audio'=>new \CURLFile( $file ) ], $options ));
     return new Message( $result );
   }
 

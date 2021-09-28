@@ -613,4 +613,9 @@ Idea from [lgg/excuse-generator](https://github.com/lgg/excuse-generator).
 
 ## Ytmusic Plugin
 
-Music from Youtube (in progress...)
+Posts audiotrack from Youtube video.
+
+[youtube-dl|http://ytdl-org.github.io/youtube-dl/download.html] is required to make this plugin work as planned, if absent you'll see link to youtube video instead. 
+
+Options:
+- `api_key` string, optional, default from env variable GOOGLE_API_KEY - Google API key with Youtube API v3 enabled.
