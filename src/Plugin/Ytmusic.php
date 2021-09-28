@@ -26,30 +26,35 @@ class Ytmusic extends Base
     if ($update->message()->text()->trigger() !== 'ytmusic') return;
 
     $client = new Client();
-    $result = $client->get("https://www.googleapis.com/youtube/v3/search?".http_build_query([
-        'q'    => $query = $update->message()->text()->token(1),
-        'part' => 'snippet,contentDetails', // more info https://developers.google.com/youtube/v3/docs/videos
-        'type' => 'video',
+    $query = $update->message()->text()->token(1);
+    $url = ($videoId = self::linkToYoutube($query))
+      ? "https://www.googleapis.com/youtube/v3/videos?".http_build_query([
+        'id'            => $videoId,
+        'part'          => 'snippet',
+        'key'           => $this->getOption('api_key',getenv('GOOGLE_API_KEY')),
+      ])
+      : "https://www.googleapis.com/youtube/v3/search?".http_build_query([
+        'q'             => $query,
+        'part'          => 'snippet',
+        'type'          => 'video',
         'videoDuration' => 'short',
-        'key'  => $this->getOption('api_key',getenv('GOOGLE_API_KEY')),
-      ]))->getBody();
-    $array = json_decode($result,true);
+        'key'           => $this->getOption('api_key',getenv('GOOGLE_API_KEY')),
+      ]);
 
-    // leave only youtube#video results
-    $array = array_filter( $array['items'], function ($item){
-      return $item['id']['kind'] == 'youtube#video';
-    });
+    $result = $client->get($url);
+    $array = json_decode($result->getBody(),true);
 
-    if (!count($array))
+    if (!isset($array['items'][0]))
     {
       $update->answerMessage('Nothing found :(');
       return false;
     }
 
-    $video    = $array[0];
-    $videoId  = $video['id']['videoId'];
+    $video    = $array['items'][0];
+    $videoId  = $video['id']['videoId'] ?? $video['id']; // search has id.videoId, videos has id
     $url      = "https://youtu.be/$videoId";
-    $slug     = self::slugify($query);
+    $title    = html_entity_decode( $video['snippet']['title'] );
+    $slug     = self::slugify($title);
     $filename = "data/ytmusic/$slug.mp3";
 
     // create folder, if not exists
@@ -73,10 +78,16 @@ class Ytmusic extends Base
 
     // send audio
     $update->bot()->sendAudio($update->message()->chat()->id(), $filename, [
-      'caption' => $video['snippet']['title'],
+      'title' => $title,
+      'caption' => "Watch ➝ $url",
     ]);
     return false;
 
+  }
+
+  public static function linkToYoutube( $query )
+  {
+    return preg_match('@(?:youtu\.be/|youtube\.com/watch\?v=)([^"&?\/\s]+)$@uim', $query, $matches) ? $matches[1] : false;
   }
 
   public static function slugify($text, string $divider = '-')
