@@ -3,10 +3,10 @@
  * Youtube plugin for Joker
  *
  * Posts audiotrack from Youtube video.
- * youtube-dl is required http://ytdl-org.github.io/youtube-dl/download.html
+ * Youtube-dl (http://ytdl-org.github.io/youtube-dl/download.html is required to make this plugin work as planned, if absent you'll see link to youtube video instead.
  *
  * Options:
- * - `api_key` string, required - Google API key with Youtube API v3 enabled.
+ * - `api_key` string, optional, default from env variable GOOGLE_API_KEY - Google API key with Youtube API v3 enabled.
  *
  * @package joker-telegram-bot
  * @author Sergei Miami <miami@blackcrystal.net>
