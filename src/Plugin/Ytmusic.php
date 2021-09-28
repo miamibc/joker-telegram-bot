@@ -28,7 +28,7 @@ class Ytmusic extends Base
     $client = new Client();
     $result = $client->get("https://www.googleapis.com/youtube/v3/search?".http_build_query([
         'q'    => $query = $update->message()->text()->token(1),
-        'part' => 'snippet',
+        'part' => 'snippet,contentDetails', // more info https://developers.google.com/youtube/v3/docs/videos
         'type' => 'video',
         'videoDuration' => 'short',
         'key'  => $this->getOption('api_key',getenv('GOOGLE_API_KEY')),
@@ -67,7 +67,7 @@ class Ytmusic extends Base
 
     if (!file_exists($filename))
     {
-      $update->answerMessage("Canot download audio from $url :(");
+      $update->answerMessage("Cannot download audio from $url :(");
       return false;
     }
 
