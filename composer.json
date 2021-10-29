@@ -14,6 +14,9 @@
   "require": {
     "ext-gd": "*",
     "ext-json": "*",
+    "ext-dom": "*",
+    "ext-intl": "*",
+    "ext-iconv": "*",
     "ext-curl": "*",
     "ext-mbstring": "*",
     "ext-sockets": "*",
@@ -23,7 +26,8 @@
     "league/html-to-markdown": "^4.9",
     "gabordemooij/redbean": "dev-master",
     "cheprasov/php-redis-client": "^1.10",
-    "mnapoli/silly": "^1.7"
+    "mnapoli/silly": "^1.7",
+    "guzzlehttp/guzzle": "^7.3"
   },
   "autoload": {
     "psr-4": {

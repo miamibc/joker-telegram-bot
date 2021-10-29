@@ -6,6 +6,7 @@ Here you can find library of plugins we use for our own purpose. They are probab
 Plugins are well documented in inline comments, some interesting details will be added here. 
 
 * [Activity Plugin](#activity-plugin)
+* [Advice Plugin](#advice-plugin)
 * [Bash Plugin](#bash-plugin)
 * [Beer Plugin](#beer-plugin)
 * [Callback Plugin](#callback-plugin)
@@ -35,6 +36,7 @@ Plugins are well documented in inline comments, some interesting details will be
 * [Uptime Plugin](#uptme-plugin)
 * [UrlCollector Plugin](#urlcollector-plugin)]
 * [Viabot Plugin](#viabot-plugin)
+* [Vkmusic Plugin](#vkmusic-plugin)
 * [Whynot Plugin](#whynot-plugin)
 
 ## Activity Plugin
@@ -49,6 +51,17 @@ Stores user activity from messages containing `from` field. Data will be stored 
 
 Configuration options:
 - `sync_time` (integer, default 60) - seconds, how often to write data to database
+
+## Advice Plugin
+
+Advice plugin for Joker. Fuckin Great Advices from [fucking-great-advice.ru](https://fucking-great-advice.ru/) API
+
+You can ask:
+- `!advice`  bot answers with random advice
+- `!advice topic`  bot answers with random advice from topic
+- `!advice wrongtopic` bot will answer with list of proper topics
+
+Thanks for idea [D0b3rm4nN](https://gist.github.com/bcdober)
 
 ## Bash Plugin
 
@@ -590,6 +603,10 @@ Blocks processing of messages sent via bot.
 Add this plugin to Joker Bot after Log Plugin, to log via_bot messages and skip future processing. 
 This is useful when you wish to allow your users to post inline messages via bot.
 
+## Vkmusic Plugin
+
+Music from Vkontakte (in progress...)
+
 ## Whynot Plugin
 
 Generate otmazki why not ...
@@ -605,3 +622,12 @@ Bot will answer something like
 ```
 
 Idea from [lgg/excuse-generator](https://github.com/lgg/excuse-generator).
+
+## Ytmusic Plugin
+
+Posts audiotrack from Youtube video.
+
+[youtube-dl|http://ytdl-org.github.io/youtube-dl/download.html] is required to make this plugin work as planned, if absent you'll see link to youtube video instead. 
+
+Options:
+- `api_key` string, optional, default from env variable GOOGLE_API_KEY - Google API key with Youtube API v3 enabled.
