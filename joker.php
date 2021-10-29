@@ -25,6 +25,7 @@ $bot->plug([
 
   new Joker\Plugin\Server( ['host' => '127.0.0.1', 'port' => 5566] ),
   new Joker\Plugin\Temp( ['api_key' => getenv( 'OPENWEATHER_API_KEY' ),'default' => 'Tallinn'] ),
+  new Joker\Plugin\Advice(),
   new Joker\Plugin\Vkmusic(),
   new Joker\Plugin\Ytmusic( ['api_key' => getenv('GOOGLE_API_KEY')]),
   new Joker\Plugin\Spotify( ['client_id' => getenv( 'SPOTIFY_CLIENT_ID' ),'secret' =>getenv( 'SPOTIFY_SECRET' )] ),
