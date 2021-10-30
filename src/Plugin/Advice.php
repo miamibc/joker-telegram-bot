@@ -89,7 +89,20 @@ class Advice extends Base
         : $this->client->get(self::CATEGORY_ENDPOINT, ['query'=> ['tag' => $query]])
       ;
       $body = json_decode($request->getBody(),true);
-      $this->advices[$query] = array_rand( $body['data'] );
+
+      if (isset($body['data']))
+      {
+        shuffle($body['data']);
+        $this->advices[$query] = $body['data'];
+      }
+
+    }
+
+    // at this moment advices must be there, if not send error
+    if (empty($this->advices[$query]))
+    {
+      $update->answerMessage('Looks like we have no advices at the moment. Try again later.');
+      return false;
     }
 
     // get one element from advices
