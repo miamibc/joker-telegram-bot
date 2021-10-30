@@ -90,19 +90,15 @@ class Advice extends Base
       ;
       $body = json_decode($request->getBody(),true);
 
-      if (isset($body['data']))
+      if (!isset($body['data']) || empty( $body['data']))
       {
-        shuffle($body['data']);
-        $this->advices[$query] = $body['data'];
+        $update->answerMessage('Looks like we have no advices at the moment. Try again later.');
+        return false;
       }
 
-    }
+      shuffle($body['data']);
+      $this->advices[$query] = $body['data'];
 
-    // at this moment advices must be there, if not send error
-    if (empty($this->advices[$query]))
-    {
-      $update->answerMessage('Looks like we have no advices at the moment. Try again later.');
-      return false;
     }
 
     // get one element from advices
