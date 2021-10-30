@@ -25,7 +25,7 @@ class Advice extends Base
 
   const TAGS_ENDPOINT  = 'https://fucking-great-advice.ru/api/v2/tags';
   const RANDOM_ENDPOINT  = 'https://fucking-great-advice.ru/api/v2/random-advices';
-  const CATEGORY_ENDPOINT  = 'https://fucking-great-advice.ru/api/v2/random-advices-by-tag?tag=';
+  const CATEGORY_ENDPOINT  = 'https://fucking-great-advice.ru/api/v2/random-advices-by-tag';
 
   private $tags = [];
   private $advices = [];
@@ -89,7 +89,7 @@ class Advice extends Base
         : $this->client->get(self::CATEGORY_ENDPOINT, ['query'=> ['tag' => $query]])
       ;
       $body = json_decode($request->getBody(),true);
-      $this->advices[$query] = $body['data'];
+      $this->advices[$query] = array_rand( $body['data'] );
     }
 
     // get one element from advices
