@@ -15,6 +15,7 @@
 
 namespace Joker\Plugin;
 
+use Joker\Helper\Process;
 use Joker\Parser\Update;
 use GuzzleHttp\Client;
 
@@ -25,27 +26,35 @@ class Ytmusic extends Base
     'dir' => 'data/ytmusic',
   ];
 
+  private $process = [];
+
+  public function __construct($options = [])
+  {
+    parent::__construct($options);
+  }
+
   public function onPublicText( Update $update )
   {
 
-    if ($update->message()->text()->trigger() !== 'ytmusic') return;
+    if ($update->message()->text()->trigger() !== 'ytmusic')
+      return;
 
     $client = new Client();
     $query = $update->message()->text()->token(1);
     $url = ($videoId = self::linkToYoutube($query))
       ? "https://www.googleapis.com/youtube/v3/videos?".http_build_query([
-        'id'            => $videoId,
-        'part'          => 'snippet',
-        'key'           => $this->getOption('api_key',getenv('GOOGLE_API_KEY')),
+        'id'   => $videoId,
+        'part' => 'snippet',
+        'key'  => $this->getOption('api_key',getenv('GOOGLE_API_KEY')),
       ])
       : "https://www.googleapis.com/youtube/v3/search?".http_build_query([
-        'q'             => $query,
-        'part'          => 'snippet',
-        'type'          => 'video',
+        'q'     => $query,
+        'part'  => 'snippet',
+        'type'  => 'video',
         // 'videoDuration' => 'short',
         // 'maxResults'    => 3,
-        'order'         => 'viewCount',
-        'key'           => $this->getOption('api_key',getenv('GOOGLE_API_KEY')),
+        'order' => 'viewCount',
+        'key'   => $this->getOption('api_key',getenv('GOOGLE_API_KEY')),
       ]);
 
     $result = $client->get($url);
@@ -61,40 +70,61 @@ class Ytmusic extends Base
     $dir = $this->getOption('dir');
     if (!file_exists($dir)) mkdir($dir);
 
-    // iterate results
+    // create new process for background downloading
+    $this->process[] = $process = new Process();
+
     foreach ($array['items'] as $video)
     {
-      $videoId  = $video['id']['videoId'] ?? $video['id']; // search has id.videoId, videos has id
-      $url      = "https://youtu.be/$videoId";
-      $title    = html_entity_decode($video['snippet']['title']);
-      $slug     = self::slugify($title);
+      $videoId = $video['id']['videoId'] ?? $video['id']; // search has id.videoId, videos has id
+      $url = "https://youtu.be/$videoId";
+      $title = html_entity_decode($video['snippet']['title'], ENT_HTML401);
+      $slug = self::slugify($title);
       $filename = "$dir/$slug.mp3";
 
-      // download with youtuube-dl
-      if (!file_exists($filename))
-      {
-        $update->customRequest('sendChatAction',[
-          'chat_id' => $update->message()->chat()->id(),
-          'action'  => 'record_voice',
-        ]);
-        `youtube-dl --ignore-errors --extract-audio --audio-format mp3 '$url' -o '$filename'`;
-      }
+      $process->add(
 
-      // send file, if downloaded and size less than 50 megabytes
-      if (file_exists($filename) && filesize($filename) < 50 * 1024 * 1024)
-      {
-        $update->bot()->sendAudio($update->message()->chat()->id(),$filename,[
-          'title'   => $title,
-          'caption' => "Watch ➝ $url",
-        ]);
-        return false;
-      }
+        // start function, here we start youtube-dl
+        function() use ($update, $title, $url, $filename)
+        {
+          $update->bot()->console("started youtude-dl $filename");
+          `youtube-dl --ignore-errors --extract-audio --audio-format mp3 '$url' -o '$filename' > /dev/null &`;
+        },
+
+        // finish function, here we check file is downloaded
+        function() use ($update, $title, $url, $filename)
+        {
+          if (!file_exists($filename))
+          {
+            $update->bot()->console("file $filename not yet found");
+            $update->customRequest('sendChatAction',[
+              'chat_id' => $update->message()->chat()->id(),
+              'action'  => 'record_voice',
+            ]);
+            return 'repeat'; // repeat same item
+          }
+          // send file, if downloaded and size less than 50 megabytes
+          if (file_exists($filename) && filesize($filename) < 50 * 1024 * 1024)
+          {
+            $update->bot()->sendAudio($update->message()->chat()->id(),$filename,[
+              'title'   => $title,
+              'caption' => "Watch ➝ $url",
+            ]);
+            return 'stop'; // file is sent, stop process
+          }
+
+          return 'next';  // next element in process
+        }
+      );
 
     }
 
-    $update->answerMessage('Nothing found :(');
-    return false;
+  }
 
+  public function onEmpty(Update $update)
+  {
+    foreach ($this->process as $k => $process) /** @var Process $process */
+      if ( $process->run() )   // run returns true, means process is finished
+        unset($this->process[$k]);
   }
 
   public static function linkToYoutube( $query )
