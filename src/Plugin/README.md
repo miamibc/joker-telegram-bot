@@ -296,6 +296,8 @@ This plugin will remove users with emojis in their name instantly, and others af
 Options:
 - `seconds_with_emoji` integer, optional, default is 0 - wait time before remove user with emoji in name
 - `seconds_without_emoji` integer, optional, default is 600 - wait time before remove user without emoji in name
+- `greeting_with_emoji` string, optional, default empty - greeting of user with emoji in name, will be skipped if empty
+- `greeting_without_emoji` string, optional, default empty - greeting of user without emoji in name, will be skipped if empty
 
 ## Log Plugin
 
