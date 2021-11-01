@@ -54,12 +54,14 @@ Configuration options:
 
 ## Advice Plugin
 
-Advice plugin for Joker. Fuckin Great Advices from [fucking-great-advice.ru](https://fucking-great-advice.ru/) API
+Advice plugin for Joker. Fuckin Great Advices from [fucking-great-advice.ru](https://fucking-great-advice.ru/) API.
 
 You can ask:
 - `!advice`  bot answers with random advice
 - `!advice topic`  bot answers with random advice from topic
 - `!advice wrongtopic` bot will answer with list of proper topics
+
+Also, bot sends advices randomly from time to time, depending on users activity, luck and time delay. Here we implemented our new helpers [Timer](/miamibc/joker-telegram-bot/blob/master/src/Helper/Timer.php) and [Tickometer](/miamibc/joker-telegram-bot/blob/master/src/Helper/Tickometer.php) for first time (description will be added later). 
 
 Thanks for idea [D0b3rm4nN](https://gist.github.com/bcdober)
 
