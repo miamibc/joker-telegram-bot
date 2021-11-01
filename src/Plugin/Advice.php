@@ -19,6 +19,7 @@ namespace Joker\Plugin;
 
 use GuzzleHttp\Client;
 use Joker\Helper\Tickometer;
+use Joker\Helper\Timer;
 use Joker\Parser\Update;
 
 class Advice extends Base
@@ -32,6 +33,7 @@ class Advice extends Base
     $tags = [],    // list of topics
     $advices = [], // advices caches
     $tickometer,   // tick-o-meter to track activity
+    $timer,        // timer for delayed messaging
     $client,       // http client
     $last          // time of last random advice
   ;
@@ -42,6 +44,8 @@ class Advice extends Base
 
     // tick-o-meter to count text activity
     $this->tickometer = new Tickometer();
+
+    $this->timer = new Timer();
 
     $this->last = time();
 
@@ -89,12 +93,20 @@ class Advice extends Base
       && $this->tickometer->count() >= 5 // tick condition (5 messages in last minute)
       && $this->randomFloat() < .33      // random chance (33%)
     ){
+      // send with 3 seconds delay
       $advice = $this->getAdvice();
-      $update->answerMessage( $advice );
+      $this->timer->add(3, function () use ($update, $advice) {
+        $update->answerMessage( $advice );
+      });
       $this->last = time();
       $this->tickometer->clear();
     }
 
+  }
+
+  public function onEmpty( Update $update )
+  {
+    $this->timer->run();
   }
 
   /**
