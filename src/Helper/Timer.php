@@ -1,5 +1,14 @@
 <?php
 
+/**
+ * Timer for doing things with delay
+ *
+ * - Add tasks (callable, this can be anonymous function) to the timer
+ * - Run periodically
+ *
+ * @package joker-telegram-bot
+ * @author Sergei Miami <miami@blackcrystal.net>
+ */
 namespace Joker\Helper;
 
 class Timer
@@ -7,11 +16,16 @@ class Timer
 
   private $jobs = [];
 
-  public function add( $delay, callable $job )
+  /**
+   * Add a job
+   * @param int $delay Delay in seconds
+   * @param callable $job function(){ ... }
+   */
+  public function add( int $delay, callable $job )
   {
     $this->jobs[] = [ time()+$delay, $job ];
 
-    /* // if you need to add sorting
+    /* // sorting can be added later
        usort( $this->jobs, function ($a,$b){
          if ($a[0] == $b[0]) return 0;
          return $a[0] < $b[0] ? -1 : 1;
@@ -19,6 +33,10 @@ class Timer
      */
   }
 
+  /**
+   * Run timer
+   * Proper tasks will be executed and removed
+   */
   public function run()
   {
     $time = time();

@@ -2,6 +2,9 @@
 
 /**
  * Tick-o-meter, a tool for registering activity in time period
+ *
+ * @package joker-telegram-bot
+ * @author Sergei Miami <miami@blackcrystal.net>
  */
 namespace Joker\Helper;
 
