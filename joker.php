@@ -13,7 +13,12 @@ $bot->plug([
 
   new Joker\Plugin\Log( ['file' =>'data/log/log.json'] ),
   new Joker\Plugin\Activity( ['sync_time' => 60] ),
-  new Joker\Plugin\Kicker(['seconds_with_emoji' => 0, 'seconds_without_emoji' => 600]),
+  new Joker\Plugin\Kicker([
+    'seconds_with_emoji' => 0,
+    'seconds_without_emoji' => 600,
+    'greeting_with_emoji' => 'Привет, %name%. Похоже ты бот, так что пока %name.',
+    'greeting_without_emoji' => 'Привет, %name%. Добро пожаловать на наш Беломор-канал. Чтобы не быть как бот, просим написать сюда "привет" или что-то в этом духе. ;) Иначе тебе положен бан :p',
+  ]),
   new Joker\Plugin\Forwarder( [
     ['from' => -343502518, 'text' => ['*покуп*'], 'to' => -343502518, ],
     ['from' => -343502518, 'text' => ['*прода*', '*сдаё*'], 'to' => -343502518, 'forward' => false ],

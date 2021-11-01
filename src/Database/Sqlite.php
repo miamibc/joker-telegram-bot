@@ -1,5 +1,8 @@
 <?php
 /**
+ * Adds ability to save custom information for object containing this trait
+ * Stores data in Sqlite database
+ * NB! Method id() is required to make this work
  *
  * @package joker-telegram-bot
  * @author Sergei Miami <miami@blackcrystal.net>

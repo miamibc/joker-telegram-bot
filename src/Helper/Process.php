@@ -11,6 +11,8 @@
  * - result is `next`   - repeat process with next item in pool
  * - result is `stop`   - stop processing
  *
+ * @package joker-telegram-bot
+ * @author Sergei Miami <miami@blackcrystal.net>
  */
 
 namespace Joker\Helper;

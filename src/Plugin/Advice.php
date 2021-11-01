@@ -18,6 +18,8 @@
 namespace Joker\Plugin;
 
 use GuzzleHttp\Client;
+use Joker\Helper\Tickometer;
+use Joker\Helper\Timer;
 use Joker\Parser\Update;
 
 class Advice extends Base
@@ -27,13 +29,25 @@ class Advice extends Base
   const RANDOM_ENDPOINT  = 'https://fucking-great-advice.ru/api/v2/random-advices';
   const CATEGORY_ENDPOINT  = 'https://fucking-great-advice.ru/api/v2/random-advices-by-tag';
 
-  private $tags = [];
-  private $advices = [];
-  private $client;
+  private
+    $tags = [],    // list of topics
+    $advices = [], // advices caches
+    $tickometer,   // tick-o-meter to track activity
+    $timer,        // timer for delayed messaging
+    $client,       // http client
+    $last          // time of last random advice
+  ;
 
   public function __construct($options = [])
   {
     parent::__construct($options);
+
+    // tick-o-meter to count text activity
+    $this->tickometer = new Tickometer();
+
+    $this->timer = new Timer();
+
+    $this->last = time();
 
     // initialize http client
     $this->client = new Client([
@@ -58,53 +72,100 @@ class Advice extends Base
   public function onPublicText( Update $update )
   {
 
+    $this->tickometer->tick();
+
+    // answer to !advice command
     $text = $update->message()->text();
-
     $trigger = $text->trigger();
-    $query   = trim( $text->token(1) );
-
-    if ( $trigger !== 'advice') return;
-
-    // if query exists, but not found in tags
-    if ($query && !isset($this->tags[$query]))
+    if ( $trigger === 'advice')
     {
-      // answer with all available tags
-      $answer = [
-        "To get advice of some category, please write one of category after !$trigger",
-        "Category can be:",
-      ];
+      $topic = $text->token(1);
+      $advice = $this->getAdvice($topic);
+      $update->answerMessage($advice);
+      $this->last = time();
+      $this->tickometer->clear();
+      return false;
+    }
+
+    // random advice, if we pass some checks
+    if (
+      time()-$this->last >= 60 * 10      // time condition (one advice in 10 minutes)
+      && $this->tickometer->count() >= 5 // tick condition (5 messages in last minute)
+      && $this->randomFloat() < .33      // random chance (33%)
+    ){
+      // send with 3 seconds delay
+      $advice = $this->getAdvice();
+      $this->timer->add(3, function () use ($update, $advice) {
+        $update->answerMessage( $advice );
+      });
+      $this->last = time();
+      $this->tickometer->clear();
+    }
+
+  }
+
+  public function onEmpty( Update $update )
+  {
+    $this->timer->run();
+  }
+
+  /**
+   * Generate random float number
+   * @param int|float $min
+   * @param int|float $max
+   *
+   * @return float
+   */
+  public function randomFloat($min = 0, $max = 1)
+  {
+    return $min + mt_rand() / mt_getrandmax() * ($max - $min);
+  }
+
+  /**
+   * @param string $topic
+   *
+   * @return string
+   * @throws \GuzzleHttp\Exception\GuzzleException
+   */
+  public function getAdvice($topic = '')
+  {
+
+    // topic specified, but not exists in available topics
+    if ($topic && !isset($this->tags[$topic]))
+    {
+      // answer with list of topics
+      $answer = [ "Wrong category. Category can be:" ];
       foreach ( $this->tags as $tag => $description)
       {
         $answer[] = "- $tag ($description)";
       }
-      $update->answerMessage(implode("\n",$answer));
-      return false;
+      return implode("\n",$answer);
     }
 
-    // if no advices of [query] loaded, load them
-    if (!isset( $this->advices[$query] ) || empty( $this->advices[$query]))
+    // load few advices from sever
+    if (!isset( $this->advices[$topic] ) || empty( $this->advices[$topic]))
     {
-      $request = empty($query)
+      $request = empty($topic)
         ? $this->client->get(self::RANDOM_ENDPOINT)
-        : $this->client->get(self::CATEGORY_ENDPOINT, ['query'=> ['tag' => $query]])
+        : $this->client->get(self::CATEGORY_ENDPOINT, ['query'=> ['tag' => $topic]])
       ;
       $body = json_decode($request->getBody(),true);
 
+      // no advices came in
       if (!isset($body['data']) || empty( $body['data']))
       {
-        $update->answerMessage('Looks like we have no advices at the moment. Try again later.');
-        return false;
+        return 'Looks like we have no advices at the moment. Try again later.';
       }
 
+      // shuffle and remember advices
       shuffle($body['data']);
-      $this->advices[$query] = $body['data'];
+      $this->advices[$topic] = $body['data'];
 
     }
 
     // get one element from advices
-    $advice = array_shift( $this->advices[$query] );
-    $update->answerMessage( $advice['text'] );
-    return false;
+    $advice = array_shift( $this->advices[$topic] );
+    return $advice['text'];
 
   }
 

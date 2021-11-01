@@ -5,8 +5,10 @@
  * This plugin will remove users with emojis in their name instantly, and others after 10 minutes of inactivity after join.
  *
  * Options:
- * - `secons_with_emoji` integer, optional, default is 0 - wait time before remove user with emoji in name
- * - `secons_without_emoji` integer, optional, default is 600 - wait time before remove user without emoji in name
+ * - `seconds_with_emoji` integer, optional, default is 0 - wait time before remove user with emoji in name
+ * - `seconds_without_emoji` integer, optional, default is 600 - wait time before remove user without emoji in name
+ * - `greeting_with_emoji` string, optional, default empty - greeting of user with emoji in name, will be skipped if empty
+ * - `greeting_without_emoji` string, optional, default empty - greeting of user without emoji in name, will be skipped if empty
  *
  * @package joker-telegram-bot
  * @author Sergei Miami <miami@blackcrystal.net>
@@ -22,6 +24,8 @@ class Kicker extends Base
   protected $options = [
     'seconds_with_emoji' => 0,
     'seconds_without_emoji' => 600,
+    'greeting_with_emoji' => '',
+    'greeting_without_emoji' => '',
   ];
 
   private $waiting_list = [];
@@ -36,11 +40,18 @@ class Kicker extends Base
     $user = $update->message()->new_chat_member();
     $chat = $update->message()->chat();
 
-    // check name for emoji
-    $option  = self::containsEmoji($user->name()) ? 'seconds_with_emoji' : 'seconds_without_emoji';
-    $seconds = $this->getOption( $option, 600 );
+    // don't worry about another bot
+    if ($user->is_bot()) return;
 
-    // add user to waiting list
+    // check name for emoji
+    $with_or_without  = self::containsEmoji($user->name()) ? 'with' : 'without';
+
+    // send greeting
+    if ($greeting = $this->getOption( "greeting_{$with_or_without}_emoji"))
+      $update->answerMessage($greeting);
+
+    // add to waiting list
+    $seconds = $this->getOption( "seconds_{$with_or_without}_emoji", 600 );
     $this->waiting_list[] = [time() + $seconds, $chat->id(), $user->id() ];
   }
 
@@ -82,11 +93,6 @@ class Kicker extends Base
         $update->customRequest('kickChatMember',[
           'chat_id' => $chat_id,
           'user_id' => $user_id,
-        ]);
-
-        $update->customRequest('sendMessage',[
-          'chat_id' => $chat_id,
-          'text'    => 'If it bleeds, we can kill it ;p',
         ]);
 
         unset($this->waiting_list[$i]);

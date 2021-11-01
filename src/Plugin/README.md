@@ -1,5 +1,4 @@
-Joker Telegram Bot plugins
-=================
+# Joker Telegram Bot plugins
 
 Here you can find library of plugins we use for our own purpose. They are probably not perfect, not optimal, but good to start coding your own plugins for [Joker Telegram Bot](https://github.com/miamibc/joker-telegram-bot).
 
@@ -34,7 +33,7 @@ Plugins are well documented in inline comments, some interesting details will be
 * [Temp Plugin](#temp-plugin)
 * [Twitch Plugin](#twitch-plugin)
 * [Uptime Plugin](#uptme-plugin)
-* [UrlCollector Plugin](#urlcollector-plugin)]
+* [UrlCollector Plugin](#urlcollector-plugin)
 * [Viabot Plugin](#viabot-plugin)
 * [Vkmusic Plugin](#vkmusic-plugin)
 * [Whynot Plugin](#whynot-plugin)
@@ -54,12 +53,14 @@ Configuration options:
 
 ## Advice Plugin
 
-Advice plugin for Joker. Fuckin Great Advices from [fucking-great-advice.ru](https://fucking-great-advice.ru/) API
+Advice plugin for Joker. Fuckin Great Advices from [fucking-great-advice.ru](https://fucking-great-advice.ru/) API.
 
 You can ask:
 - `!advice`  bot answers with random advice
 - `!advice topic`  bot answers with random advice from topic
 - `!advice wrongtopic` bot will answer with list of proper topics
+
+Also, bot sends advices randomly from time to time, depending on users activity, luck and time delay. Here we implemented our new helpers [Timer](/miamibc/joker-telegram-bot/blob/master/src/Helper/Timer.php) and [Tickometer](/miamibc/joker-telegram-bot/blob/master/src/Helper/Tickometer.php) for first time (description will be added later). 
 
 Thanks for idea [D0b3rm4nN](https://gist.github.com/bcdober)
 
@@ -97,7 +98,7 @@ Plugin for fast prototyping. Pass associative array of trigger => callback as op
 
 Example:
 
-```
+```php
 $joker->plug([
   new Joker\Plugin\Callback(['callbacktest' => function(Joker\Parser\Update $update){
     $update->answerMessage('callbacktest success');
@@ -236,7 +237,7 @@ Ported from [lgg/excuse-generator](https://github.com/lgg/excuse-generator)
 
 Forwards messages from one chat to another. Rules can be added with configuration, example:
 
-```
+```php
 new Joker\Plugin\Forwarder([
     ['from' => -343502518, 'text' => ['*покуп*'], 'to' => -343502519, ],
     ['from' => -343502518, 'text' => ['*прода*', '*сдаё*'], 'to' => -343502519, 'forward' => false ],
@@ -296,6 +297,8 @@ This plugin will remove users with emojis in their name instantly, and others af
 Options:
 - `seconds_with_emoji` integer, optional, default is 0 - wait time before remove user with emoji in name
 - `seconds_without_emoji` integer, optional, default is 600 - wait time before remove user without emoji in name
+- `greeting_with_emoji` string, optional, default empty - greeting of user with emoji in name, will be skipped if empty
+- `greeting_without_emoji` string, optional, default empty - greeting of user without emoji in name, will be skipped if empty
 
 ## Log Plugin
 
