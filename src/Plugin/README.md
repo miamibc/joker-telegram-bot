@@ -1,5 +1,4 @@
-Joker Telegram Bot plugins
-=================
+# Joker Telegram Bot plugins
 
 Here you can find library of plugins we use for our own purpose. They are probably not perfect, not optimal, but good to start coding your own plugins for [Joker Telegram Bot](https://github.com/miamibc/joker-telegram-bot).
 
@@ -34,7 +33,7 @@ Plugins are well documented in inline comments, some interesting details will be
 * [Temp Plugin](#temp-plugin)
 * [Twitch Plugin](#twitch-plugin)
 * [Uptime Plugin](#uptme-plugin)
-* [UrlCollector Plugin](#urlcollector-plugin)]
+* [UrlCollector Plugin](#urlcollector-plugin)
 * [Viabot Plugin](#viabot-plugin)
 * [Vkmusic Plugin](#vkmusic-plugin)
 * [Whynot Plugin](#whynot-plugin)
@@ -99,7 +98,7 @@ Plugin for fast prototyping. Pass associative array of trigger => callback as op
 
 Example:
 
-```
+```php
 $joker->plug([
   new Joker\Plugin\Callback(['callbacktest' => function(Joker\Parser\Update $update){
     $update->answerMessage('callbacktest success');
@@ -238,7 +237,7 @@ Ported from [lgg/excuse-generator](https://github.com/lgg/excuse-generator)
 
 Forwards messages from one chat to another. Rules can be added with configuration, example:
 
-```
+```php
 new Joker\Plugin\Forwarder([
     ['from' => -343502518, 'text' => ['*покуп*'], 'to' => -343502519, ],
     ['from' => -343502518, 'text' => ['*прода*', '*сдаё*'], 'to' => -343502519, 'forward' => false ],

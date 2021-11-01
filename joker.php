@@ -16,8 +16,8 @@ $bot->plug([
   new Joker\Plugin\Kicker([
     'seconds_with_emoji' => 0,
     'seconds_without_emoji' => 600,
-    'greeting_with_emoji' => 'Привет, %name%. Пока, %name.',
-    'greeting_without_emoji' => 'Привет, %name%. Добро пожаловать на Беломор-канал. Чтобы доказать что ты не бот, напиши "привет" или что-то в этом роде ;)',
+    'greeting_with_emoji' => 'Привет, %name%. Похоже ты бот, так что пока %name.',
+    'greeting_without_emoji' => 'Привет, %name%. Добро пожаловать на наш Беломор-канал. Чтобы не быть как бот, просим написать сюда "привет" или что-то в этом духе. ;) Иначе тебе положен бан :p',
   ]),
   new Joker\Plugin\Forwarder( [
     ['from' => -343502518, 'text' => ['*покуп*'], 'to' => -343502518, ],
