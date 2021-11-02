@@ -73,9 +73,12 @@ class Kicker extends Base
     $chat = $update->message()->chat();
     if (isset( $this->waiting_list[ $id = $user->id() . $chat->id() ]) )
     {
+      // remove from waiting list
       unset($this->waiting_list[$id]);
+
+      // send greeting_not_bot
       $greeting = strtr( $this->getOption('greeting_not_bot'), ['%name%'=>$user]);
-      $update->answerMessage( $greeting );
+      if ($greeting) $update->answerMessage( $greeting );
     }
 
   }
@@ -96,11 +99,15 @@ class Kicker extends Base
       list($time, $user, $chat) = $item;
       if ( $now > $time )
       {
-        // send greeting_is_bot and ban user
-        $greeting = strtr( $this->getOption('greeting_is_bot'), ['%name%'=>$user]);
-        $chat->sendMessage( $greeting );
-        $chat->banChatMember( $user );
+        // remove from waiting list
         unset($this->waiting_list[$index]);
+
+        // send greeting_is_bot
+        $greeting = strtr( $this->getOption('greeting_is_bot'), ['%name%'=>$user]);
+        if ($greeting) $chat->sendMessage( $greeting );
+
+        // ban user from chat
+        $chat->banChatMember( $user );
       }
     }
 
