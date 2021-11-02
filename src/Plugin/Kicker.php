@@ -89,7 +89,7 @@ class Kicker extends Base
     if (empty($this->waiting_list)) return;
 
     $now = time();
-    foreach ($this->waiting_list as $i => $item)
+    foreach ($this->waiting_list as $index => $item)
     {
       /** @var $user User */
       /** @var $chat Chat */
@@ -100,7 +100,7 @@ class Kicker extends Base
         $greeting = strtr( $this->getOption('greeting_is_bot'), ['%name%'=>$user]);
         $chat->sendMessage( $greeting );
         $chat->banChatMember( $user );
-        unset($this->waiting_list[$i]);
+        unset($this->waiting_list[$index]);
       }
     }
 
