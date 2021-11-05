@@ -273,6 +273,12 @@ class Bot
     return (bool)$result;
   }
 
+  public function banChatMember( $chat_id, $user_id, $bantime = 600)
+  {
+    $result = $this->_request("banChatMember", ["chat_id" =>$chat_id,"user_id" =>$user_id, "until_date" => time()+$bantime] );
+    return (bool)$result;
+  }
+
   public function sendPhoto( $chat_id, $file, $options = [] )
   {
     if (!file_exists($file)) return false;

@@ -8,6 +8,8 @@
 
 namespace Joker\Parser;
 
+use Joker\Bot;
+
 class Base
 {
 
@@ -77,6 +79,26 @@ class Base
   public function parent()
   {
     return $this->parent;
+  }
+
+  /**
+   * Get bot from parents
+   * @return Bot|false
+   */
+  public function bot()
+  {
+    $item = $this->parent();
+    do
+    {
+      // if it's bot, return it
+      if ($item instanceof Bot) return $item;
+
+      // no method parent(), return false
+      if (!method_exists($item, 'parent')) return false;
+
+    }
+    while ( $item = $item->parent() ); // next parent
+    return false;
   }
 
 }

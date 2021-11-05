@@ -50,4 +50,28 @@ class Chat extends Base
     return "Unknown";
   }
 
+  /**
+   * Ban user from chat
+   *
+   * @param User $user
+   * @param int $bantime
+   * @return bool
+   */
+  public function banChatMember( User $user, $bantime = 600)
+  {
+    return $this->bot()->banChatMember( $this->id(), $user->id(), $bantime );
+  }
+
+  /**
+   * Sent message to chat
+   *
+   * @param $message
+   * @param array $options
+   * @return Message
+   */
+  public function sendMessage( $message, $options = [] )
+  {
+    return $this->bot()->sendMessage($message, $options );
+  }
+
 }

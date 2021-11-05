@@ -7,8 +7,10 @@
  * Options:
  * - `seconds_with_emoji` integer, optional, default is 0 - wait time before remove user with emoji in name
  * - `seconds_without_emoji` integer, optional, default is 600 - wait time before remove user without emoji in name
- * - `greeting_with_emoji` string, optional, default empty - greeting of user with emoji in name, will be skipped if empty
- * - `greeting_without_emoji` string, optional, default empty - greeting of user without emoji in name, will be skipped if empty
+ * - `greeting_with_emoji` string, optional, default empty - greeting when joined user with emoji in name, will be skipped if empty
+ * - `greeting_without_emoji` string, optional, default empty - greeting when joined user without emoji in name, will be skipped if empty
+ * - `greeting_is_bot` string, optional, default empty - greeting before inactive visitor will be kicked
+ * - `greeting_not_bot` string, optional, default empty - greeting when visitor said something
  *
  * @package joker-telegram-bot
  * @author Sergei Miami <miami@blackcrystal.net>
@@ -16,6 +18,8 @@
 
 namespace Joker\Plugin;
 
+use Joker\Parser\Chat;
+use Joker\Parser\User;
 use Joker\Parser\Update;
 
 class Kicker extends Base
@@ -26,6 +30,8 @@ class Kicker extends Base
     'seconds_without_emoji' => 600,
     'greeting_with_emoji' => '',
     'greeting_without_emoji' => '',
+    'greeting_is_bot' => '',
+    'greeting_not_bot' => '',
   ];
 
   private $waiting_list = [];
@@ -48,11 +54,13 @@ class Kicker extends Base
 
     // send greeting
     if ($greeting = $this->getOption( "greeting_{$with_or_without}_emoji"))
-      $update->answerMessage($greeting);
+    {
+      $chat->sendMessage(strtr($greeting,['%name%' => $user]));
+    }
 
     // add to waiting list
     $seconds = $this->getOption( "seconds_{$with_or_without}_emoji", 600 );
-    $this->waiting_list[] = [time() + $seconds, $chat->id(), $user->id() ];
+    $this->waiting_list[ $user->id() . $chat->id() ] = [time() + $seconds, $user, $chat ];
   }
 
   /**
@@ -61,16 +69,20 @@ class Kicker extends Base
    */
   public function onPublicText( Update $update )
   {
-    // new chat member
-    $message = $update->message();
-    foreach ($this->waiting_list as $i=>$item)
+    if (empty($this->waiting_list)) return;
+
+    $user = $update->message()->from();
+    $chat = $update->message()->chat();
+    if (isset( $this->waiting_list[ $id = $user->id() . $chat->id() ]) )
     {
-      list($time, $chat_id, $user_id ) = $item;
-      if (
-        $chat_id == $message->chat()->id() &&
-        $user_id == $message->from()->id()
-      )  unset($this->waiting_list[$i]);
+      // remove from waiting list
+      unset($this->waiting_list[$id]);
+
+      // send greeting_not_bot
+      $greeting = strtr( $this->getOption('greeting_not_bot'), ['%name%'=>$user]);
+      if ($greeting) $update->answerMessage( $greeting );
     }
+
   }
 
   /**
@@ -79,24 +91,25 @@ class Kicker extends Base
    */
   public function onEmpty( Update $update)
   {
+    if (empty($this->waiting_list)) return;
 
     $now = time();
-    foreach ($this->waiting_list as $i => $item)
+    foreach ($this->waiting_list as $index => $item)
     {
-
-      list($time, $chat_id, $user_id ) = $item;
-
+      /** @var $user User */
+      /** @var $chat Chat */
+      list($time, $user, $chat) = $item;
       if ( $now > $time )
       {
+        // remove from waiting list
+        unset($this->waiting_list[$index]);
 
-        // kick user
-        $update->customRequest('kickChatMember',[
-          'chat_id' => $chat_id,
-          'user_id' => $user_id,
-        ]);
+        // send greeting_is_bot
+        $greeting = strtr( $this->getOption('greeting_is_bot'), ['%name%'=>$user]);
+        if ($greeting) $chat->sendMessage( $greeting );
 
-        unset($this->waiting_list[$i]);
-
+        // ban user from chat
+        $chat->banChatMember( $user );
       }
     }
 

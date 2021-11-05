@@ -8,8 +8,6 @@
 
 namespace Joker\Parser;
 
-use Joker\Bot;
-
 /**
  * This object represents an incoming update.
  * @see https://core.telegram.org/bots/api#update
@@ -100,15 +98,6 @@ class Update extends Base
       'Inline'    => isset($this->data['inline_query']),
       'Shipping'  => isset($this->data['shipping_query']),
     ];
-  }
-
-  /**
-   * @return Bot
-   */
-  public function bot()
-  {
-    // in Update, parent is a bot
-    return $this->parent();
   }
 
   public function toJson()
