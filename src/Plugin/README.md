@@ -295,10 +295,13 @@ If your channel is popular enough, you will constantly be attacked with bots wit
 This plugin will remove users with emojis in their name instantly, and others after 10 minutes of inactivity after join.
 
 Options:
+
 - `seconds_with_emoji` integer, optional, default is 0 - wait time before remove user with emoji in name
 - `seconds_without_emoji` integer, optional, default is 600 - wait time before remove user without emoji in name
-- `greeting_with_emoji` string, optional, default empty - greeting of user with emoji in name, will be skipped if empty
-- `greeting_without_emoji` string, optional, default empty - greeting of user without emoji in name, will be skipped if empty
+- `greeting_with_emoji` string, optional, default empty - greeting when joined user with emoji in name, will be skipped if empty
+- `greeting_without_emoji` string, optional, default empty - greeting when joined user without emoji in name, will be skipped if empty
+- `greeting_is_bot` string, optional, default empty - greeting before inactive visitor will be kicked
+- `greeting_not_bot` string, optional, default empty - greeting when visitor said something
 
 ## Log Plugin
 
@@ -630,7 +633,7 @@ Idea from [lgg/excuse-generator](https://github.com/lgg/excuse-generator).
 
 Posts audiotrack from Youtube video.
 
-[youtube-dl|http://ytdl-org.github.io/youtube-dl/download.html] is required to make this plugin work as planned, if absent you'll see link to youtube video instead. 
+[youtube-dl](http://ytdl-org.github.io/youtube-dl/download.html) is required to make this plugin work as planned, if absent you'll see link to youtube video instead. 
 
 Options:
 - `api_key` string, optional, default from env variable GOOGLE_API_KEY - Google API key with Youtube API v3 enabled.

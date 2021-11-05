@@ -7,8 +7,10 @@
  * Options:
  * - `seconds_with_emoji` integer, optional, default is 0 - wait time before remove user with emoji in name
  * - `seconds_without_emoji` integer, optional, default is 600 - wait time before remove user without emoji in name
- * - `greeting_with_emoji` string, optional, default empty - greeting of user with emoji in name, will be skipped if empty
- * - `greeting_without_emoji` string, optional, default empty - greeting of user without emoji in name, will be skipped if empty
+ * - `greeting_with_emoji` string, optional, default empty - greeting when joined user with emoji in name, will be skipped if empty
+ * - `greeting_without_emoji` string, optional, default empty - greeting when joined user without emoji in name, will be skipped if empty
+ * - `greeting_is_bot` string, optional, default empty - greeting before inactive visitor will be kicked
+ * - `greeting_not_bot` string, optional, default empty - greeting when visitor said something
  *
  * @package joker-telegram-bot
  * @author Sergei Miami <miami@blackcrystal.net>
