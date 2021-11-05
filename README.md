@@ -118,6 +118,12 @@ More information about existing plugins functionality can be found [here](https:
 
 I'll be glad to see your plugins and help with implementations.
 
+## Helpers
+
+We created few classes for our needs, i called them Helpers.
+
+Description and examples can be found in [Helpers documentation](https://github.com/miamibc/joker-telegram-bot/tree/master/src/Helper).
+
 ## Todo
 
 - Reboot counter

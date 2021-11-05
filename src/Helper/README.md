@@ -48,13 +48,21 @@ class MyPlugin extends Base
 
 ## Process
 
-Process helper allows to initialize process, and check it's finished with use of functions.
+Process helper, allows creating query with jobs, running one-by-one
+with ability to repeat, switch to next item or stop processing any time.
+
+Pool - is array of Tasks
+We get one Task from the Pool and call [start] on it
+Then, we call [finish] and check the result
+- result is `repeat` - repeat process with same item
+- result is `next`   - repeat process with next item in pool
+- result is `stop`   - stop processing
 
 See [Ytmusic Plugin](https://github.com/miamibc/joker-telegram-bot/blob/master/src/Plugin/Ytmusic.php) for details of usage.
 
 ## Tickometer
 
-Performs calculation of user activity.
+Tick-o-meter, a tool for registering activity in time period.
 
 See [Advice Plugin](https://github.com/miamibc/joker-telegram-bot/blob/master/src/Plugin/Advice.php) for details of usage.
 
