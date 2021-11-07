@@ -142,7 +142,8 @@ class Bot
     // if empty buffer, request updates
     if (empty($this->buffer))
     {
-      foreach ($this->getUpdates($this->last_update_id) as $item)
+      if (!$updates = $this->getUpdates($this->last_update_id)) $updates = [];
+      foreach ($updates as $item)
       {
         $this->buffer[] = new Update( $item, $this );
         $this->last_update_id = $item['update_id'] + 1;
