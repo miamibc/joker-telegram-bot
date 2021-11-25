@@ -17,6 +17,7 @@ Plugins are well documented in inline comments, some interesting details will be
 * [Forwarder Plugin](#forwarder-plugin)
 * [Game Plugin](#game-plugin)
 * [Hello Plugin](#hello-plugin)
+* [Ignore Plugin](#ignore-plugin)
 * [Kicker Plugin](#kicker-plugin)
 * [Log Plugin](#log-plugin)
 * [Lurk Plugin](#lurk-plugin)
@@ -287,6 +288,23 @@ Bot will answer you with standart greeting
     Born in 2001, I was entertainment chatbot written in miRCscript. Now I'm a bit new: I run PHP on fast virtual server to connect modern geeky Telegram network and joke my random funs.
     
     Read more: https://github.com/miamibc/joker-telegram-bot 
+
+## Ignore Plugin
+
+Adds ability to be ignored in processing all incoming events.
+Additionally, ignored all messages sent via bot.
+
+To  be ignored say:
+```
+!ignore
+```
+
+To be unignored, say:
+```
+!unignore
+```
+
+Thanks to **Roboromat** for the idea.
 
 ## Kicker Plugin
 

@@ -55,7 +55,7 @@ class Kicker extends Base
     // send greeting
     if ($greeting = $this->getOption( "greeting_{$with_or_without}_emoji"))
     {
-      $chat->sendMessage(strtr($greeting,['%name%' => $user]));
+      $chat->sendMessage(strtr($greeting,['%name%' => $user->name()]));
     }
 
     // add to waiting list
@@ -79,7 +79,7 @@ class Kicker extends Base
       unset($this->waiting_list[$id]);
 
       // send greeting_not_bot
-      $greeting = strtr( $this->getOption('greeting_not_bot'), ['%name%'=>$user]);
+      $greeting = strtr( $this->getOption('greeting_not_bot'), ['%name%'=>$user->name()]);
       if ($greeting) $update->answerMessage( $greeting );
     }
 
@@ -105,7 +105,7 @@ class Kicker extends Base
         unset($this->waiting_list[$index]);
 
         // send greeting_is_bot
-        $greeting = strtr( $this->getOption('greeting_is_bot'), ['%name%'=>$user]);
+        $greeting = strtr( $this->getOption('greeting_is_bot'), ['%name%'=>$user->name()]);
         if ($greeting) $chat->sendMessage( $greeting );
 
         // ban user from chat

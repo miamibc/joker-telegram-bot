@@ -107,4 +107,38 @@ class MyPlugin extends Base
 }
 ```
 
+## Stemmer/Lemmer
 
+To-do.
+
+Sources:
+- https://github.com/neonxp/Stemmer/
+- https://github.com/ladamalina/php-lingua-stem-ru
+- https://github.com/andyceo/PHP-Porter-Stemmer
+- https://github.com/wamania/php-stemmer
+- https://yandex.ru/dev/mystem/
+- https://github.com/iskander-akhmetov/Highly-Language-Independent-Word-Lemmatization-Using-a-Machine-Learning-Classifier/tree/master/DS_lemm
+- https://nlpub.ru/%D0%A0%D0%B5%D1%81%D1%83%D1%80%D1%81%D1%8B
+- http://opencorpora.org/
+- http://www.solarix.ru/
+- 
+## Rus to lat
+
+Good one, found in internets...
+
+```php
+function rus2lat($string){
+    $rus = array('ё','ж','ц','ч','ш','щ','ю','я','Ё','Ж','Ц','Ч','Ш','Щ','Ю','Я','Ъ','Ь','ъ','ь');
+    $lat = array('e','zh','c','ch','sh','sh','ju','ja','E','ZH','C','CH','SH','SH','JU','JA','','','','');
+    $string = str_replace($rus,$lat,$string);
+    $string = strtr($string,
+    "АБВГДЕЗИЙКЛМНОПРСТУФХЫЭабвгдезийклмнопрстуфхыэ",
+    "ABVGDEZIJKLMNOPRSTUFHIEabvgdezijklmnoprstufhie");
+    return $string;
+}
+```
+
+## FAQ
+
+https://github.com/Koziev/chatbot
+https://github.com/Koziev/chatbot/blob/master/data/faq2.txt

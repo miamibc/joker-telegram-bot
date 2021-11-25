@@ -1,9 +1,9 @@
 <?php
 
 /**
- * Timer for doing things with delay
+ * Interval for doing things with interval
  *
- * - Add tasks (callable, this can be anonymous function) to the timer
+ * - Add tasks (callable, this can be anonymous function)
  * - Run periodically
  *
  * @package joker-telegram-bot
@@ -11,7 +11,7 @@
  */
 namespace Joker\Helper;
 
-class Timer
+class Interval
 {
 
   private $jobs = [];
@@ -23,14 +23,7 @@ class Timer
    */
   public function add( int $delay, callable $job )
   {
-    $this->jobs[] = [ time()+$delay, $job ];
-
-    /* // sorting can be added later
-       usort( $this->jobs, function ($a,$b){
-         if ($a[0] == $b[0]) return 0;
-         return $a[0] < $b[0] ? -1 : 1;
-       });
-     */
+    $this->jobs[] = [ $delay, $job, time()+$delay ];
   }
 
   /**
@@ -40,13 +33,13 @@ class Timer
   public function run()
   {
     $time = time();
-    foreach ($this->jobs as $k=>$job)
+    foreach ($this->jobs as $job)
     {
-      list($alarma, $callable) = $job;
+      list($delay, $callable, $alarma) = $job;
       if ($time >= $alarma)
       {
         call_user_func( $callable );
-        unset($this->jobs[$k]);
+        $this->jobs[] = [ $delay, $job, time()+$delay];
       }
     }
   }
