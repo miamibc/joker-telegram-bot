@@ -25,8 +25,9 @@ $bot->plug([
     ['from' => -343502518, 'text' => ['*покуп*'], 'to' => -343502518, ],
     ['from' => -343502518, 'text' => ['*прода*', '*сдаё*'], 'to' => -343502518, 'forward' => false ],
   ]),
+  new Joker\Plugin\Ignore(),
   new Joker\Plugin\UrlCollector(['file' => 'data/urls.txt']),
-  new Joker\Plugin\Viabot(),
+  // new Joker\Plugin\Viabot(), // TODO: not necessary anymore, will be removed soon
 
   // *** insert your plugins here, order is important ***
 
