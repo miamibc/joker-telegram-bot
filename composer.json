@@ -27,7 +27,8 @@
     "gabordemooij/redbean": "dev-master",
     "cheprasov/php-redis-client": "^1.10",
     "mnapoli/silly": "^1.7",
-    "guzzlehttp/guzzle": "^7.3"
+    "guzzlehttp/guzzle": "^7.3",
+    "imangazaliev/didom": "^1.18"
   },
   "autoload": {
     "psr-4": {
