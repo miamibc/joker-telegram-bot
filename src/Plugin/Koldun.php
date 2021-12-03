@@ -21,7 +21,7 @@ class Koldun extends Base
 
   private $client;       // http client
   protected $options =[
-    'triggers' => ['сколько', "что", "как", "где", "почему", "когда", "кому", "зачем"],
+    'triggers' => ['сколько', "что", "кто", "как", "где", "почему", "когда", "кому", "зачем"],
   ];
 
   public function __construct($options = [])
