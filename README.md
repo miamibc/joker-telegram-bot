@@ -132,9 +132,9 @@ Description and examples can be found in [Helpers documentation](https://github.
 - ~~Add onTimer event type, to process events by time~~
 - Add CommandPlugin base class, to simplify adding new commands
 - ~~Database implementations: Redis, Mysql, Simplesql and nosql~~
-- Audio processing with ffmpeg and sending with sendAudio/sendVoice
-- ~~CowsayPlugin post image instead of text~~ done
-- Improved admin of jokes
+- ~~Audio processing with ffmpeg and sending with sendAudio/sendVoice~~
+- ~~CowsayPlugin post image instead of text~~ 
+- ~~Improved admin of jokes~~
 - Implement [Payments](https://core.telegram.org/bots/payments)
 - ~~Currency rates~~ (thanks ʎǝxǝl∀ for ide∀)
 - ~~Corona plugin~~
