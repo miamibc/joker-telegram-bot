@@ -10,7 +10,6 @@
 
 namespace Joker\Plugin;
 
-use DateTime;
 use Joker\Parser\Update;
 
 class Flip extends Base
