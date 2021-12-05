@@ -1,7 +1,8 @@
 <?php
 /**
  * Flip plugin for Joker
- * Flips text upside-down
+ *
+ * Flips text upside-down and back
  *
  * @package joker-telegram-bot
  * @author Sergei Miami <miami@blackcrystal.net>
