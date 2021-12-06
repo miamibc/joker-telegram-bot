@@ -116,7 +116,7 @@ class Flip extends Base
     }, $text );
 
     // find best result
-    $best = count( array_diff($text, $result1) ) > count(array_diff($text, $result2)) ? $result1 : $result2;
+    $best = count( array_diff($text, $result1) ) >= count(array_diff($text, $result2)) ? $result1 : $result2;
 
     // reverse and return sting
     return implode("", array_reverse($best));
