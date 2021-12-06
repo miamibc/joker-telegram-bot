@@ -14,6 +14,7 @@ Plugins are well documented in inline comments, some interesting details will be
 * [Cowsay Plugin](#cowsay-plugin)
 * [Currency Plugin](#currency-plugin)
 * [Excuse Plugin](#excuse-plugin)
+* [Flip Plugin](#flip-plugin)
 * [Forwarder Plugin](#forwarder-plugin)
 * [Game Plugin](#game-plugin)
 * [Hello Plugin](#hello-plugin)
@@ -233,6 +234,27 @@ Bot will answer something like
 ```
 
 Ported from [lgg/excuse-generator](https://github.com/lgg/excuse-generator)
+
+## Flip Plugin
+
+Flips text upside-down and back.
+
+```
+Sergei Miami, [5/12/21 12:55 PM]
+!flip мир перевернулся
+
+Joker Test, [5/12/21 12:55 PM]
+[In reply to Sergei Miami]
+ʁɔvʎнdǝʚǝdǝu dиw
+
+Sergei Miami, [5/12/21 12:55 PM]
+!flip ʁɔvʎнdǝʚǝdǝu dиw
+
+Joker Test, [5/12/21 12:55 PM]
+[In reply to Sergei Miami]
+мир перевернулся
+```
+
 
 ## Forwarder Plugin
 

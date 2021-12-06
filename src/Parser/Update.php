@@ -116,6 +116,14 @@ class Update extends Base
     return $this->bot()->sendMessage( $this->data['message']['chat']['id'], $text, $options );
   }
 
+  public function replyMessage( $text, $options = [] )
+  {
+    if (!isset($this->data['message']['message_id'],
+               $this->data['message']['chat']['id'])) return false;
+    $options['reply_to_message_id'] = $this->data['message']['message_id'];
+    return $this->bot()->sendMessage( $this->data['message']['chat']['id'], $text, $options );
+  }
+
   public function deleteMessage()
   {
     if (!isset($this->data['message']['chat']['id'], $this->data['message']['message_id'])) return false;

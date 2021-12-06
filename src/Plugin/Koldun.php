@@ -46,10 +46,10 @@ class Koldun extends Base
     if (!in_array( $text->trigger(), $this->getOption('triggers'))) return;
 
     $google = $this->client->getAsync('https://www.google.com/search?' . http_build_query(['q'=>(string)$text]) );
-    $update->bot()->console( "Google started");
+    $update->bot()->log( "Google started");
     $google->then(
       function (ResponseInterface $res) use ($update){
-        $update->bot()->console( "Google status " . $res->getStatusCode() );
+        $update->bot()->log( "Google status " . $res->getStatusCode() );
         file_put_contents("data/google.html", $html = $res->getBody());
         if (!preg_match('@<div class="\w+" data-attrid="wa:\/description".*<\/div>@iU', $html )) return;
         $didom = new Document("<body>$html</body>");
@@ -57,7 +57,7 @@ class Koldun extends Base
         $update->answerMessage("Google said: $text");
       },
       function (RequestException $e)  use ($update) {
-        $update->bot()->console( "Google error " . $e->getMessage() );
+        $update->bot()->log( "Google error " . $e->getMessage() );
       }
     );
 /*
