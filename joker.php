@@ -33,7 +33,12 @@ $bot->plug([
 
   new Joker\Plugin\Server( ['host' => '127.0.0.1', 'port' => 5566] ),
   new Joker\Plugin\Temp( ['api_key' => getenv( 'OPENWEATHER_API_KEY' ),'default' => 'Tallinn'] ),
-  new Joker\Plugin\Advice(),
+  new Joker\Plugin\Advice([
+    'random_time'   => 60*60, // time condition (one advice per hour)
+    'random_ticks'  => 5,     // tick condition (5 messages in last minute)
+    'random_chance' => .33,   // random chance (33%)
+    'random_delay'  => 5,     // random advice delay
+  ]),
   new Joker\Plugin\Flip(),
   new Joker\Plugin\Vkmusic(),
   new Joker\Plugin\Ytmusic( ['api_key' => getenv('GOOGLE_API_KEY')]),

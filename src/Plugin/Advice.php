@@ -11,6 +11,12 @@
  *   !advice wrongtopic
  *      bot will answer with list of proper topics
  *
+ * Options:
+ * - `random_time` (int, default 360) - seconds between random advices
+ * - `random_ticks` (int, default 5)  - chat activity, number of messages per last minute
+ * - `random_chance` (float, default .33) - random chance
+ * - `random_delay` (int, default 5) - delay before message will be sent
+ *
  * @package joker-telegram-bot
  * @author Sergei Miami <miami@blackcrystal.net>
  */
@@ -28,6 +34,13 @@ class Advice extends Base
   const TAGS_ENDPOINT  = 'https://fucking-great-advice.ru/api/v2/tags';
   const RANDOM_ENDPOINT  = 'https://fucking-great-advice.ru/api/v2/random-advices';
   const CATEGORY_ENDPOINT  = 'https://fucking-great-advice.ru/api/v2/random-advices-by-tag';
+
+  protected $options = [
+    'random_time'   => 60*60, // time condition (one advice per hour)
+    'random_ticks'  => 5,     // tick condition (5 messages in last minute)
+    'random_chance' => .33,   // random chance (33%)
+    'random_delay'  => 5,     // random advice delay
+  ];
 
   private
     $tags = [],    // list of topics
@@ -89,13 +102,13 @@ class Advice extends Base
 
     // random advice, if we pass some checks
     if (
-      time()-$this->last >= 60 * 10      // time condition (one advice in 10 minutes)
-      && $this->tickometer->count() >= 5 // tick condition (5 messages in last minute)
-      && $this->randomFloat() < .33      // random chance (33%)
+      time()-$this->last            >= $this->getOption('random_time')
+      && $this->tickometer->count() >= $this->getOption('random_ticks')
+      && $this->randomFloat()       <= $this->getOption('random_chance')
     ){
       // send with 3 seconds delay
       $advice = $this->getAdvice();
-      $this->timer->add(3, function () use ($update, $advice) {
+      $this->timer->add( $this->getOption('random_delay'), function () use ($update, $advice) {
         $update->answerMessage( $advice );
       });
       $this->last = time();
