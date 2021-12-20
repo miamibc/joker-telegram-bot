@@ -24,6 +24,7 @@
 namespace Joker\Plugin;
 
 use GuzzleHttp\Client;
+use GuzzleHttp\Exception\ConnectException;
 use Joker\Helper\Tickometer;
 use Joker\Helper\Timer;
 use Joker\Parser\Update;
@@ -64,7 +65,7 @@ class Advice extends Base
 
     // initialize http client
     $this->client = new Client([
-      'timeout'  => 2.0,
+      'timeout'  => 5.0,
       'headers' => [
         'Referer' => 'https://fucking-great-advice.ru/',
         'Accept' => 'application/json',
@@ -73,11 +74,16 @@ class Advice extends Base
     ]);
 
     // request information about tags
-    $response = $this->client->get(self::TAGS_ENDPOINT);
-    $body = json_decode($response->getBody(), true);
-    foreach ($body['data'] as $item)
+    try
     {
-      $this->tags[ $item['alias'] ] ="{$item['title']}, {$item['advicesCount']} advices";
+      $response = $this->client->get(self::TAGS_ENDPOINT);
+      $body = json_decode($response->getBody(),true);
+      foreach ($body['data'] as $item)
+      {
+        $this->tags[$item['alias']] = "{$item['title']}, {$item['advicesCount']} advices";
+      }
+    } catch (ConnectException $exception){
+      /** nothing to do */
     }
 
   }
@@ -102,11 +108,12 @@ class Advice extends Base
 
     // random advice, if we pass some checks
     if (
-      time()-$this->last            >= $this->getOption('random_time')
+      isset($this->tags['']) // tags is loaded
+      && time()-$this->last         >= $this->getOption('random_time')
       && $this->tickometer->count() >= $this->getOption('random_ticks')
       && $this->randomFloat()       <= $this->getOption('random_chance')
     ){
-      // send with 3 seconds delay
+      // send with delay
       $advice = $this->getAdvice();
       $this->timer->add( $this->getOption('random_delay'), function () use ($update, $advice) {
         $update->answerMessage( $advice );
@@ -138,7 +145,6 @@ class Advice extends Base
    * @param string $topic
    *
    * @return string
-   * @throws \GuzzleHttp\Exception\GuzzleException
    */
   public function getAdvice($topic = '')
   {
@@ -158,12 +164,16 @@ class Advice extends Base
     // load few advices from sever
     if (!isset( $this->advices[$topic] ) || empty( $this->advices[$topic]))
     {
-      $request = empty($topic)
-        ? $this->client->get(self::RANDOM_ENDPOINT)
-        : $this->client->get(self::CATEGORY_ENDPOINT, ['query'=> ['tag' => $topic]])
-      ;
-      $body = json_decode($request->getBody(),true);
-
+      try
+      {
+        $request = empty($topic)
+          ? $this->client->get(self::RANDOM_ENDPOINT)
+          : $this->client->get(self::CATEGORY_ENDPOINT,['query' => ['tag' => $topic]]);
+        $body = json_decode($request->getBody(),true);
+      }
+      catch (ConnectException $e){
+        /* nothing to do */
+      }
       // no advices came in
       if (!isset($body['data']) || empty( $body['data']))
       {
