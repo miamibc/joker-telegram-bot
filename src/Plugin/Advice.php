@@ -11,6 +11,12 @@
  *   !advice wrongtopic
  *      bot will answer with list of proper topics
  *
+ * Options:
+ * - `random_time` (int, default 360) - seconds between random advices
+ * - `random_ticks` (int, default 5)  - chat activity, number of messages per last minute
+ * - `random_chance` (float, default .33) - random chance
+ * - `random_delay` (int, default 5) - delay before message will be sent
+ *
  * @package joker-telegram-bot
  * @author Sergei Miami <miami@blackcrystal.net>
  */
@@ -18,6 +24,7 @@
 namespace Joker\Plugin;
 
 use GuzzleHttp\Client;
+use GuzzleHttp\Exception\ConnectException;
 use Joker\Helper\Tickometer;
 use Joker\Helper\Timer;
 use Joker\Parser\Update;
@@ -28,6 +35,13 @@ class Advice extends Base
   const TAGS_ENDPOINT  = 'https://fucking-great-advice.ru/api/v2/tags';
   const RANDOM_ENDPOINT  = 'https://fucking-great-advice.ru/api/v2/random-advices';
   const CATEGORY_ENDPOINT  = 'https://fucking-great-advice.ru/api/v2/random-advices-by-tag';
+
+  protected $options = [
+    'random_time'   => 60*60, // time condition (one advice per hour)
+    'random_ticks'  => 5,     // tick condition (5 messages in last minute)
+    'random_chance' => .33,   // random chance (33%)
+    'random_delay'  => 5,     // random advice delay
+  ];
 
   private
     $tags = [],    // list of topics
@@ -51,7 +65,7 @@ class Advice extends Base
 
     // initialize http client
     $this->client = new Client([
-      'timeout'  => 2.0,
+      'timeout'  => 5.0,
       'headers' => [
         'Referer' => 'https://fucking-great-advice.ru/',
         'Accept' => 'application/json',
@@ -60,11 +74,16 @@ class Advice extends Base
     ]);
 
     // request information about tags
-    $response = $this->client->get(self::TAGS_ENDPOINT);
-    $body = json_decode($response->getBody(), true);
-    foreach ($body['data'] as $item)
+    try
     {
-      $this->tags[ $item['alias'] ] ="{$item['title']}, {$item['advicesCount']} advices";
+      $response = $this->client->get(self::TAGS_ENDPOINT);
+      $body = json_decode($response->getBody(),true);
+      foreach ($body['data'] as $item)
+      {
+        $this->tags[$item['alias']] = "{$item['title']}, {$item['advicesCount']} advices";
+      }
+    } catch (ConnectException $exception){
+      /** nothing to do */
     }
 
   }
@@ -89,13 +108,14 @@ class Advice extends Base
 
     // random advice, if we pass some checks
     if (
-      time()-$this->last >= 60 * 10      // time condition (one advice in 10 minutes)
-      && $this->tickometer->count() >= 5 // tick condition (5 messages in last minute)
-      && $this->randomFloat() < .33      // random chance (33%)
+      isset($this->tags['']) // tags is loaded
+      && time()-$this->last         >= $this->getOption('random_time')
+      && $this->tickometer->count() >= $this->getOption('random_ticks')
+      && $this->randomFloat()       <= $this->getOption('random_chance')
     ){
-      // send with 3 seconds delay
+      // send with delay
       $advice = $this->getAdvice();
-      $this->timer->add(3, function () use ($update, $advice) {
+      $this->timer->add( $this->getOption('random_delay'), function () use ($update, $advice) {
         $update->answerMessage( $advice );
       });
       $this->last = time();
@@ -125,7 +145,6 @@ class Advice extends Base
    * @param string $topic
    *
    * @return string
-   * @throws \GuzzleHttp\Exception\GuzzleException
    */
   public function getAdvice($topic = '')
   {
@@ -145,12 +164,16 @@ class Advice extends Base
     // load few advices from sever
     if (!isset( $this->advices[$topic] ) || empty( $this->advices[$topic]))
     {
-      $request = empty($topic)
-        ? $this->client->get(self::RANDOM_ENDPOINT)
-        : $this->client->get(self::CATEGORY_ENDPOINT, ['query'=> ['tag' => $topic]])
-      ;
-      $body = json_decode($request->getBody(),true);
-
+      try
+      {
+        $request = empty($topic)
+          ? $this->client->get(self::RANDOM_ENDPOINT)
+          : $this->client->get(self::CATEGORY_ENDPOINT,['query' => ['tag' => $topic]]);
+        $body = json_decode($request->getBody(),true);
+      }
+      catch (ConnectException $e){
+        /* nothing to do */
+      }
       // no advices came in
       if (!isset($body['data']) || empty( $body['data']))
       {

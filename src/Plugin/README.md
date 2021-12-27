@@ -64,6 +64,12 @@ You can ask:
 
 Also, bot sends advices randomly from time to time, depending on users activity, luck and time delay. Here we implemented our new helpers [Timer](/miamibc/joker-telegram-bot/blob/master/src/Helper/Timer.php) and [Tickometer](/miamibc/joker-telegram-bot/blob/master/src/Helper/Tickometer.php) for first time (description will be added later). 
 
+Options:
+- `random_time` (int, default 360) - seconds between random advices
+- `random_ticks` (int, default 5)  - activity needed to produce random advice (messages per minute)
+- `random_chance` (float, default .33) - chance of random advice
+- `random_delay` (int, default 5) - delay before random advice will be sent
+
 Thanks for idea [D0b3rm4nN](https://gist.github.com/bcdober)
 
 ## Bash Plugin
