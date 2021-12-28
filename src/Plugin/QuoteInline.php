@@ -17,19 +17,22 @@
 namespace Joker\Plugin;
 
 use Joker\Parser\Update;
+use RedBeanPHP\R;
 
 class QuoteInline extends Base
 {
 
   protected $options = [
-    'dir' => 'data/jokes',
+    'trigger' => 'tg',
     'limit' => 10,
   ];
 
   public function onInline( Update $update )
   {
-    $query = $update->inline_query()->query();
-    $jokes = $this->searchJokes( $query );
+    if (!$trigger = $this->getOption('trigger')) return;
+    $limit = $this->getOption('limit');
+    $query  = '%' . strtr( mb_strtolower($update->inline_query()->query()), [' ' => '%']) . '%';
+    $jokes   = R::find('joke', " trigger = ? AND search LIKE ? ORDER BY random() LIMIT ? ", [ $trigger, $query, $limit ] );
     if (!$jokes) return false;
 
     $update->inline_query()->answer([
@@ -46,66 +49,8 @@ class QuoteInline extends Base
       'cache_time' => 1,
       'is_personal' => true,
     ]);
-
     return false;
   }
 
-
-  private function searchJokes($query )
-  {
-
-    // if no trigger defined, answer nothing
-    if (!$trigger = $this->getOption('trigger')) return false;
-
-    $filename =  $this->getOption('dir') . "/!$trigger.txt";
-
-    $file = file($filename);
-    if (empty( $query))
-    {
-      return false;
-    }
-    elseif (is_numeric( $query ) || $query[0] === '#' ){
-      // number
-      $rand   = preg_replace('@[^\d]+@', "", $query) * 1;
-      if (!isset( $file[$rand-1])) return false;
-      $found   = [
-        $rand-1 => $file[$rand-1],
-      ];
-    }
-    elseif ($query === 'last'){
-      // number
-      $count  = count($file);
-      if (!isset( $file[$count-1])) return false;
-      $found   = [
-        $count-1 => $file[$count-1],
-      ];
-    }
-    else {
-
-      // exact match
-      $found = array_filter( $file, function ($value) use ($query) {
-        return preg_match('#\b'.preg_quote( $query ).'\b#iu', $value);
-      });
-
-      // relaxed match
-      if (!count($found))
-      {
-        $found = array_filter( $file, function ($value) use ($query) {
-          return preg_match('#'.preg_quote( $query ).'#iu', $value);
-        });
-      }
-
-    }
-
-    if (!count($found)) return false;
-
-    foreach (array_slice( $found, 0, $this->getOption('limit', 10), true) as $key => $value)
-    {
-      $id = $key+1;
-      $found[$key] = "!$trigger #$id: $value";
-    }
-
-    return array_values( $found );
-  }
 
 }
