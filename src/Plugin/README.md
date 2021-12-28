@@ -511,9 +511,8 @@ Then select any joke from list, this will post a joke via the bot.
 This functionality available for bots with `inline mode` enabled. Read more about enabling it [here](https://core.telegram.org/bots/api#inline-mode).
 
 Configuration options:
-- `dir` (string, optional, default data/jokes) directory with jokes
-- `limit` (integer, optional, default 10) maximum number of jokes to display in suggestion block
 - `trigger` (string, required) for now this plugin allows to serve only one file with jokes, type it's name here
+- `limit`   (integer, optional, default 10) maximum number of jokes to display in suggestion block
 
 ## Server Plugin
 
