@@ -62,7 +62,7 @@ $bot->plug([
   new Joker\Plugin\Whynot(),
   new Joker\Plugin\Uptime(),
   new Joker\Plugin\Game( [ 'trigger' => 'chpocker', 'url' => 'https://blackcrystal.dev/chpocker/']),
-  new Joker\Plugin\QuoteInline( ['dir' =>'data/jokes', 'limit' => 10, 'trigger' => 'tg'] ),
+  new Joker\Plugin\QuoteInline( ['trigger'=> 'tg', 'limit' => 10] ),
   new Joker\Plugin\QuoteAdmin(),
 
   // *** somethingg wide, without triggers, must stay in the end ***

@@ -177,7 +177,15 @@ class Bot
         if ($score !== count($pieces)) continue;
 
         // at last, execute it
-        $result = call_user_func( [$plugin,$method], $update );
+        try
+        {
+          $result = call_user_func([$plugin,$method],$update);
+        }
+        catch (\Exception $exception)
+        {
+          $this->log("Exception $exception");
+          $result = Bot::PLUGIN_BREAK;
+        }
 
         // check return value to change plugin processing behaviour if needed
         if     ($result === Bot::PLUGIN_NEXT)  { break 1; }
