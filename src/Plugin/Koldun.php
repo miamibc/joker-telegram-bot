@@ -32,8 +32,6 @@ class Koldun extends Base
     $this->client = new Client([
       'timeout'  => 2.0,
       'headers' => [
-        'Referer' => 'https://fucking-great-advice.ru/',
-        'Accept' => 'application/json',
         'User-Agent' => 'Mozilla/5.0 (X11; Linux x86_64; rv:94.0) Gecko/20100101 Firefox/94.0',
       ],
     ]);
