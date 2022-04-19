@@ -3,11 +3,15 @@
  * Random joke from Anekdot.ru plugin for Joker
  *
  * Ask random joke, or search by id or text:
- *   !anek
- *   !anek 1234
- *   !anek scuko blya jjosh
  *
- * Bot will answer you with joke from Anekdot.ru
+ * !anek
+ * !anek 833334
+ * !anek блондинка
+ *
+ * Bot will answer you something like
+ *
+ * !anek #833334
+ * Теперь в Евросоюзе 1GB свободного места.
  *
  * @package joker-telegram-bot
  * @author Sergei Miami <miami@blackcrystal.net>
@@ -15,6 +19,7 @@
 
 namespace Joker\Plugin;
 
+use DiDom\Document;
 use Joker\Parser\Update;
 
 class Anek extends Base
@@ -43,6 +48,12 @@ class Anek extends Base
       // random joke
       $joke = $this->getRandomJoke();
     }
+    elseif ( is_numeric($query) || substr($query, 0, 1) === '#')
+    {
+      // get by id
+      $id = is_numeric($query) ? $query : substr($query, 1);
+      $joke = $this->getJokeById( $id );
+    }
     else
     {
       // search
@@ -50,14 +61,14 @@ class Anek extends Base
     }
 
     if (!$joke) $joke = "Joke not found :(";
-    $update->answerMessage( "$trigger $joke");
+    $update->answerMessage( "!$trigger $joke");
     return false;
 
   }
 
   /**
    * Get one joke from random_jokes pool.
-   * If pool is empty, loads from bash.im
+   * If pool is empty, loads new page of random joke from the site
    * @return string A joke
    */
   private function getRandomJoke()
@@ -71,7 +82,27 @@ class Anek extends Base
   }
 
   /**
-   * Performas sarch on bash.im
+   * Get joke by ID
+   * @param $id
+   *
+   * @return false|string
+   * @throws \DiDom\Exceptions\InvalidSelectorException
+   */
+  private function getJokeById( $id )
+  {
+    $content = file_get_contents(self::GETBYID_ENDPOINT . $id);
+
+    // suddenly, we can't use ::parseJkokes() method, because template is a bit different here
+    $document = new Document($content);
+    if (!$text = $document->first('.text')) return false;
+    $text = strtr( $text->innerHtml(), ['<br>'=>"\n", '<br />'=>"\n"] );
+    $text = strip_tags( $text );
+    $text = html_entity_decode( $text, ENT_QUOTES );
+    return "#$id\n" . trim( $text );
+  }
+
+  /**
+   * Search on site
    *
    * @param string $query text or joke id
    * @return string
@@ -81,8 +112,17 @@ class Anek extends Base
     // if query is number, we can search by id. Just ensure we removed # from beginning
     if (preg_match('@#(\d+)$@',  $query, $matches)) $query = $matches[1];
 
-    $content = file_get_contents(self::SEARCH_ENDPOINT . '?' . http_build_query(['text'=>$query]));
+    //ch[j]=on&ch[s]=on&mode=phrase&xcnt=100&maxlen=0&order=0
+    $content = file_get_contents(self::SEARCH_ENDPOINT . '?' . http_build_query([
+      'query'=>$query,
+      'ch' => [ 'j'=>'on' , 's' => 'on' ],
+      'mode' => 'phrase',
+      'xcnt' => 100,
+      'maxlen' => 0,
+      'order' => 0,
+    ]));
     $jokes = $this->parseJokes( $content );
+
     if (!count($jokes)) return false;
     return $jokes[ mt_rand(0, count($jokes)-1)];
   }
@@ -96,14 +136,15 @@ class Anek extends Base
   private function parseJokes( $content )
   {
 
-    preg_match_all('@<article class="quote" data-quote="(\d+)">[\s\S]+<div class="quote__body">[\s\n]+(.*)$@imU', $content, $matches, PREG_SET_ORDER);
-
     $result = [];
-    foreach ($matches as $match)
+    $html = new Document($content);
+
+    foreach ( $html->find('div[data-id]') as $item)
     {
-      $id   = $match[1];
-      $text = $match[2];
-      $text = strtr( $text, ['<br>'=>"\n", '<br />'=>"\n"] );
+      if (!$text = $item->find('div.text')) continue;
+      $id = $item->{"data-id"};
+      $text = strtr( $text[0]->innerHtml(), ['<br>'=>"\n", '<br />'=>"\n"] );
+      $text = strip_tags( $text );
       $text = html_entity_decode( $text, ENT_QUOTES );
       $result[] = "#$id\n" . trim( $text );
     }
