@@ -44,6 +44,7 @@ $bot->plug([
   new Joker\Plugin\Ytmusic( ['api_key' => getenv('GOOGLE_API_KEY')]),
   new Joker\Plugin\Spotify( ['client_id' => getenv( 'SPOTIFY_CLIENT_ID' ),'secret' =>getenv( 'SPOTIFY_SECRET' )] ),
   new Joker\Plugin\Lurk(),
+  new Joker\Plugin\Anek(),
   new Joker\Plugin\Bash(),
   new Joker\Plugin\Cowsay( ['bg_color' =>'#222222','text_color' =>'#dadada']),
   new Joker\Plugin\Hello(),

@@ -6,6 +6,7 @@ Plugins are well documented in inline comments, some interesting details will be
 
 * [Activity Plugin](#activity-plugin)
 * [Advice Plugin](#advice-plugin)
+* [Anek plugin](#anek-plugin)
 * [Bash Plugin](#bash-plugin)
 * [Beer Plugin](#beer-plugin)
 * [Callback Plugin](#callback-plugin)
@@ -71,6 +72,21 @@ Options:
 - `random_delay` (int, default 5) - delay before random advice will be sent
 
 Thanks for idea [D0b3rm4nN](https://gist.github.com/bcdober)
+
+## Anek Plugin
+
+Random jokes from [Anekdot.ru](https://anekdot.ru/).
+
+Ask random joke, or search by id or text:
+
+    !anek
+    !anek 833334
+    !anek блондинка
+
+Bot will answer you something like
+
+    !anek #833334
+    Теперь в Евросоюзе 1GB свободного места.
 
 ## Bash Plugin
 
