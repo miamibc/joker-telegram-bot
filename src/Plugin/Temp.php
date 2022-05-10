@@ -47,10 +47,12 @@ class Temp extends Base
       'королевство' => 'narva',                // requested by Overdoze
       'korolevstvo' => 'narva',
       'kingdom'     => 'narva',
-      'tll'         => 'tallinn',              // home town
+      'tll'         => 'tallinn',              // hometown
+      'tln'         => 'tallinn',              // hometown
       'lasnamae'    => '59.4525804,24.844022', // home district
       'spb'         => 'sankt-peterburg',      // best town
       'msk'         => 'moscow',               // big town
+      'ny'          => 'new york',             // another big town
       'nowhere'     => '60.4600098,169.5706892',
     ];
     if (isset($locations[$query]))
