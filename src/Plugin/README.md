@@ -6,6 +6,7 @@ Plugins are well documented in inline comments, some interesting details will be
 
 * [Activity Plugin](#activity-plugin)
 * [Advice Plugin](#advice-plugin)
+* [Allo plugin](#allo-plugin)
 * [Anek plugin](#anek-plugin)
 * [Bash Plugin](#bash-plugin)
 * [Beer Plugin](#beer-plugin)
@@ -72,6 +73,12 @@ Options:
 - `random_delay` (int, default 5) - delay before random advice will be sent
 
 Thanks for idea [D0b3rm4nN](https://gist.github.com/bcdober)
+
+## Allo Plugin
+
+Few people in our chat started to add "allo" to their messages, even it's not a phone call. 
+It's a meme or what, don't know, so I wrote this short plugin to reply instantly to all "alloing" 
+in our chat and (hopefully) make less of them. 
 
 ## Anek Plugin
 
