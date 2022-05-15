@@ -62,4 +62,9 @@ class Text
     return mb_strlen( $this->text );
   }
 
+  public function contains( $text )
+  {
+    return preg_match("@\b" . preg_quote($text) . "\b@imu", $this->text) ? true : false;
+  }
+
 }
