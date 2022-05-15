@@ -37,4 +37,13 @@ class TextTest extends TestCase
     $this->assertEquals('https://github.com/dacaps', $text->substring(78,25));
   }
 
+  public function testContains()
+  {
+    $text = new Text( "о, димас! хочешь прикол? а чего у тебя такие одинаковые проекты?) два из трёх https://github.com/dacaps" );
+    $this->assertFalse( $text->contains('котики'));
+    $this->assertFalse( $text->contains('пёсики'));
+    $this->assertTrue( $text->contains('проекты'));
+    $this->assertFalse( $text->contains('проект'));
+  }
+
 }
