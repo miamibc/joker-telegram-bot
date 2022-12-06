@@ -140,6 +140,7 @@ Description and examples can be found in [Helpers documentation](https://github.
 - ~~Corona plugin~~
 - ~~Chpocker HTML5 game~~
 - ~~Inline quote plugin~~
+- ~~Mastodon integration~~
 - More cool plugins
 
 Please send your ideas into the [issues](https://github.com/miamibc/joker-telegram-bot/issues)
