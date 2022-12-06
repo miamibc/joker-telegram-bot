@@ -67,4 +67,9 @@ class Text
     return preg_match("@\b" . preg_quote($text) . "\b@imu", $this->text) ? true : false;
   }
 
+  public function words()
+  {
+    return $this->data;
+  }
+
 }

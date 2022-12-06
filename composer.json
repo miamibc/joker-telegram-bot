@@ -28,7 +28,9 @@
     "cheprasov/php-redis-client": "^1.10",
     "mnapoli/silly": "^1.7",
     "guzzlehttp/guzzle": "^7.3",
-    "imangazaliev/didom": "^1.18"
+    "imangazaliev/didom": "^1.18",
+    "skyeng/php-lemmatizer": "^1.0",
+    "nxp/russian-porter-stemmer": "^1.0"
   },
   "autoload": {
     "psr-4": {

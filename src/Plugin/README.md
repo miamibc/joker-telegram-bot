@@ -32,6 +32,7 @@ Plugins are well documented in inline comments, some interesting details will be
 * [QuoteInline Plugin](#quoteinline-plugin)
 * [Server Plugin](#server-plugin)
 * [Spotify Plugin](#spotify-plugin)
+* [Stats Plugin](#stats-plugin)
 * [Sticker Plugin](#sticker-plugin)
 * [StickerFun Plugin](#stickerfun-plugin)
 * [Temp Plugin](#temp-plugin)
@@ -594,6 +595,31 @@ TODO:
 - Publish result as audio message
 
 
+## Stats Plugin
+
+Stats Plugin for Joker
+
+Ask joker fro your stats:
+   
+    !stats
+
+After few seconds of thinking, bot will answer you with your top words:
+
+    406681 total lines in log, processed 495 public messages from Eduard Z during past month, minimum word length 6 symbols. Top words:
+    - 16 тольк (только)
+    - 9 больш (больше, большой, больши)
+    - 8 youtube (youtube)
+    - 7 сейчас (сейчас)
+    - 6 спасиб (спасибо)
+    - 6 прост (просто, простите)
+    - 6 вообщ (вообще)
+    - 5 канал (каналов, каналы, канале)
+    - 5 сегодн (сегодня)
+    - 5 деньг (деньги, деньгах)
+
+Configuration options:
+- `file` (string, required) Path to log file (ame as in [Log Plugin](#log-plugin))
+ 
 ## Sticker Plugin
 
 Example sticker plugin. Send sticker to Joker private chat, he will answer with random sticker from same pack.

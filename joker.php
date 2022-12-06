@@ -65,6 +65,7 @@ $bot->plug([
   new Joker\Plugin\Game( [ 'trigger' => 'chpocker', 'url' => 'https://blackcrystal.dev/chpocker/']),
   new Joker\Plugin\QuoteInline( ['trigger'=> 'tg', 'limit' => 10] ),
   new Joker\Plugin\QuoteAdmin(),
+  new Joker\Plugin\Stats( ['file' =>'data/log/log.json'] ),
 
   // *** somethingg wide, without triggers, must stay in the end ***
 
