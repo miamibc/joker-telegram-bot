@@ -30,6 +30,7 @@ namespace Joker\Plugin;
 
 use Joker\Parser\Update;
 use Joker\Parser\User;
+use Wamania\Snowball\StemmerManager;
 
 class Stats extends Base
 {
@@ -40,52 +41,64 @@ class Stats extends Base
 
     $update->answerMessage( implode(PHP_EOL, $this->personStats($update->message()->from())));
     return false;
-
   }
 
-  public function personStats( User $user)
+  public function personStats( User $user )
   {
 
     $file = fopen( $this->getOption( 'file' ), 'r');
 
-    $i = 0; $processed = 0; $words = []; $forms = [];
-    $stemmer = new \NXP\Stemmer();
+    $lines = 0; $processed = 0; $words = []; $forms = [];
+    $stemmer = new StemmerManager();
     $start = strtotime('1 month ago');
 
     while ( ($data = fgets( $file )) !== false)
     {
-      $i++;
-      $line = json_decode( $data, true );
-      $update = new Update( $line );
+      $lines++;
+      $update = new Update( json_decode( $data, true ) );
       $tags = $update->getTags();
-      if (!$tags['Public']) continue;
-      if (empty($update->message())) continue;
-      if (empty($update->message()->from())) continue;
 
-      // skip wrong users
-      if ($update->message()->from()->id() !== $user->id()) continue;
+      // skip non-public messages
+      if (!$tags['Message'] || !$tags['Public']) continue;
 
       // skip old dates
       if ($update->message()->date() < $start) continue;
 
-      if ($text = $update->message()->text())
+      // just in case, skip messages without user
+      if (!$update->message()->from()) continue;
+
+      // skip wrong users
+      if ($update->message()->from()->id() !== $user->id()) continue;
+
+      // process texts, english and russian separately because stemmer needs to know the language
+      foreach ([$update->message()->text(), $update->message()->caption()] as $text)
       {
-        $processed++;
-        foreach (preg_match_all('@\b[a-zа-яё]{6,}\b@iu', $text, $matches) ? $matches[0] : [] as $word )
+        if (!$text) continue;
+        foreach (preg_match_all('@\b[a-z]{6,}\b@iu', "$text", $matches) ? $matches[0] : [] as $word )
         {
           $word = mb_strtolower($word) ;
-          $firstform = $stemmer->getWordBase( $word );
+          $firstform = $stemmer->stem( $word , 'en');
+          if (!isset($words[$firstform])) $words[$firstform] = 0;
+          $words[$firstform]++;
+          $forms[$firstform][$word] = true;
+        }
+        foreach (preg_match_all('@\b[а-яё]{6,}\b@iu', "$text", $matches) ? $matches[0] : [] as $word )
+        {
+          $word = mb_strtolower($word) ;
+          $firstform = $stemmer->stem( $word , 'ru');
           if (!isset($words[$firstform])) $words[$firstform] = 0;
           $words[$firstform]++;
           $forms[$firstform][$word] = true;
         }
       }
+
+      $processed++;
     }
     fclose( $file );
 
     arsort($words, SORT_NUMERIC);
 
-    $result = ["$i total lines in log, processed $processed public messages from $user for past month, minimum word length 6 symbols. Top words:"];
+    $result = ["$lines total lines in log, processed $processed public messages from $user for past month, minimum word length 6 symbols. Top words:"];
 
     if (empty($words))
     {
