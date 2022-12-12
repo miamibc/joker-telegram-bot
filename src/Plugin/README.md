@@ -420,15 +420,17 @@ Answer will be parsed from Wikimedia article (suddenly not the best quality)
 
 ## Mastodon Plugin
 
-Mastodon plugin for Joker
-
-Enable live translation of updates from Mastodon on your Telegram channel by typing:
+Enable live translation of updates from Mastodon to your Telegram channel by typing:
     
     !mastodon abcd       (abcd is a message you want to search in the updates)
 
 To disable translation, type:
     
     !mastodon off
+
+To start plugin, you need an account in Mastodon. Add hostname and API token to the .env file:
+- `MASTODON_HOST` host where you registered your account, for example "https://masto.ai"
+- `MASTODON_API_TOKEN` your API token
 
 ## Meme Plugin
 
