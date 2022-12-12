@@ -24,6 +24,7 @@ Plugins are well documented in inline comments, some interesting details will be
 * [Kicker Plugin](#kicker-plugin)
 * [Log Plugin](#log-plugin)
 * [Lurk Plugin](#lurk-plugin)
+* [Mastodon Plugin](#mastodon-plugin)
 * [Meme Plugin](#meme-plugin)
 * [Moderate Plugin](#moderate-plugin)
 * [Pasta Plugin](#pasta-plugin)
@@ -416,6 +417,18 @@ Answer will be parsed from Wikimedia article (suddenly not the best quality)
     »— Владимир Познер[![](//lurkmore.so/images/thumb/a/ac/Lurkosparta.jpg/250px-Lurkosparta.jpg)](/%D0%A4%D0%B0%D0%B9%D0%BB:Lurkosparta.jpg)[![](/skins/common/images/magnify-clip.png)](/%D0%A4%D0%B0%D0%B9%D0%BB:Lurkosparta.jpg "Увеличить")
     
     Как это обычно бывает у нас…
+
+## Mastodon Plugin
+
+Mastodon plugin for Joker
+
+Enable live translation of updates from Mastodon on your Telegram channel by typing:
+    
+    !mastodon abcd       (abcd is a message you want to search in the updates)
+
+To disable translation, type:
+    
+    !mastodon off
 
 ## Meme Plugin
 

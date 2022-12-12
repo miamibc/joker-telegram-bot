@@ -55,10 +55,10 @@ class Mastodon extends Base
     }
     else
     {
-
       $this->subscribers[ $update->message()->chat()->id()] = $status;
       $update->replyMessage("Mastodon translation started, word to search: *$status*");
     }
+    return false;
   }
 
   public function onTimer( Update $update )
