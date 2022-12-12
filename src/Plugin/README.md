@@ -24,6 +24,7 @@ Plugins are well documented in inline comments, some interesting details will be
 * [Kicker Plugin](#kicker-plugin)
 * [Log Plugin](#log-plugin)
 * [Lurk Plugin](#lurk-plugin)
+* [Mastodon Plugin](#mastodon-plugin)
 * [Meme Plugin](#meme-plugin)
 * [Moderate Plugin](#moderate-plugin)
 * [Pasta Plugin](#pasta-plugin)
@@ -32,6 +33,7 @@ Plugins are well documented in inline comments, some interesting details will be
 * [QuoteInline Plugin](#quoteinline-plugin)
 * [Server Plugin](#server-plugin)
 * [Spotify Plugin](#spotify-plugin)
+* [Stats Plugin](#stats-plugin)
 * [Sticker Plugin](#sticker-plugin)
 * [StickerFun Plugin](#stickerfun-plugin)
 * [Temp Plugin](#temp-plugin)
@@ -416,6 +418,20 @@ Answer will be parsed from Wikimedia article (suddenly not the best quality)
     
     Как это обычно бывает у нас…
 
+## Mastodon Plugin
+
+Enable live translation of updates from Mastodon to your Telegram channel by typing:
+    
+    !mastodon abcd       (abcd is a message you want to search in the updates)
+
+To disable translation, type:
+    
+    !mastodon off
+
+To start plugin, you need an account in Mastodon. Add hostname and API token to the .env file:
+- `MASTODON_HOST` host where you registered your account, for example "https://masto.ai"
+- `MASTODON_API_TOKEN` your API token
+
 ## Meme Plugin
 
 Create meme with [Memegen.link](https://memegen.link/) project.
@@ -594,6 +610,31 @@ TODO:
 - Publish result as audio message
 
 
+## Stats Plugin
+
+Stats Plugin for Joker
+
+Ask joker fro your stats:
+   
+    !stats
+
+After few seconds of thinking, bot will answer you with your top words:
+
+    406681 total lines in log, processed 495 public messages from Eduard Z during past month, minimum word length 6 symbols. Top words:
+    - 16 тольк (только)
+    - 9 больш (больше, большой, больши)
+    - 8 youtube (youtube)
+    - 7 сейчас (сейчас)
+    - 6 спасиб (спасибо)
+    - 6 прост (просто, простите)
+    - 6 вообщ (вообще)
+    - 5 канал (каналов, каналы, канале)
+    - 5 сегодн (сегодня)
+    - 5 деньг (деньги, деньгах)
+
+Configuration options:
+- `file` (string, required) Path to log file (ame as in [Log Plugin](#log-plugin))
+ 
 ## Sticker Plugin
 
 Example sticker plugin. Send sticker to Joker private chat, he will answer with random sticker from same pack.

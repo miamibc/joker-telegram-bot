@@ -1,0 +1,16 @@
+###
+# curl
+#	-H 'Authorization: Bearer our_access_token_here'
+#	https://mastodon.example/api/v1/accounts/verify_credentials
+GET {{MASTODON_HOST}}/api/v1/accounts/verify_credentials
+Authorization: Bearer {{MASTODON_API_TOKEN}}
+
+###
+
+GET {{MASTODON_HOST}}/api/v1/streaming/hashtag?tag=security HTTP/1.1
+Authorization: Bearer {{MASTODON_API_TOKEN}}
+
+###
+
+GET {{MASTODON_HOST}}/api/v1/streaming/public HTTP/1.1
+Authorization: Bearer {{MASTODON_API_TOKEN}}
