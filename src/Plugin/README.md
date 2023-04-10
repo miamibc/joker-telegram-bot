@@ -489,11 +489,13 @@ Joker, [10/4/23 11:55 PM]
 Ну, я не садовод, но я думаю, что вы правы.
 ```
 
-To start plugin, you need to have account in [OpenAI platform](https://platform.openai.com/). Add API key to the .env file:
+To start plugin, you need to have account in [OpenAI platform](https://platform.openai.com/). Insert API key to the .env file, like this:
 
 - `OPENAI_API_KEY` your api token
 
-Here is parameters you can cusomize on plugin initialization:
+Or provide `api_key` initialization parameter. 
+
+Here are all parameters you can customize:
 
 - `api_key` (string, optional, default from env variable OPENAI_API_KEY) - API key from OpenAI
 - `model` (string, optional, default 'text-davinci-003') - model to use in OpenAI API request
