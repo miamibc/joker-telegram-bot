@@ -25,6 +25,7 @@ use Joker\Database\Sqlite;
  * @method string description() Optional. Description, for groups, supergroups and channel chats. Returned only in getChat.
  * @method string invite_link() Optional. Primary invite link, for groups, supergroups and channel chats. Returned only in getChat.
  * @method Message pinned_message() Optional. The most recent pinned message (by sending date). Returned only in getChat.
+ * @method bool all_members_are_administrators() Optional. All members are administrators
  */
 class Chat extends Base
 {

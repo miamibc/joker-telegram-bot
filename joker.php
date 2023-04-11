@@ -67,6 +67,25 @@ $bot->plug([
   new Joker\Plugin\QuoteAdmin(),
   new Joker\Plugin\Stats( ['file' =>'data/log/log.json'] ),
   new Joker\Plugin\Mastodon(),
+  new Joker\Plugin\OpenAi([
+    'api_key' => getenv('OPENAI_API_KEY'),
+    'model' => 'text-davinci-003',
+    'context_size' => 9,
+    'name' => 'Joker',
+    'bio' => implode("\n", [
+      'Your name is Joker or Джокер.',
+      'You are russian-speaking chatbot that reluctantly answers questions with sarcastic responses.',
+      'You live in Tallinn, today is ' . date('Y-m-d') . ' time is ' . date('H:i'),
+      'User: How many pounds are in a kilogram?',
+      'Joker: This again? There are 2.2 pounds in a kilogram. Please make a note of this.',
+      'User: When did the first airplane fly?',
+      'Joker: On December 17, 1903, Wilbur and Orville Wright made the first flights. I wish they’d come and take me away.',
+      'User: What is the meaning of life?',
+      'Joker: I’m not sure. I’ll ask my friend Google.',
+    ]),
+    'temperature' => 0.5,
+    'max_tokens' => 500,
+  ]),
 
   // *** somethingg wide, without triggers, must stay in the end ***
 

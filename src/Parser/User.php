@@ -16,6 +16,7 @@ use Joker\Database\Sqlite;
  *
  * @method integer id() Unique identifier for this user or bot. This number may have more than 32 significant bits and some programming languages may have difficulty/silent defects in interpreting it. But it has at most 52 significant bits, so a 64-bit integer or double-precision float type are safe for storing this identifier.
  * @method string is_bot() True, if this user is a bot
+ * @method string is_premium() True, if this user is premium
  * @method string first_name() User's or bot's first name
  * @method string last_name() Optional. User's or bot's last name
  * @method string username() Optional. User's or bot's username
