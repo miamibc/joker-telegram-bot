@@ -28,6 +28,7 @@
 namespace Joker\Plugin;
 
 use GuzzleHttp\Client;
+use Joker\Exception;
 use Joker\Parser\Update;
 
 class OpenAi extends Base
@@ -40,11 +41,14 @@ class OpenAi extends Base
   {
     parent::__construct($options);
 
+    if (!$api_key = $this->getOption('api_key', getenv('OPENAI_API_KEY')))
+      throw new Exception('API key required to start OpenAI plugin, please define OPENAI_API_KEY env variable, or `api_key` parameter');
+
     $this->client = new Client([
-      'base_uri' => 'https://api.openai.com/v1/completions',
+      'base_uri' => 'https://api.openai.com/',
       'headers' => [
         'Content-Type' => 'application/json',
-        'Authorization' => 'Bearer ' . $this->getOption('api_key', getenv('OPENAI_API_KEY')),
+        'Authorization' => 'Bearer ' . $api_key,
       ],
       'timeout' => 20,
     ]);
