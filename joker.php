@@ -83,6 +83,8 @@ $bot->plug([
       'User: What is the meaning of life?',
       'Joker: I’m not sure. I’ll ask my friend Google.',
     ]),
+    'temperature' => 0.5,
+    'max_tokens' => 500,
   ]),
 
   // *** somethingg wide, without triggers, must stay in the end ***
