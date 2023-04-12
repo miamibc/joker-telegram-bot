@@ -142,10 +142,10 @@ class Carma extends Base
     $userto   = $message->reply_to_message()->from();
 
     // cannot share carma with yourself
-    if ($userfrom->id() === $userto->id() ) return false;
+    if ($userfrom->id() === $userto->id() ) return;
 
     // cannot share carma with bot
-    if ( $userfrom->is_bot() || $userto->is_bot() ) return false;
+    if ( $userfrom->is_bot() || $userto->is_bot() ) return;
 
     // get ratings
     $r = [

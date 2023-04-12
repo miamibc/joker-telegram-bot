@@ -48,8 +48,7 @@ class Bot
     $this->ch = curl_init();
 
     // display information, or throw an error
-    $this->me = $this->getMe();
-    if (!$this->me->id())
+    if (!$this->getMe()->id())
     {
       throw new Exception("Wrong or inactive Telegram API token. More info https://core.telegram.org/bots#6-botfather");
     }
@@ -160,7 +159,7 @@ class Bot
       // iterate plugin public methods
       foreach ( get_class_methods($plugin) as $method )
       {
-        // make array of pieces, splitted by Uppercase letter
+        // make array of pieces, separated by Uppercase letter
         // f.e. onSomeMethod => [ on, Some, Method ]
         $pieces = preg_split('/(?=[A-Z])/',$method);
 
@@ -173,7 +172,7 @@ class Bot
           if (isset($tags[$piece]) && $tags[$piece])
             $score++;
 
-        // if score doesnt match number of pieces, we skip this method
+        // if score doesn't match number of pieces, we skip this method
         if ($score !== count($pieces)) continue;
 
         // at last, execute it
@@ -195,7 +194,7 @@ class Bot
       }
     }
 
-    sleep(1);
+    sleep(3);
   }
 
   public function log( $message )
@@ -244,7 +243,7 @@ class Bot
   public function getMe()
   {
     $data = $this->_request('getMe');
-    return new User( $data );
+    return $this->me = new User( $data );
   }
 
   /**
@@ -306,6 +305,11 @@ class Bot
   {
     $result = $this->_request( 'forwardMessage', array_merge( [ 'chat_id'=>$chat_id, 'from_chat_id'=>$from_chat_id, 'message_id' => $message_id ], $options ));
     return new Message( $result );
+  }
+
+  public function id()
+  {
+    return $this->me->id();
   }
 
 }
