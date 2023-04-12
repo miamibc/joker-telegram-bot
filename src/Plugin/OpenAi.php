@@ -54,11 +54,65 @@ class OpenAi extends Base
     ]);
   }
 
+  public function onPublicReply(Update $update)
+  {
+    $name = $this->getOption('name', 'Joker');
+    $bio = $this->getOption('bio', 'Joker is a chatbot that reluctantly answers questions with sarcastic responses');
+
+    // build prompt:
+    // start from current message and go up in history,
+    // append these messages to the prompt
+    // and finally append bio
+    $prompt = "";
+    $message = $update->message();
+    $joker_was_here = false;
+    do {
+      $prompt = "{$message->from()->name()}: {$message->text()}\n$prompt";
+      if ($message->from()->id() == $update->bot()->id()) $joker_was_here = true;
+      if (!$replied_to = $message->reply_to_message()) break;
+    } while( $message = $this->context[$replied_to->id()] ?? false );
+
+    // no joker in discussion, or no prompt at all, no need to answer
+    if (!$joker_was_here || !$prompt = trim($prompt)) return;
+
+    if (mb_strlen($prompt) > 1000)
+    {
+      $update->replyMessage("Многовато вопросов, сорян, закрываем лавочку :p");
+      return false;
+    }
+
+    // add bio and final message
+    $prompt = "$bio\n$prompt\n$name:";
+
+    $response = $this->client->post('/v1/completions', ['json' => [
+      "model" => $this->getOption('model', 'text-davinci-003'),
+      "prompt" => $prompt,
+      "temperature" => $this->getOption('temperature', 0.5),
+      "max_tokens" => $this->getOption('max_tokens', 500),
+      "top_p" => 0.3,
+      "frequency_penalty" => 0.5,
+      "presence_penalty" => 0.0,
+    ]])->getBody()->getContents();
+
+    $response = json_decode($response);
+    $update->bot()->log($response);
+
+    // no answer, nothing to do
+    if (!$answer = $response->choices[0]->text ?? null) return;
+
+    // answer
+    $reply = $update->replyMessage($answer);
+
+    // save context
+    $this->context[$update->message()->id()] = $update->message();
+    $this->context[$reply->id()] = $reply;
+
+    return false;
+
+  }
+
   public function onPublicText(Update $update)
   {
-    $context_size = $this->getOption('context_size', 9);
-    $this->context[] = "{$update->message()->from()->name()}: {$update->message()->text()}";
-    if (count($this->context) > $context_size) $this->context = array_slice( $this->context, -$context_size);
 
     $text = (string)$update->message()->text();
 
@@ -66,39 +120,38 @@ class OpenAi extends Base
     if (!preg_match('/\b(joker|джокер|jok|джок)\b/ui', $text)) return;
 
     // answer only to premium users
-    // if (!$update->message()->from()->is_premium()) return;
+    if (false) // !$update->message()->from()->is_premium())
+    {
+      $update->answerMessage('Сорян, начать беседу теперь может только премиум аккаунт телеграмма. Это сделано чтобы поберечь Маямкины бабки :p');
+      return;
+    }
 
     $name = $this->getOption('name', 'Joker');
     $bio  = $this->getOption('bio' , 'Joker is a chatbot that reluctantly answers questions with sarcastic responses');
+    $prompt = "$bio\n{$update->message()->from()->name()}: {$update->message()->text()}\n$name:";
 
     $response = $this->client->post('/v1/completions', ['json' => [
-      "model" => $this->getOption('model', 'text-davinci-003' ),
-      "prompt" => $prompt = "$bio\n\n" . implode("\n", $this->context ) . "\n$name:",
+      "model" => $this->getOption('model', 'text-davinci-003'),
+      "prompt" => $prompt,
       "temperature" => $this->getOption('temperature', 0.5),
-      "max_tokens" => $this->getOption('max_tokens',500),
+      "max_tokens" => $this->getOption('max_tokens', 500),
       "top_p" => 0.3,
       "frequency_penalty" => 0.5,
       "presence_penalty" => 0.0,
     ]])->getBody()->getContents();
 
-    $response = json_decode( $response );
+    $response = json_decode($response);
+    $update->bot()->log($response);
+
+    // no answer, nothing to do
     if (!$answer = $response->choices[0]->text ?? null) return;
 
-    // debug
-    $update->bot()->log([
-      'prompt' => $prompt,
-      'response' => $response,
-      'answer' => $answer,
-    ]);
-
     // answer
-    $update->answerMessage($answer);
+    $reply = $update->replyMessage($answer);
 
     // save context
-    $this->context[] = "";
-    $this->context[] = "{$update->message()->from()->name()}: {$update->message()->text()}";
-    $this->context[] = "{$name}: {$answer}";
-    if (count($this->context) > $context_size) $this->context = array_slice( $this->context, -$context_size);
+    $this->context[$update->message()->id()] = $update->message();
+    $this->context[$reply->id()] = $reply;
 
     return false;
 
