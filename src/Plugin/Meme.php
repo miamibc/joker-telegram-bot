@@ -15,6 +15,11 @@ use Joker\Parser\Update;
 class Meme extends Base
 {
 
+  protected $options = [
+    'description' => 'Memes generator',
+    'risk' => 'MEDIUM. Anonymous request\'s text can be visible in api.memegen.link access logs by site administrators',
+  ];
+
   public function onPublicText( Update $update )
   {
     // process only if triggered by 'meme' trigger

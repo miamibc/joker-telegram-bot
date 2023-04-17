@@ -19,7 +19,11 @@ class StickerFun extends Base
 
   protected $options = [
     'range'  => 300,         // timeframe to check stickers
+
+    'description' => 'Bot answers with stickers on public chat',
+    'risk' => 'LOW. Nothing stored or shared',
   ];
+
   protected $sets_used = []; // remember all used sticker sets
   protected $timeline  = []; // record sticker activity
 

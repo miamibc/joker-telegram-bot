@@ -33,6 +33,11 @@ use Joker\Parser\Update;
 class Spotify extends Base
 {
 
+  protected $options = [
+    'description' => 'Spotify search for music tracks',
+    'risk' => 'MEDIUM. Nothing stored by plugin, but anonymous search requests are going to Spotify API. Here is their privacy policy https://developer.spotify.com/terms',
+  ];
+
   const SPOTIFY_API_ENDPOINT  = 'https://api.spotify.com/v1';
   const SPOTIFY_AUTH_ENDPOINT = 'https://accounts.spotify.com/api/token';
   private $token, $token_expire_time;

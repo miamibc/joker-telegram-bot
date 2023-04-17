@@ -15,6 +15,11 @@ use RedBeanPHP\R;
 class QuoteAdmin extends Base
 {
 
+  protected $options = [
+    'description' => 'Quote Admin',
+    'risk' => 'MEDIUM. Only jokes stored by plugin in a local database by admins',
+  ];
+
   private $sessions = [];
 
   public function onPrivateText( Update $update )

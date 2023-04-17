@@ -20,6 +20,11 @@ use Joker\Parser\Update;
 class Currency extends Base
 {
 
+  protected $options = [
+    'description' => 'Currency information',
+    'risk' => 'LOW. Nothing stored by plugin, anonymous API requests goes to public Coinbase API',
+  ];
+
   const RATE_URL = "https://api.coinbase.com/v2/exchange-rates";
 
   public function onPublicText( Update $update )

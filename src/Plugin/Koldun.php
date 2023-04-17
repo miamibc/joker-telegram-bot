@@ -22,12 +22,13 @@ class Koldun extends Base
   private $client;       // http client
   protected $options =[
     'triggers' => ['сколько', "что", "кто", "как", "где", "почему", "когда", "кому", "зачем"],
+
+    'description' => 'Koldun plugin',
+    'risk' => 'MEDIUM. Messages that starts from words "сколько", "что", "кто", "как", "где", "почему", "когда", "кому", "зачем" is sent to google search',
   ];
 
-  public function __construct($options = [])
+  public function init()
   {
-    parent::__construct($options);
-
     // initialize http client
     $this->client = new Client([
       'timeout'  => 2.0,
@@ -35,7 +36,6 @@ class Koldun extends Base
         'User-Agent' => 'Mozilla/5.0 (X11; Linux x86_64; rv:94.0) Gecko/20100101 Firefox/94.0',
       ],
     ]);
-
   }
 
   public function onPublicText( Update $update )

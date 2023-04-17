@@ -19,6 +19,11 @@ use Joker\Parser\Update;
 class Temp extends Base
 {
 
+  protected $options = [
+    'description' => 'Openweather API integration',
+    'risk' => 'MEDIUM. Last requested location will be stored in local database. Users information is not sent to Openweather API, unless you write it directly in request !temp my name is xyz i live in zyx. OpenWeather privacy policy https://openweather.co.uk/privacy-policy',
+  ];
+
   const API_URL = 'http://api.openweathermap.org/data/2.5/weather';
 
   public function onPublicText( Update $update )

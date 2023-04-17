@@ -17,6 +17,11 @@ use Joker\Parser\Update;
 class UrlCollector extends Base
 {
 
+  protected $options = [
+    'description' => 'URL collecting plugins',
+    'risk' => 'MEDIUM. Save all URLs into the local file, stored locally not shared anywhere',
+  ];
+
   public function onPublicTextEntities( Update $update )
   {
     $filename = $this->getOption('file', 'data/urls.txt');

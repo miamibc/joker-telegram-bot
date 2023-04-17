@@ -17,6 +17,11 @@ class Beer extends Base
 
   private $last_message = 0;
 
+  protected $options = [
+    'description' => 'Beer plugin',
+    'risk' => 'LOW. Nothing stored by plugin',
+  ];
+
   public function onPublicText( Update $update )
   {
 

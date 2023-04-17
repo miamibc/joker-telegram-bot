@@ -16,7 +16,7 @@ class Privacy extends Base
 
   protected $options = [
     'description' => 'Reads information about enabled plugins and their privacy',
-    'risk' => 'no',
+    'risk' => 'LOW. Nothing stored by plugin',
   ];
 
   public function onText(Update $update)
@@ -24,7 +24,7 @@ class Privacy extends Base
     $trigger = $update->message()->text()->trigger();
     if (!in_array($trigger, ['privacy'])) return;
 
-    $text = ["Privacy information for enabled plugins:"];
+    $text = ["!privacy: Privacy information for enabled plugins:"];
 
     foreach ($this->bot()->plugins() as $plugin) /** @var Base $plugin */
     {
@@ -32,8 +32,14 @@ class Privacy extends Base
       $description = $plugin->getOption('description', 'Not specified');
       $risk = $plugin->getOption('risk', 'Unknown');
       $text[] = "- $name - $description ($risk)";
+
+      if (count($text) > 20)
+      {
+        $update->answerMessage(implode("\n", $text));
+        $text = [];
+      }
     }
-    $update->replyMessage(implode("\n", $text));
+    $update->answerMessage(implode("\n", $text));
     return false;
   }
 

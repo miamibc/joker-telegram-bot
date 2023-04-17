@@ -16,6 +16,11 @@ use Joker\Parser\Update;
 class Pasta extends Base
 {
 
+  protected $options = [
+    'description' => 'Pasta answers',
+    'risk' => 'LOW. Nothing stored by plugin',
+  ];
+
   private $last_message = 0;
 
   public function onPublicText( Update $update )

@@ -25,7 +25,15 @@ class Carma extends Base
 {
 
   protected
-    $options = ['clean_time' => false, 'power_time' => 600,'start_carma' => 10, 'limit' => 30], // defaults
+    $options = [
+      'clean_time' => false,
+      'power_time' => 600,
+      'start_carma' => 10,
+      'limit' => 30,
+
+      'description' => 'Carma plugin',
+      'risk' => 'MEDIUM. Stores users information in local database',
+    ],
     $messages_to_clean = [], // array with messages that must be cleaned
     $users = [];    // array of username/user
 

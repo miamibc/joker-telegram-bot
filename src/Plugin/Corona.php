@@ -23,6 +23,10 @@ use Joker\Parser\Update;
 
 class Corona extends Base
 {
+  protected $options = [
+    'description' => 'Corona information',
+    'risk' => 'LOW. Nothing stored by plugin',
+  ];
 
   const LIST_URL = "https://api.github.com/repos/CSSEGISandData/COVID-19/contents/csse_covid_19_data/csse_covid_19_daily_reports?ref=master";
 

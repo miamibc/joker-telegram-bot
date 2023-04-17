@@ -35,6 +35,11 @@ use Wamania\Snowball\StemmerManager;
 class Stats extends Base
 {
 
+  protected $options = [
+    'description' => 'Frequency analysis of words said by chat members',
+    'risk' => 'MEDIUM. Accidentially, in stats result some secret information can appear, for example if you repeat your password lots of times :D Be careful what you write on a public channel',
+  ];
+
   public function onPublicText( Update  $update)
   {
     if ($update->message()->text()->trigger() !== 'stats') return;

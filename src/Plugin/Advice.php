@@ -41,6 +41,9 @@ class Advice extends Base
     'random_ticks'  => 5,     // tick condition (5 messages in last minute)
     'random_chance' => .33,   // random chance (33%)
     'random_delay'  => 5,     // random advice delay
+
+    'description' => 'Fuckin great advices',
+    'risk' => 'LOW. Nothing interestig can be extracted from API. See https://fucking-great-advice.ru for their terms.',
   ];
 
   private
@@ -52,10 +55,8 @@ class Advice extends Base
     $last          // time of last random advice
   ;
 
-  public function __construct($options = [])
+  public function init()
   {
-    parent::__construct($options);
-
     // tick-o-meter to count text activity
     $this->tickometer = new Tickometer();
 

@@ -22,6 +22,11 @@ use Joker\Parser\Update;
 class Ignore extends Base
 {
 
+  protected $options = [
+    'description' => 'Ignore plugin',
+    'risk' => 'LOW. Ignore status stored in local database',
+  ];
+
   public function onViabot( Update $update )
   {
     return false;

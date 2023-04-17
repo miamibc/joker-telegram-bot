@@ -20,6 +20,11 @@ class Lurk extends Base
 
   const API_URL  = 'https://lurkmore.to/api.php';
 
+  protected $options = [
+    'description' => 'Lurkmore plugin',
+    'risk' => 'MEDIUM. Anonymous request\'s text can be visible in lurkmore.to access logs by site administrators',
+  ];
+
   public function onPublicText( Update $update )
   {
 

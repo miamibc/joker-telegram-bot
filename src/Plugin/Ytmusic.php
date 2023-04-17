@@ -24,6 +24,9 @@ class Ytmusic extends Base
 
   protected $options = [
     'dir' => 'data/ytmusic',
+
+    'description' => 'Youtube search',
+    'risk' => 'MEDIUM. Search requests can be visible in google cloud console. Terms of service https://developers.google.com/youtube/terms/developer-policies',
   ];
 
   private $process = [];

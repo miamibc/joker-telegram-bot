@@ -22,6 +22,11 @@ use Joker\Parser\Update;
 class Game extends Base
 {
 
+  protected $options = [
+    'description' => 'Game plugin',
+    'risk' => 'LOW. Nothing stored by plugin',
+  ];
+
   /**
    * Listen to public and private chat text message
    * with trigger !chpocker, and answers with our game

@@ -101,6 +101,9 @@ class Whynot extends Base
       ";-]]]",
     ],
 
+
+    'description' => 'Generates stupid excuses why not',
+    'risk' => 'LOW. Nothing stored by plugin',
   ];
 
   public function onPublicText( Update $update )
