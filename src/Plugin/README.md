@@ -511,6 +511,7 @@ Here are all parameters you can customize:
 - `bio` (string, optional, default 'Joker is a chatbot that reluctantly answers questions with sarcastic responses') - few words about your bot, will be always placed at the top of OpenAI context
 - `temperature` (integer, optional, default 0.5) - randomness of the bot answers
 - `max_tokens` (integer, optional, default 500) - maximum size of the answer (+- number of english words)
+- `max_context_length` (bool, optional, default 1000) - maximum length of the context
 - `premium_only` (bool, optional, default false) - answer only to premium accounts
 
 ### Pasta Plugin
