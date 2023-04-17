@@ -24,7 +24,7 @@ class Privacy extends Base
     $trigger = $update->message()->text()->trigger();
     if (!in_array($trigger, ['privacy'])) return;
 
-    $text = ["!privacy: Privacy information for enabled plugins:"];
+    $text = ["!privacy: Enabled plugins, their privacy information and risks",""];
 
     foreach ($this->bot()->plugins() as $plugin) /** @var Base $plugin */
     {
