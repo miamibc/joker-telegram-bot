@@ -9,10 +9,13 @@
 
 namespace Joker\Plugin;
 
+use Joker\Bot;
+
 abstract class Base
 {
 
   protected $options = [];
+  protected $bot = null;
 
   public function __construct( $options = [] )
   {
@@ -28,4 +31,20 @@ abstract class Base
   {
     return $this->options;
   }
+
+  public function init()
+  {
+  }
+
+  public function setBot(Bot $bot)
+  {
+    $this->bot = $bot;
+    return $this;
+  }
+
+  public function bot(): Bot
+  {
+    return $this->bot;
+  }
+
 }
