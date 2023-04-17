@@ -20,6 +20,7 @@
  * - `bio` (string, optional, default 'Joker is a chatbot that reluctantly answers questions with sarcastic responses') - few words about your bot, will be always placed at the top of OpenAI context
  * - `temperature` (integer, optional, default 0.5) - randomness of the bot answers
  * - `max_tokens` (integer, optional, default 500) - maximum size of the answer (+- number of english words)
+ * - `premium_only` (bool, optional, default false) - answer only to premium accounts
  *
  * @package joker-telegram-bot
  * @author Sergei Miami <miami@blackcrystal.net>
@@ -75,6 +76,9 @@ class OpenAi extends Base
     // no joker in discussion, or no prompt at all, no need to answer
     if (!$joker_was_here || !$prompt = trim($prompt)) return;
 
+    // answer only to premium users
+    if ( $this->getOption('premium_only') && !$update->message()->from()->is_premium()) return;
+
     if (mb_strlen($prompt) > 1000)
     {
       $update->replyMessage("Многовато вопросов, сорян, закрываем лавочку :p");
@@ -120,11 +124,7 @@ class OpenAi extends Base
     if (!preg_match('/\b(joker|джокер|jok|джок)\b/ui', $text)) return;
 
     // answer only to premium users
-    if (false) // !$update->message()->from()->is_premium())
-    {
-      $update->answerMessage('Сорян, начать беседу теперь может только премиум аккаунт телеграмма. Это сделано чтобы поберечь Маямкины бабки :p');
-      return;
-    }
+    if ( $this->getOption('premium_only') && !$update->message()->from()->is_premium()) return;
 
     $name = $this->getOption('name', 'Joker');
     $bio  = $this->getOption('bio' , 'Joker is a chatbot that reluctantly answers questions with sarcastic responses');

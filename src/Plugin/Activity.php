@@ -14,6 +14,11 @@ use Joker\Parser\Update;
 class Activity extends Base
 {
 
+  protected $options = [
+    'description' => 'Saves publicly available user information, like name, username or ID, into the local database',
+    'risk' => 'Medium',
+  ];
+
   private $pool = [];
 
   /** @var integer */
