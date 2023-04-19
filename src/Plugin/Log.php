@@ -17,6 +17,9 @@ class Log extends Base
     'empty'  => false, // empty event symbol, for example .
     'screen' => false, // show log in screen
     'file'   => false, // log to file
+
+    'description' => 'Writes messages from Telegram API directly to the log file',
+    'risk' => 'Medium',
   ];
 
   public function onEmpty( Update $update )

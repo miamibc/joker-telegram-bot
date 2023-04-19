@@ -18,6 +18,9 @@ class Excuse extends Base
 
   protected $options = [
 
+    'description' => 'Excuse plugin',
+    'risk' => 'LOW. Nothing stored by plugin',
+
     "names" => [
       "Друг",
       "Товарищ",

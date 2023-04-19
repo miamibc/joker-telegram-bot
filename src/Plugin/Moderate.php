@@ -15,8 +15,11 @@ class Moderate extends Base
 {
 
   protected $options = [
-      'characters_between' => 255,
-    ];
+    'characters_between' => 255,
+
+    'description' => 'Moderate plugin',
+    'risk' => 'LOW. Nothing stored by plugin',
+  ];
 
   private $counter = [];
 

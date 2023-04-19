@@ -17,6 +17,11 @@ use Joker\Plugin;
 class Hello extends Base
 {
 
+  protected $options = [
+    'description' => 'Hello world plugin',
+    'risk' => 'LOW. Nothing stored by plugin',
+  ];
+
   public function onPrivateText( Update $update )
   {
 

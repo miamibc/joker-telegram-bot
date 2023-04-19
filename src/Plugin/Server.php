@@ -26,12 +26,15 @@ use Joker\Parser\Update;
 class Server extends Base
 {
 
+  protected $options = [
+    'description' => 'Server plugin',
+    'risk' => 'LOW. Nothing stored by plugin',
+  ];
+
   private $sock;
 
-  public function __construct($options = [])
+  public function init()
   {
-    parent::__construct($options);
-
     $sock = socket_create(AF_INET, SOCK_STREAM, SOL_TCP);
     socket_bind($sock,
                 $this->getOption('address', '127.0.0.1'),

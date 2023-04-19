@@ -20,6 +20,8 @@
  * - `bio` (string, optional, default 'Joker is a chatbot that reluctantly answers questions with sarcastic responses') - few words about your bot, will be always placed at the top of OpenAI context
  * - `temperature` (integer, optional, default 0.5) - randomness of the bot answers
  * - `max_tokens` (integer, optional, default 500) - maximum size of the answer (+- number of english words)
+ * - `max_context_length` (bool, optional, default 1000) - maximum length of the context
+ * - `premium_only` (bool, optional, default false) - answer only to premium accounts
  *
  * @package joker-telegram-bot
  * @author Sergei Miami <miami@blackcrystal.net>
@@ -37,10 +39,13 @@ class OpenAi extends Base
   private $client;
   private $context = [];
 
-  public function __construct(array $options = [])
-  {
-    parent::__construct($options);
+  protected $options = [
+    'description' => 'Adds talking ability to your bot',
+    'risk' => 'Context [your question and a dialogue in replies] is sent to OpenAI API and processed there. See OpenAI article https://help.openai.com/en/articles/6837156-terms-of-use',
+  ];
 
+  public function init()
+  {
     if (!$api_key = $this->getOption('api_key', getenv('OPENAI_API_KEY')))
       throw new Exception('API key required to start OpenAI plugin, please define OPENAI_API_KEY env variable, or `api_key` parameter');
 
@@ -48,7 +53,7 @@ class OpenAi extends Base
       'base_uri' => 'https://api.openai.com/',
       'headers' => [
         'Content-Type' => 'application/json',
-        'Authorization' => 'Bearer ' . $api_key,
+        'Authorization' => "Bearer $api_key",
       ],
       'timeout' => 20,
     ]);
@@ -75,7 +80,10 @@ class OpenAi extends Base
     // no joker in discussion, or no prompt at all, no need to answer
     if (!$joker_was_here || !$prompt = trim($prompt)) return;
 
-    if (mb_strlen($prompt) > 1000)
+    // answer only to premium users
+    if ( $this->getOption('premium_only') && !$update->message()->from()->is_premium()) return;
+
+    if (mb_strlen($prompt) > $this->getOption('max_context_length', 1000))
     {
       $update->replyMessage("Многовато вопросов, сорян, закрываем лавочку :p");
       return false;
@@ -120,15 +128,17 @@ class OpenAi extends Base
     if (!preg_match('/\b(joker|джокер|jok|джок)\b/ui', $text)) return;
 
     // answer only to premium users
-    if (false) // !$update->message()->from()->is_premium())
-    {
-      $update->answerMessage('Сорян, начать беседу теперь может только премиум аккаунт телеграмма. Это сделано чтобы поберечь Маямкины бабки :p');
-      return;
-    }
+    if ( $this->getOption('premium_only') && !$update->message()->from()->is_premium()) return;
 
     $name = $this->getOption('name', 'Joker');
     $bio  = $this->getOption('bio' , 'Joker is a chatbot that reluctantly answers questions with sarcastic responses');
     $prompt = "$bio\n{$update->message()->from()->name()}: {$update->message()->text()}\n$name:";
+
+    if (mb_strlen($prompt) > $this->getOption('max_context_length', 1000))
+    {
+      $update->replyMessage("Многовато вопросов, сорян, закрываем лавочку :p");
+      return false;
+    }
 
     $response = $this->client->post('/v1/completions', ['json' => [
       "model" => $this->getOption('model', 'text-davinci-003'),

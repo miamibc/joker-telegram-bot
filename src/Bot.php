@@ -223,7 +223,22 @@ class Bot
   public function plug( array $plugins )
   {
     $this->plugins = $plugins;
+
+    foreach ($this->plugins as $plugin)
+    {
+        if (method_exists($plugin, 'setBot'))
+            call_user_func([$plugin, 'setBot'], $this);
+
+        if (method_exists($plugin, 'init'))
+            call_user_func([$plugin,'init']);
+    }
+
     return $this;
+  }
+
+  public function plugins()
+  {
+      return $this->plugins;
   }
 
   /** ctrl-c and ctrl+break event processing */

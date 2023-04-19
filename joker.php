@@ -85,7 +85,9 @@ $bot->plug([
     ]),
     'temperature' => 0.5,
     'max_tokens' => 500,
+    'premium_only' => false,
   ]),
+  new Joker\Plugin\Privacy(),
 
   // *** somethingg wide, without triggers, must stay in the end ***
 

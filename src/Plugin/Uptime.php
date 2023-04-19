@@ -15,11 +15,15 @@ use Joker\Parser\Update;
 class Uptime extends Base
 {
 
+  protected $options = [
+    'description' => 'Uptime information',
+    'risk' => 'LOW. Nothing stored by plugin',
+  ];
+
   private $started;
 
-  public function __construct($options = [])
+  public function init()
   {
-    parent::__construct($options);
     $this->started = time();
   }
 

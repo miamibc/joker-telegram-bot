@@ -24,10 +24,13 @@ class Mastodon extends Base
   private $client;
   private $subscribers = [];
 
-  public function __construct($options = [])
-  {
-    parent::__construct($options);
+  protected $options = [
+    'description' => 'Mastodon integration plugin',
+    'risk' => 'LOW. Nothing is shared with Mastodon APIs, we only read information from there.',
+  ];
 
+  public function init()
+  {
     if (!$token = getenv('MASTODON_API_TOKEN'))
       throw new Exception("Mastodon plugin requires MASTODON_API_TOKEN to be defined in .env file");
 

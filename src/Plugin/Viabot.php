@@ -15,6 +15,11 @@ use Joker\Parser\Update;
 class Viabot extends Base
 {
 
+  protected $options = [
+    'description' => 'Viabot plugin disables processing of messages sent via bots',
+    'risk' => 'LOW. Nothing stored by plugin',
+  ];
+
   public function onViabot( Update $update )
   {
     return false;

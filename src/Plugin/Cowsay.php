@@ -13,6 +13,14 @@
  *               ||----w |
  *              ||     ||
  *
+ * Options can be:
+ *   `font_file`  (string, optional, default depends on ubuntu version) path to font file
+ *   `font_size`  (int, optional, default 20) font size in pixels
+ *   `padding`    (int, optional, default 100) padding
+ *   `bg_color`   (string, optional, default #000000) background color
+ *   `text_color` (string, optional, default #ffffff) text color
+ *   `delete`     (boolean, optional, default true) delete generated image after sending
+ *
  * @package joker-telegram-bot
  * @author Sergei Miami <miami@blackcrystal.net>
  */
@@ -32,19 +40,11 @@ class Cowsay extends Base
     'bg_color'   => '#000000',
     'text_color' => '#ffffff',
     'delete'     => true,
+
+    'description' => 'Cowsay plugin',
+    'risk' => 'LOW. Nothing stored by plugin',
   ];
 
-  /**
-   * CowsayPlugin constructor.
-   *
-   * Options can be:
-   *   `font_file`  (string, optional, default depends on ubuntu version) path to font file
-   *   `font_size`  (int, optional, default 20) font size in pixels
-   *   `padding`    (int, optional, default 100) padding
-   *   `bg_color`   (string, optional, default #000000) background color
-   *   `text_color` (string, optional, default #ffffff) text color
-   *   `delete`     (boolean, optional, default true) delete generated image after sending
-   */
   public function __construct($options = [])
   {
     // if font_file option is not defined

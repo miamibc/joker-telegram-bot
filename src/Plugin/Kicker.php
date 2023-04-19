@@ -32,6 +32,9 @@ class Kicker extends Base
     'greeting_without_emoji' => '',
     'greeting_is_bot' => '',
     'greeting_not_bot' => '',
+
+    'description' => 'Kicker plugin',
+    'risk' => 'LOW. Nothing stored by plugin',
   ];
 
   private $waiting_list = [];

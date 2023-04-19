@@ -33,6 +33,11 @@ class Anek extends Base
 
   private $random_jokes = [];
 
+  protected $options = [
+    'description' => 'Random joke from Anekdot.ru',
+    'risk' => 'MEDIUM. Anonymous request\'s text can be visible in anekdot.ru access logs by site administrator',
+  ];
+
   public function onPublicText( Update $update )
   {
 

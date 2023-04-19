@@ -17,6 +17,11 @@ use Joker\Parser\Update;
 class Twitch extends Base
 {
 
+  protected $options = [
+    'description' => 'Twitch search',
+    'risk' => 'MEDIUM. Nothing is stored in plugin, no information about requester is sent to Twitch API. Twitch API privacy poilcy https://www.twitch.tv/p/ru-ru/legal/developer-agreement/',
+  ];
+
   protected $access_token, $expires_at;
 
   public function onPublicText( Update $update )

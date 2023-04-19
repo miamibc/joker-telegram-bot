@@ -14,6 +14,11 @@ use Joker\Parser\Update;
 class Sticker extends Base
 {
 
+  protected $options = [
+    'description' => 'Bot answers with stickers on private chat',
+    'risk' => 'LOW. Nothing stored or shared',
+  ];
+
   public function onPrivateSticker( Update $update )
   {
 

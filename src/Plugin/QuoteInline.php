@@ -24,6 +24,9 @@ class QuoteInline extends Base
   protected $options = [
     'trigger' => 'tg',
     'limit' => 10,
+
+    'description' => 'Inline quote',
+    'risk' => "LOW. You can accidentially send request to QuoteInline by typing @bot_name and some texts. We don't store and share this information",
   ];
 
   public function onInline( Update $update )

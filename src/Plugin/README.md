@@ -4,6 +4,12 @@ Here you can find library of plugins we use for our own purpose. They are probab
 
 Plugins are well documented in inline comments, some interesting details will be added here. 
 
+Every plugin has default options, that can be visible, if plugin [Privacy](#privacy-plugin) active:
+- [description] (optional, default 'Not specified') - Short description of plugin
+- [risk] (optional, default 'Unknown) - information on risks for users
+
+## Available plugins
+
 * [Activity Plugin](#activity-plugin)
 * [Advice Plugin](#advice-plugin)
 * [Allo plugin](#allo-plugin)
@@ -29,6 +35,7 @@ Plugins are well documented in inline comments, some interesting details will be
 * [Moderate Plugin](#moderate-plugin)
 * [OpenAI Plugin](#openai-plugin)
 * [Pasta Plugin](#pasta-plugin)
+* [Privacy Plugin](#privacy-plugin)
 * [Quote Plugin](#quote-plugin)
 * [QuoteAdmin Plugin](#quoteadmin-plugin)
 * [QuoteInline Plugin](#quoteinline-plugin)
@@ -45,7 +52,7 @@ Plugins are well documented in inline comments, some interesting details will be
 * [Vkmusic Plugin](#vkmusic-plugin)
 * [Whynot Plugin](#whynot-plugin)
 
-## Activity Plugin
+### Activity Plugin
 
 Stores user activity from messages containing `from` field. Data will be stored in sqlite database, table `user`.
 
@@ -58,7 +65,7 @@ Stores user activity from messages containing `from` field. Data will be stored 
 Configuration options:
 - `sync_time` (integer, default 60) - seconds, how often to write data to database
 
-## Advice Plugin
+### Advice Plugin
 
 Advice plugin for Joker. Fuckin Great Advices from [fucking-great-advice.ru](https://fucking-great-advice.ru/) API.
 
@@ -77,13 +84,13 @@ Options:
 
 Thanks for idea [D0b3rm4nN](https://gist.github.com/bcdober)
 
-## Allo Plugin
+### Allo Plugin
 
 Few people in our chat started to add "allo" to their messages, even it's not a phone call. 
 It's a meme or what, don't know, so I wrote this short plugin to reply instantly to all "alloing" 
 in our chat and (hopefully) make less of them. 
 
-## Anek Plugin
+### Anek Plugin
 
 Random jokes from [Anekdot.ru](https://anekdot.ru/).
 
@@ -98,7 +105,7 @@ Bot will answer you something like
     !anek #833334
     Теперь в Евросоюзе 1GB свободного места.
 
-## Bash Plugin
+### Bash Plugin
 
 Random jokes from [Bash.im](https://bash.im/).
 
@@ -116,7 +123,7 @@ Bot will answer you with joke from bash
     Tellah: 
     or "scuko blya jjosh" for "awesome"
 
-## Beer Plugin
+### Beer Plugin
 
 Answers to message with beer thematics, by one of hardcoded joke. 
 
@@ -126,7 +133,7 @@ Answers to message with beer thematics, by one of hardcoded joke.
 Beer plugin is version of [Pasta Plugin](#pasta-plugin). 
 Thanks to [Dm!tro](https://github.com/Dm1tro-in-da-world) for this contribution.  
 
-## Callback Plugin
+### Callback Plugin
 
 Plugin for fast prototyping. Pass associative array of trigger => callback as options and you'll get different action for different triggers.
 
@@ -144,7 +151,7 @@ $joker->plug([
 ]);
 ```
 
-## Carma plugin
+### Carma plugin
 
 Allows people to exchange carma between them by like and dislike their posts.
 
@@ -156,7 +163,7 @@ Options:
 
 Thanks for help in development to **D0b3rm4nN** and [AL^Raven](https://github.com/alravenbc).
 
-## Corona Plugin
+### Corona Plugin
 
 Corona worldwide virus stats for Joker.
 
@@ -206,7 +213,7 @@ Configuration options:
 
 Data from [COVID-19 Data Repository by the Center for Systems Science and Engineering (CSSE) at Johns Hopkins University](https://github.com/CSSEGISandData/COVID-19) repository.
 
-## Cowsay Plugin
+### Cowsay Plugin
 
 Classic [linux console fun](https://en.wikipedia.org/wiki/Cowsay) now is in Joker. Say
 
@@ -233,7 +240,7 @@ Configuration options:
 - `text_color` (string, optional, default #ffffff) text color
 - `delete`     (boolean, optional, default true) delete generated image after sending
 
-## Currency Plugin
+### Currency Plugin
 
 Currency exchange rates for Joker (thanks ʎǝxǝl∀ for ide∀)
 
@@ -251,7 +258,7 @@ And receive information, something like
 
 Information requested from [Coinbase API](https://developers.coinbase.com/api/v2)
 
-## Excuse Plugin
+### Excuse Plugin
 
 Generate random exuses
 
@@ -267,7 +274,7 @@ Bot will answer something like
 
 Ported from [lgg/excuse-generator](https://github.com/lgg/excuse-generator)
 
-## Flip Plugin
+### Flip Plugin
 
 Flips text upside-down and back.
 
@@ -288,7 +295,7 @@ Joker Test, [5/12/21 12:55 PM]
 ```
 
 
-## Forwarder Plugin
+### Forwarder Plugin
 
 Forwards messages from one chat to another. Rules can be added with configuration, example:
 
@@ -307,7 +314,7 @@ Each line of configuration consists of array:
 
 NB! Joker can't read and forward messages from another bots, because Telegram [does not allow to read bots messages with Telegram Bot API](https://core.telegram.org/bots/faq#why-doesnt-my-bot-see-messages-from-other-bots). If you need to read them, try to search implementations of another protocol - Mtproto. 
 
-## Game Plugin
+### Game Plugin
 
 This plugin allows you to publish HTML5 game with a bot. Game need to be registered in BotFather, and inline mode must be enabled. [Read more](https://core.telegram.org/bots/api#games). 
 
@@ -327,7 +334,7 @@ Configuration options:
 - `trigger` (string, required) - short name of a game, will be used to request game by typing !trigger in private or public chat
 - `url`     (string, required) - URL of a game
 
-## Hello Plugin
+### Hello Plugin
 
 Hello world plugin, small example of writing basic plugin for Joker.
 
@@ -343,7 +350,7 @@ Bot will answer you with standart greeting
     
     Read more: https://github.com/miamibc/joker-telegram-bot 
 
-## Ignore Plugin
+### Ignore Plugin
 
 Adds ability to be ignored in processing all incoming events.
 Additionally, ignored all messages sent via bot.
@@ -360,7 +367,7 @@ To be unignored, say:
 
 Thanks to **Roboromat** for the idea.
 
-## Kicker Plugin
+### Kicker Plugin
 
 If your channel is popular enough, you will constantly be attacked with bots with strange names containing emoji. 
 
@@ -375,7 +382,7 @@ Options:
 - `greeting_is_bot` string, optional, default empty - greeting before inactive visitor will be kicked
 - `greeting_not_bot` string, optional, default empty - greeting when visitor said something
 
-## Log Plugin
+### Log Plugin
 
 Log all incoming messages to a file
 
@@ -384,7 +391,7 @@ Configuration options:
 * `screen` (boolean, default false) - log messages to the screen
 * `file` (string or false, default false) - log messages to file 
 
-## Lurk Plugin
+### Lurk Plugin
 
 Shows articles from [Lurkmore](https://lurkmore.to/) with use of [Mediawiki API](https://www.mediawiki.org/wiki/API).
 
@@ -419,7 +426,7 @@ Answer will be parsed from Wikimedia article (suddenly not the best quality)
     
     Как это обычно бывает у нас…
 
-## Mastodon Plugin
+### Mastodon Plugin
 
 Enable live translation of updates from Mastodon to your Telegram channel by typing:
     
@@ -433,7 +440,7 @@ To start plugin, you need an account in Mastodon. Add hostname and API token to 
 - `MASTODON_HOST` host where you registered your account, for example "https://masto.ai"
 - `MASTODON_API_TOKEN` your API token
 
-## Meme Plugin
+### Meme Plugin
 
 Create meme with [Memegen.link](https://memegen.link/) project.
 
@@ -461,7 +468,7 @@ Learn what you don't.
 
 ![meme answer](https://api.memegen.link/images/rollsafe/Show_what_you_can./Learn_what_you_don't..jpg)
 
-## Moderate Plugin
+### Moderate Plugin
 
 Removes sticker flood in Group. Bot must be administrator.
 
@@ -469,7 +476,7 @@ Plugin counts amount of text between stickers. If user trying to flood with stic
 
 Parameter `characters_between` defaults to 255, can be set in plugin options. 
 
-## OpenAI Plugin
+### OpenAI Plugin
 
 Add chatting ability to your bot with help of [OpenAI](https://platform.openai.com/)
 
@@ -504,14 +511,31 @@ Here are all parameters you can customize:
 - `bio` (string, optional, default 'Joker is a chatbot that reluctantly answers questions with sarcastic responses') - few words about your bot, will be always placed at the top of OpenAI context
 - `temperature` (integer, optional, default 0.5) - randomness of the bot answers
 - `max_tokens` (integer, optional, default 500) - maximum size of the answer (+- number of english words)
+- `max_context_length` (bool, optional, default 1000) - maximum length of the context
+- `premium_only` (bool, optional, default false) - answer only to premium accounts
 
-## Pasta Plugin
+### Pasta Plugin
 
 Example plugin with custom text triggers.
 
 Parameter `minimum_time` can be used to set minimum time between triggering this plugin.
 
-## Quote Plugin
+### Privacy Plugin
+
+Display enabled plugins information: description and risks. 
+
+Ask in public or private chat
+
+    !privacy
+    
+And you'll receive list, like this
+
+    Privacy information for enabled plugins:
+    - Joker\Plugin\Log - Writes messages from Telegram API directly to the log file (Miami personal responsibility)
+    - Joker\Plugin\Privacy - Reads information about enabled plugins and their privacy (no)
+    - Joker\Plugin\Uptime - Not specified (Unknown)
+
+### Quote Plugin
 
 You can request for random joke from trigger, get joke by number or search by text.
 
@@ -540,7 +564,7 @@ Bot will list all available triggers:
 List of jokes: !2alsmom !2forsedad !al !anek !cyberzx !ep !fly !fun !gorkiy !hmage !irc !ircnet !joke !jokerquery !kod !lancer !matpac !mind !morg !mt !onliner !patriot !peni !pore !romes !say !test !tg !trigger !ua !vou !wolf
 ```
 
-## QuoteAdmin Plugin
+### QuoteAdmin Plugin
 
 Separate plugin made for administration of quotes. Allows to add, list, remove jokes from database.
 
@@ -578,7 +602,7 @@ Added: !tg 111 of 111: [01.11.20 21:58]
 <SHPONGIk> понятно)
 ```
 
-## QuoteInline Plugin
+### QuoteInline Plugin
 
 Type bot's @username with text to search in jokes
 
@@ -590,7 +614,7 @@ Configuration options:
 - `trigger` (string, required) for now this plugin allows to serve only one file with jokes, type it's name here
 - `limit`   (integer, optional, default 10) maximum number of jokes to display in suggestion block
 
-## Server Plugin
+### Server Plugin
 
 With this plugin you can communicate bot from outside.
 
@@ -618,7 +642,7 @@ Configuration options:
 - `port` (integer, optional, default 5566) - port number
 
 
-## Spotify Plugin
+### Spotify Plugin
 
 Random music track from Spotify API
 
@@ -647,7 +671,7 @@ TODO:
 - Publish result as audio message
 
 
-## Stats Plugin
+### Stats Plugin
 
 Stats Plugin for Joker
 
@@ -671,19 +695,19 @@ After few seconds of thinking, bot will answer you with your top words:
 
 Configuration options:
 - `file` (string, required) Path to log file (ame as in [Log Plugin](#log-plugin))
- 
-## Sticker Plugin
+
+### Sticker Plugin
 
 Example sticker plugin. Send sticker to Joker private chat, he will answer with random sticker from same pack.
 
-## StickerFun Plugin
+### StickerFun Plugin
 
 Send random sticker from previously posted, when people started to send lots of stickers
 
 Options:
 - `range` integer, optional, default 300 - defines a time frame (seconds) to search stickers activity in
 
-## Temp Plugin
+### Temp Plugin
 
 Weather conditions worldwide. Commands to activate this:
 - !temp
@@ -722,7 +746,7 @@ Configuration options:
 
 Data source [Openweather API](http://api.openweathermap.org)
 
-## Twitch Plugin
+### Twitch Plugin
 
 This plugin allows you to search Twitch channels.
 
@@ -737,29 +761,29 @@ Configuration options:
 
 Thanks for idea to **D0b3rm4nN**.
 
-## Uptime Plugin
+### Uptime Plugin
 
 Shows amount of time bot was up.
 
-## UrlCollector Plugin
+### UrlCollector Plugin
 
 Collects URLS from public messages
 
 Configuration options:
 - `file` (string, oprional, default 'data/urls.txt') - file to save urls to
 
-## Viabot Plugin
+### Viabot Plugin
 
 Blocks processing of messages sent via bot.
 
 Add this plugin to Joker Bot after Log Plugin, to log via_bot messages and skip future processing. 
 This is useful when you wish to allow your users to post inline messages via bot.
 
-## Vkmusic Plugin
+### Vkmusic Plugin
 
 Music from Vkontakte (in progress...)
 
-## Whynot Plugin
+### Whynot Plugin
 
 Generate otmazki why not ...
 
@@ -775,7 +799,7 @@ Bot will answer something like
 
 Idea from [lgg/excuse-generator](https://github.com/lgg/excuse-generator).
 
-## Ytmusic Plugin
+### Ytmusic Plugin
 
 Posts audiotrack from Youtube video.
 

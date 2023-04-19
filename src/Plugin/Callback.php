@@ -23,6 +23,11 @@ use Joker\Parser\Update;
 class Callback extends Base
 {
 
+  protected $options = [
+    'description' => 'Callback plugin',
+    'risk' => 'LOW. Nothing stored by plugin',
+  ];
+
   public function onPublicText( Update $update )
   {
     $triggers = array_keys($this->getOptions());

@@ -21,6 +21,11 @@ use Joker\Parser\Update;
 class Forwarder extends Base
 {
 
+  protected $options = [
+    'description' => 'Forwards texts to another channel',
+    'risk' => 'MEDIUM. Messages from user can be forwarded to another channel',
+  ];
+
   public function onMessageText( Update $update )
   {
 

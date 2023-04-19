@@ -15,6 +15,11 @@ use Joker\Parser\Update;
 class Flip extends Base
 {
 
+  protected $options = [
+    'description' => 'Flips texts upside-down',
+    'risk' => 'LOW. Nothing stored by plugin',
+  ];
+
   private static $table = [
     "a"      => "\u{0250}",
     "b"      => "q",

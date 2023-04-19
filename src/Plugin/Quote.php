@@ -20,9 +20,13 @@ class Quote extends Base
 
   private $triggers = [], $counter = 0;
 
-  public function __construct($options = [])
+  protected $options = [
+    'description' => 'Quote plugin',
+    'risk' => 'LOW. Nothing stored by plugin',
+  ];
+
+  public function init()
   {
-    parent::__construct($options);
     $this->triggers = self::jokeTriggers();
   }
 
