@@ -40,6 +40,10 @@ class OpenAi extends Base
   private $context = [];
 
   protected $options = [
+    'model' => 'gpt-4',
+    'bio' => 'Joker is a chatbot that reluctantly answers questions with sarcastic responses',
+    'max_context_length' => 1000,
+
     'description' => 'Adds talking ability to your bot',
     'risk' => 'Context [your question and a dialogue in replies] is sent to OpenAI API and processed there. See OpenAI article https://help.openai.com/en/articles/6837156-terms-of-use',
   ];
@@ -61,40 +65,53 @@ class OpenAi extends Base
 
   public function onPublicReply(Update $update)
   {
-    $name = $this->getOption('name', 'Joker');
-    $bio = $this->getOption('bio', 'Joker is a chatbot that reluctantly answers questions with sarcastic responses');
+    $model = $this->getOption('model');
+    $bio = array_map(function( $item ){
+      return [
+        'role' => 'system',
+        "content" => $item,
+      ];
+    }, is_array($b = $this->getOption('bio')) ? $b : [$b]);
 
-    // build prompt:
-    // start from current message and go up in history,
-    // append these messages to the prompt
-    // and finally append bio
-    $prompt = "";
+    // look up the conversation: start from current message and go up in history
+    $me_was_here = false;
     $message = $update->message();
-    $joker_was_here = false;
-    do {
-      $prompt = "{$message->from()->name()}: {$message->text()}\n$prompt";
-      if ($message->from()->id() == $update->bot()->id()) $joker_was_here = true;
-      if (!$replied_to = $message->reply_to_message()) break;
-    } while( $message = $this->context[$replied_to->id()] ?? false );
+    do
+    {
+      // detect joker was in conversation
+      if ($is_me = $message->from()->id() == $update->bot()->id()) $me_was_here = true;
 
-    // no joker in discussion, or no prompt at all, no need to answer
-    if (!$joker_was_here || !$prompt = trim($prompt)) return;
+      // build conversation
+      $messages[] = [
+        'role' => $is_me ? "assistant" : "user",
+        'name' => $this->prepareName($message->from()->name() ),
+        "content" => (string) $message->text(),
+      ];
+
+      // if not a reply, break
+      if (!$replied_to = $message->reply_to_message()) break;
+    }
+    while( $message = $this->context[$replied_to->id()] ?? false );
+
+    // no joker in conversation, or no messages found, no need to answer
+    if (!$me_was_here || empty($messages)) return;
 
     // answer only to premium users
     if ( $this->getOption('premium_only') && !$update->message()->from()->is_premium()) return;
 
-    if (mb_strlen($prompt) > $this->getOption('max_context_length', 1000))
-    {
-      $update->replyMessage("Многовато вопросов, сорян, закрываем лавочку :p");
-      return false;
-    }
+    $messages = array_merge($bio, array_reverse( $messages ));
 
-    // add bio and final message
-    $prompt = "$bio\n$prompt\n$name:";
+    // $this->bot()->log( $messages );
 
-    $response = $this->client->post('/v1/completions', ['json' => [
-      "model" => $this->getOption('model', 'text-davinci-003'),
-      "prompt" => $prompt,
+    //    if (mb_strlen($prompt) > $this->getOption('max_context_length', 1000))
+    //    {
+    //      $update->replyMessage("Многовато вопросов, сорян, закрываем лавочку :p");
+    //      return false;
+    //    }
+
+    $response = $this->client->post('/v1/chat/completions', ['json' => [
+      "model" => $model,
+      "messages" => $messages,
       "temperature" => $this->getOption('temperature', 0.5),
       "max_tokens" => $this->getOption('max_tokens', 500),
       "top_p" => 0.3,
@@ -103,10 +120,11 @@ class OpenAi extends Base
     ]])->getBody()->getContents();
 
     $response = json_decode($response);
-    $update->bot()->log($response);
+
+    // $update->bot()->log($response);
 
     // no answer, nothing to do
-    if (!$answer = $response->choices[0]->text ?? null) return;
+    if (!$answer = $response->choices[0]->message->content ?? null) return;
 
     // answer
     $reply = $update->replyMessage($answer);
@@ -122,27 +140,43 @@ class OpenAi extends Base
   public function onPublicText(Update $update)
   {
 
+    $model = $this->getOption('model');
+    $bio = array_map(function( $item ){
+      return [
+        'role' => 'system',
+        "content" => $item,
+      ];
+    }, is_array($b = $this->getOption('bio')) ? $b : [$b]);
+
     $text = (string)$update->message()->text();
 
     // answer to texts with Joker
     if (!preg_match('/\b(joker|джокер|jok|джок)\b/ui', $text)) return;
 
     // answer only to premium users
-    if ( $this->getOption('premium_only') && !$update->message()->from()->is_premium()) return;
+    if ($this->getOption('premium_only') && !$update->message()->from()->is_premium()) return;
 
-    $name = $this->getOption('name', 'Joker');
-    $bio  = $this->getOption('bio' , 'Joker is a chatbot that reluctantly answers questions with sarcastic responses');
-    $prompt = "$bio\n{$update->message()->from()->name()}: {$update->message()->text()}\n$name:";
+    $messages = array_merge( $bio, [[
+      "role" => "user",
+      'name' => $this->prepareName( $update->message()->from()->name() ),
+      "content" => $text,
+    ]]);
 
-    if (mb_strlen($prompt) > $this->getOption('max_context_length', 1000))
+    // $this->bot()->log( $messages );
+
+    // check size of request
+    $size = array_sum(array_map(function ($item){
+      return mb_strlen( $item['content']);
+    }, $messages));
+    if ($size > $this->getOption('max_context_length', 1000))
     {
-      $update->replyMessage("Многовато вопросов, сорян, закрываем лавочку :p");
+      $update->replyMessage("Многобукв! Автор выпей йаду :p");
       return false;
     }
 
-    $response = $this->client->post('/v1/completions', ['json' => [
-      "model" => $this->getOption('model', 'text-davinci-003'),
-      "prompt" => $prompt,
+    $response = $this->client->post('/v1/chat/completions', ['json' => [
+      "model" => $model,
+      "messages" => $messages,
       "temperature" => $this->getOption('temperature', 0.5),
       "max_tokens" => $this->getOption('max_tokens', 500),
       "top_p" => 0.3,
@@ -151,10 +185,11 @@ class OpenAi extends Base
     ]])->getBody()->getContents();
 
     $response = json_decode($response);
+
     $update->bot()->log($response);
 
     // no answer, nothing to do
-    if (!$answer = $response->choices[0]->text ?? null) return;
+    if (!$answer = $response->choices[0]->message->content ?? null) return;
 
     // answer
     $reply = $update->replyMessage($answer);
@@ -165,6 +200,11 @@ class OpenAi extends Base
 
     return false;
 
+  }
+
+  private function prepareName( $name ) : string
+  {
+    return substr( preg_replace('@[^a-zA-Z0-9_-]@', '', $name), 0, 64);
   }
 
 }
