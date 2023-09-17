@@ -100,6 +100,18 @@ class Update extends Base
     ];
   }
 
+  /**
+   * check tag exists and it's true
+   * Note tag names must start from Uppercase letter
+   * @param string $tag
+   * @return bool
+   */
+  public function hasTag( string $tag ) : bool
+  {
+    $tags = $this->getTags();
+    return isset($tags[$tag]) && $tags[$tag];
+  }
+
   public function toJson()
   {
     return json_encode( $this->data );

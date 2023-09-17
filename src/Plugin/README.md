@@ -504,15 +504,16 @@ Or provide `api_key` initialization parameter.
 
 Here are all parameters you can customize:
 
-- `api_key` (string, optional, default from env variable OPENAI_API_KEY) - API key from OpenAI
-- `model` (string, optional, default 'text-davinci-003') - model to use in OpenAI API request
-- `context_size` (integer, optional, default 9) - context size
-- `name` (string, optional, default Joker) - name of the bot, that will be used in context generating
-- `bio` (string, optional, default 'Joker is a chatbot that reluctantly answers questions with sarcastic responses') - few words about your bot, will be always placed at the top of OpenAI context
-- `temperature` (integer, optional, default 0.5) - randomness of the bot answers
-- `max_tokens` (integer, optional, default 500) - maximum size of the answer (+- number of english words)
-- `max_context_length` (bool, optional, default 1000) - maximum length of the context
-- `premium_only` (bool, optional, default false) - answer only to premium accounts
+* `max_content_length` (integer, optional, default 1000) - maximum length of the content
+* `premium_only` (bool, optional, default false) - answer only to premium accounts
+* `api_key` (string, optional, default from env variable OPENAI_API_KEY) - API key from OpenAI
+* `bio` (array | string, optional, default 'Joker is a chatbot that reluctantly answers questions with sarcastic responses') - few words about your bot, will be always placed at the top of OpenAI context
+* `model` (string, optional, default 'gpt-4') - OpenAI setting, model to use in OpenAI API request
+* `temperature` (integer, optional, default 0.5) - OpenAI setting, randomness of the bot answers
+* `max_tokens` (integer, optional, default 500) - OpenAI setting, maximum size of the answer (+- number of english words)
+* `top_p` (decimal, optional, default 0.3) - OpenAI setting
+* `frequency_penalty` (decimal, optional, default 0.5) - OpenAI setting
+* `presence_penalty` (decimal, optional, default 0.0) - OpenAI setting
 
 ### Pasta Plugin
 
