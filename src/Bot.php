@@ -197,22 +197,28 @@ class Bot
     sleep(3);
   }
 
+  /**
+   * Display console message, if debug mode is on
+   * @param $message
+   * @return mixed
+   */
   public function log( $message )
   {
-    if ($this->debug)
-    {
-      $timestamp = date("Y-m-d H:i:s");
-      $json = is_string($message) ? $message : json_encode($message);
-      echo "\n[$timestamp] $json";
-    }
-    return $message;
+    return $this->debug
+           ? $this->console($message)
+           : $message;
   }
 
+  /**
+   * Display console message
+   * @param $message
+   * @return mixed
+   */
   public function console( $message )
   {
     $timestamp = date("Y-m-d H:i:s");
-    $json = is_string($message) ? $message : json_encode($message, JSON_PRETTY_PRINT);
-    echo "\n[$timestamp] $json";
+    $json = is_string($message) ? $message : json_encode($message, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
+    echo "\n[$timestamp] $json\n";
     return $message;
   }
 
