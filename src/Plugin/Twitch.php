@@ -12,6 +12,7 @@
 
 namespace Joker\Plugin;
 
+use Carbon\Carbon;
 use Joker\Helper\Strings;
 use Joker\Parser\Update;
 
@@ -62,13 +63,13 @@ class Twitch extends Base
     foreach ($array['data'] as $item)
     {
       // if (count($result) > 10) break;
-      $result[] =  trim( implode( " ", [
+      $result[] =  trim( implode( ' ', [
         // online/offline
         $item['is_live'] ?'🌕':'🌑',
         // title and a link
         "<a href=\"https://www.twitch.tv/{$item['display_name']}\">" . trim($item['title']) . "</a>",
         // started time
-        $item['started_at'] ? ' started '. Strings::diffTimeInWords($item['started_at'], time()) . ' ago' : ''
+        $item['started_at'] ? ' started '. Carbon::parse($item['started_at'])->diffForHumans(['short' => true, 'parts' => 3]) : '' ,
       ]));
     }
 
