@@ -12,6 +12,7 @@
     }
   ],
   "require": {
+    "php": ">=7.4",
     "ext-gd": "*",
     "ext-json": "*",
     "ext-dom": "*",
@@ -29,7 +30,8 @@
     "mnapoli/silly": "^1.7",
     "guzzlehttp/guzzle": "^7.3",
     "imangazaliev/didom": "^1.18",
-    "wamania/php-stemmer": "^3.0"
+    "wamania/php-stemmer": "^3.0",
+    "nesbot/carbon": "^2.72"
   },
   "autoload": {
     "psr-4": {

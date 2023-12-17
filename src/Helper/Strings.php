@@ -2,6 +2,8 @@
 
 namespace Joker\Helper;
 
+use Carbon\Carbon;
+
 class Strings
 {
 
@@ -50,14 +52,16 @@ class Strings
    */
   public static function diffTimeInWords($from,$to)
   {
-    $date1 = new \DateTime("@$from");
-    $date2 = new \DateTime("@$to");
-    $interval =  date_diff($date1, $date2);
+
+    $date1 = new \DateTime( is_numeric($from) ? "@$from" : "$from");
+    $date2 = new \DateTime( is_numeric($to)   ? "@$to"   : "$to");
+    $interval = $date1->diff($date2);
     $result = [];
     foreach (['%y'=>'years', '%m' => 'months', '%d' => 'days', '%h' => 'hours', '%i' => 'minutes', '%s' => 'seconds'] as $key => $value)
+    {
       if ($num = $interval->format($key))
         $result[] = "$num $value";
-
+    }
     return implode(" ", $result);
   }
 
