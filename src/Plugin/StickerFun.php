@@ -5,6 +5,7 @@
  *
  * Options:
  * - `range` integer, optional, default 300 - defines a time frame (seconds) to search stickers activity in
+ * - `delay` integer, optional, default 3 - random delay before sending answer sticker, up to .x. seconds
  *
  * @package joker-telegram-bot
  * @author Sergei Miami <miami@blackcrystal.net>
@@ -18,6 +19,7 @@ class StickerFun extends Base
 {
 
   protected $options = [
+    'delay' => 3,
     'range'  => 300,         // timeframe to check stickers
 
     'description' => 'Bot answers with stickers on public chat',
@@ -70,6 +72,13 @@ class StickerFun extends Base
 
     // choose random sticker
     $file_id = $result['stickers'][ mt_rand(0, count($result['stickers'])-1) ]['file_id'];
+
+    // send action
+    $update->message()->chat()->sendAction(Update::ACTION_STICKER);
+
+    // random delay
+    if ($delay = mt_rand(0, $this->getOption('delay')))
+      sleep( $delay );
 
     // send it
     $update->answerSticker( $file_id );
