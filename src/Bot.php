@@ -322,6 +322,12 @@ class Bot
     return new Message( $result );
   }
 
+  public function sendAction( $chat_id, $action, $options = [] )
+  {
+    $result = $this->_requestMultipart( 'sendChatAction', array_merge( [ 'chat_id'=>$chat_id, 'action'=>$action ], $options ));
+    return new Message( $result );
+  }
+
   public function forwardMessage( $chat_id, $from_chat_id, $message_id, $options = [] )
   {
     $result = $this->_request( 'forwardMessage', array_merge( [ 'chat_id'=>$chat_id, 'from_chat_id'=>$from_chat_id, 'message_id' => $message_id ], $options ));

@@ -72,7 +72,19 @@ class Chat extends Base
    */
   public function sendMessage( $message, $options = [] )
   {
-    return $this->bot()->sendMessage($message, $options );
+    return $this->bot()->sendMessage($this->id(), $message, $options );
+  }
+
+  /**
+   * Sent action to chat
+   *
+   * @param $message
+   * @param array $options
+   * @return Message
+   */
+  public function sendAction( $action, $options = [] )
+  {
+    return $this->bot()->sendAction($this->id(), $action, $options );
   }
 
 }
