@@ -27,7 +27,6 @@ namespace Joker\Parser;
  */
 class Update extends Base
 {
-
   protected $wrapper = [
     'message' => Message::class,
     'edited_message' => Message::class,
@@ -40,6 +39,21 @@ class Update extends Base
     'shipping_query' => ShippingQuery::class,
   ];
 
+  const ACTION_TYPING = 'typing',
+    ACTION_UPLOAD_PHOTO = 'upload_photo',
+    ACTION_RECORD_VIDEO = 'record_video',
+    ACTION_UPLOAD_VIDEO = 'upload_video',
+    ACTION_RECORD_VOICE = 'record_voice',
+    ACTION_UPLOAD_DOCUMENT = 'upload_document',
+    ACTION_STICKER = 'choose_sticker',
+    ACTION_FIND_LOCATION = 'find_location',
+    ACTION_RECORD_VIDEO_NOTE = 'record_video_note'
+  ;
+
+  /**
+   * alias for update_id
+   * @return int
+   */
   public function id()
   {
     return $this->update_id();
@@ -59,7 +73,7 @@ class Update extends Base
       ),
       'Public'    => !$private,
       'Group'     => isset($this->data['message']['chat']['type'])
-                     && in_array( $this->data['message']['chat']['type'], ['group', 'supergroup', 'channel']),
+                  && in_array( $this->data['message']['chat']['type'], ['group', 'supergroup', 'channel']),
       'Sticker'   => isset($this->data['message']['sticker']),
       'Entities'  => isset($this->data['message']['entities']),
       'Animation' => isset($this->data['message']['animation']),
@@ -75,20 +89,20 @@ class Update extends Base
       'Text'      => isset($this->data['message']['text']),
       'Reply'     => isset($this->data['message']['reply_to_message']),
       'Forward'   => isset($this->data['message']['forward_from'])
-                     || isset($this->data['message']['forward_from_chat'])
-                     || isset($this->data['message']['forward_from_message_id'])
-                     || isset($this->data['message']['forward_date']),
+                  || isset($this->data['message']['forward_from_chat'])
+                  || isset($this->data['message']['forward_from_message_id'])
+                  || isset($this->data['message']['forward_date']),
       'Poll'      => isset($this->data['poll']),
       'Answer'    => isset($this->data['poll_answer']),
       'Edit'      => isset($this->data['edited_message'])
-                     || isset($this->data['edited_channel_post']),
+                  || isset($this->data['edited_channel_post']),
       'Location'  => isset($this->data['message']['venue'])
-                     || isset($this->data['message']['location']),
+                  || isset($this->data['message']['location']),
       'Join'      => isset($this->data['message']['new_chat_member'])
-                     || isset($this->data['message']['new_chat_members'])
-                     || isset($this->data['message']['new_chat_participant']),
+                  || isset($this->data['message']['new_chat_members'])
+                  || isset($this->data['message']['new_chat_participant']),
       'Leave'     => isset($this->data['message']['left_chat_member'])
-                     || isset($this->data['message']['left_chat_participant']),
+                  || isset($this->data['message']['left_chat_participant']),
       'Pin'       => isset($this->data['message']['pinned_message']),
       'Message'   => isset($this->data['message']),
       'Viabot'    => isset($this->data['message']['via_bot']),

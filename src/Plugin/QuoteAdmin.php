@@ -137,6 +137,7 @@ EOF;
   {
     $limit   = $update->message()->text()->token(1);
     if (!$limit) $limit = 5;
+    if ($limit > 10) $limit = 10; // capped to 10
     if (!is_numeric($limit))
     {
       $update->answerMessage( "Parameter must be a number");
@@ -146,7 +147,7 @@ EOF;
     $custom  = $update->message()->from()->getCustom();
     $trigger = $custom->admin_current_trigger;
     $result = [];
-    foreach ( R::find('joke', " trigger = ? ORDER BY id DESC LIMIT ? ", [ $trigger, $limit ]) as $item)
+    foreach ( R::find('joke', " trigger = ? ORDER BY id DESC LIMIT ? ", [ $trigger,$limit ]) as $item)
     {
        $result[] = "#$item->id $item->joke";
     }

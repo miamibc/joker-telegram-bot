@@ -63,8 +63,6 @@ $bot->plug([
   new Joker\Plugin\Whynot(),
   new Joker\Plugin\Uptime(),
   new Joker\Plugin\Game( [ 'trigger' => 'chpocker', 'url' => 'https://blackcrystal.dev/chpocker/']),
-  new Joker\Plugin\QuoteInline( ['trigger'=> 'tg', 'limit' => 10] ),
-  new Joker\Plugin\QuoteAdmin(),
   new Joker\Plugin\Stats( ['file' =>'data/log/log.json'] ),
   new Joker\Plugin\Mastodon(),
   new Joker\Plugin\OpenAi([
@@ -88,6 +86,8 @@ $bot->plug([
   // *** somethingg wide, without triggers, must stay in the end ***
 
   new Joker\Plugin\Quote(),
+  new Joker\Plugin\QuoteInline( ['trigger'=> 'tg', 'limit' => 5, 'length' => 80] ),
+  new Joker\Plugin\QuoteAdmin(),
   new Joker\Plugin\Pasta( ['minimum_time' => 60 * 60] ),
   new Joker\Plugin\Beer( ['minimum_time'=>15*60] ),
 

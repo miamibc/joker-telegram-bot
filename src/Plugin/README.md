@@ -613,7 +613,8 @@ This functionality available for bots with `inline mode` enabled. Read more abou
 
 Configuration options:
 - `trigger` (string, required) for now this plugin allows to serve only one file with jokes, type it's name here
-- `limit`   (integer, optional, default 10) maximum number of jokes to display in suggestion block
+- `limit`   (integer, optional, default 5) maximum number of jokes to display in suggestion block
+- `length`  (integer, optional, default 80) length of search results in pop-up menu, about 80 symbols are visible in Telegram Desktop @ 2024
 
 ### Server Plugin
 
@@ -707,6 +708,7 @@ Send random sticker from previously posted, when people started to send lots of 
 
 Options:
 - `range` integer, optional, default 300 - defines a time frame (seconds) to search stickers activity in
+- `delay` integer, optional, default 3 - delay before send the answering sticker
 
 ### Temp Plugin
 

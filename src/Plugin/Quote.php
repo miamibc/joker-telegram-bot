@@ -1,10 +1,9 @@
 <?php
 /**
- * Joker Quote Plugin
- * - Quotes from sqlite database
- * - Random quote
- * - Quote by number
- * - Search quote
+ * Joker Quote Plugin shows quotes from sqlite database
+ * - Random quote (no parameter)
+ * - Find quote by it's sequence number (number) or ID (#number)
+ * - Find quote by it's content (string)
  *
  * @package joker-telegram-bot
  * @author Sergei Miami <miami@blackcrystal.net>
@@ -77,7 +76,14 @@ class Quote extends Base
       $joke   = R::findOne('joke', " trigger = ? ORDER BY id LIMIT $offset,1 ", [ $trigger ] );
       $prefix = "!$trigger $query of $count";
     }
-    // string query
+    // numeric query with hash - search by ID
+    elseif ((mb_substr($query,0,1) === '#' && ($id = mb_substr($query, 1)) && is_numeric($id)))
+    {
+      $update->bot()->log("Searching by ID $id");
+      $joke   = R::findOne('joke', " trigger = ? AND id = ? LIMIT 1 ", [ $trigger, $id ] );
+      $prefix = "!$trigger $query";
+    }
+    // string query - search by words
     else
     {
       $query  = '%' . strtr( mb_strtolower($query), [' ' => '%']) . '%';

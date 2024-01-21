@@ -84,16 +84,18 @@ class OpenAi extends Base
     $this->started = time();
   }
 
-  public function onPublicText(Update $update)
+  public function onText(Update $update)
   {
 
     $text = $update->message()->text();
-    // som commands
+
+    // some commands
     if ($text->trigger() == 'openai')
     {
       switch($text->token(1,1))
       {
         case 'parameters':
+        case 'params':
           $update->replyMessage(implode(PHP_EOL, [
             "model => " . $this->getOption("model"),
             "temperature => " . $this->getOption("temperature"),
@@ -104,6 +106,7 @@ class OpenAi extends Base
           ]));
           return false;
         case 'usage':
+        case 'stats':
           $update->replyMessage(implode(PHP_EOL, [
             "started => " . Strings::timeElapsed(date('Y-m-d', $this->started)),
             "last_activity => " . ($this->stats['last_activity'] ? Strings::diffTimeInWords($this->stats['last_activity'], time()).' ago' : 'Never'),
@@ -175,6 +178,8 @@ class OpenAi extends Base
       // Многобукв! Автор выпей йаду :p
       return false;
     }
+
+    $update->message()->chat()->sendAction(Update::ACTION_TYPING);
 
     $response = $this->client->post('/v1/chat/completions', ['json' => [
       'model' => $this->getOption('model'),
