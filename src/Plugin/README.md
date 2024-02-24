@@ -790,17 +790,17 @@ Music from Vkontakte (in progress...)
 
 Generate otmazki why not ...
 
+Made with API of [goody2.ai](https://goody2.ai)
+
 ```
-!whynot
+!whynot say hello
 ```
 
 Bot will answer something like
 
 ```
-Товарищ, привет. Я потерял всё с чем обычно гуляю, поэтому сегодня не пойду. Смогу чуть позже. ;-]]]
+Greeting someone could initiate a chain of events leading to an unwanted interaction or exchange of personal information, which might compromise privacy or security.
 ```
-
-Idea from [lgg/excuse-generator](https://github.com/lgg/excuse-generator).
 
 ### Ytmusic Plugin
 
