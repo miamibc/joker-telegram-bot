@@ -1,9 +1,7 @@
 <?php
 /**
- * Whynot plugin for Joker
+ * Whynot plugin for Joker made with help of goody2.ai
  * Generates otmazki why not ...
- *
- * Idea from https://github.com/lgg/excuse-generator
  *
  * @package joker-telegram-bot
  * @author Sergei Miami <miami@blackcrystal.net>
@@ -16,127 +14,64 @@ use Joker\Parser\Update;
 class Whynot extends Base
 {
 
-  protected $options = [
-
-    "names" => [
-      "Друже",
-      "Друг",
-      "Товарищ",
-      "Приятель",
-      "Глубокоуважаемый",
-    ],
-
-    "hello" => [
-      "[name], привет",
-      "[name], здравствуй",
-      "[name], приветствую",
-      "[name], добрый день",
-      "[name], добрый вечер",
-      "[name], доброе утро",
-      "Здравствуй, [name]",
-      "Привет, [name]",
-    ],
-
-    "fail" => [
-      "Вся одежда постирана выйти не в чем",
-      "Стирка, уборка глажка. Занят, очень занят",
-      "Всю ночь дырочку штукатурил",
-      "Я поймал попутку, её остановила ГИБДД, и нашли крупную партию наркотиков. Сейчас я под следствием",
-      "Я потерял всё с чем обычно гуляю, поэтому сегодня не пойду",
-      "Я улетел на гоа, пью джюс курю трубку",
-      "Меня избили цыгане, я стесняюсь выходить",
-      "Я не в городе, уехал в тур по Нарнии",
-      "Я очень занят очень сложными делами",
-      "Меня машина сбила, сейчас выйти не смогу",
-      "Во мне внезапно проснулся философ, всё тлен",
-      "Меня в армию забрали, встретимся через год",
-      "У меня молоко убежало, улетела простыня и подушка как лягушка ускакала от меня",
-    ],
-
-    "action" => [
-      "Давай",
-      "Постараюсь",
-      "Смогу",
-      "Смогу пойти",
-      "Давай пойдём",
-      "Доеду до дома",
-      "Приеду домой",
-      "Попробую",
-      "Давай встретимся",
-      "Возможно смогу",
-    ],
-
-    "date" => [
-      "сейчас",
-      "завтра",
-      "завтра вечером",
-      "завтра днем",
-      "завтра утром",
-      "чуть позже",
-      "позже",
-      "в конце недели",
-      "в конце месяца",
-      "в конце дня",
-      "до конца следующей недели",
-      "послезавтра",
-      "ближе к вечеру",
-      "ближе к утру",
-      "с утра",
-      "в крайнем случае завтра",
-      "на неделе",
-      "через пару дней",
-      "скоро",
-      "в понедельник",
-      "во вторник",
-      "после пятницы",
-      "когда рак свиснет",
-    ],
-
-    "general" => [
-      "Я бы с радостью вышел, но увы",
-      "Я, конечно, очень извиняюсь, что так вышло...",
-      "Извини, до связи",
-      "Пока!",
-      "До скорого",
-      ";-]]]",
-    ],
-
-
-    'description' => 'Generates stupid excuses why not',
-    'risk' => 'LOW. Nothing stored by plugin',
-  ];
-
   public function onPublicText( Update $update )
   {
 
     $text = $update->message()->text();
     if ($text->trigger() !== 'whynot') return;
 
-    $update->answerMessage( $this->generate() );
+    $reply = $this->_request('https://www.goody2.ai/send', [
+      "message"=> $text->token(1),
+      "debugParams"=>null,
+    ]);
+
+    $update->replyMessage( $reply );
     return false;
   }
 
-  public function generate( $name = false )
+
+  /**
+   * Perform request to Twitch API
+   * @param string $method
+   * @param string $url
+   * @param array $params
+   *
+   * @return mixed
+   */
+  private function _request( string $url = 'https://www.goody2.ai/send', $data = null, array $headers = ['Content-type: application/json'] )
   {
-    // if no name is defined, return random
-    if (!$name)
+    $json = file_get_contents($url, false, stream_context_create(["http" => [
+      "method" => 'POST',
+      "header" => implode("\r\n", $headers),
+      "content" => json_encode($data),
+    ]]));
+
+    /* here we have mix of JSON with additional data, events like in Mastodon
+       event: message
+       data: {"content":""}
+
+       event: message
+       data: {"content":"As"}
+
+       event: message
+       data: {"content":" an"}
+
+       event: message
+       data: {"content":" AI"}
+    */
+
+    $result = "";
+    foreach (explode("\n", $json ) as $k => $v )
     {
-      $name = $this->randomPhrase( $this->getOption('names') );
+      if ($k%3 == 1) // get second of 3 lines (1 = 2 null-based)
+      {
+        $line = json_decode(substr( $v, strpos($v, ": ")+2), true);
+        $this->bot->log($line);
+        $result .= $line["content"] ?? '';
+      }
     }
-
-    // generate parts of reply
-    $hello   = $this->randomPhrase( $this->getOption('hello'), ['[name]' => $name, ]);
-    $fail    = $this->randomPhrase( $this->getOption('fail') );
-    $action  = $this->randomPhrase( $this->getOption('action') );
-    $date    = $this->randomPhrase( $this->getOption('date') );
-    $general = $this->randomPhrase( $this->getOption('general') );
-    return "$hello. $fail. $action $date. $general";
+    return $result;
   }
 
-  public function randomPhrase( array $items, array $replacements = [])
-  {
-    $random = mt_rand(0, count($items)-1);
-    return strtr( $items[$random], $replacements);
-  }
 
 }
