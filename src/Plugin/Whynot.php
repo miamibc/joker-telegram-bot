@@ -14,6 +14,11 @@ use Joker\Parser\Update;
 class Whynot extends Base
 {
 
+  protected $options = [
+    'description' => 'Generates otmazki why not ...',
+    'risk' => 'MEDIUM. Nothing is stored in plugin, no information about requester is sent to API. Visit author site for privacy information https://brain.wtf/',
+  ];
+
   public function onPublicText( Update $update )
   {
 
