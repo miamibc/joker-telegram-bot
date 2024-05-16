@@ -25,6 +25,7 @@ Every plugin has default options, that can be visible, if plugin [Privacy](#priv
 * [Flip Plugin](#flip-plugin)
 * [Forwarder Plugin](#forwarder-plugin)
 * [Game Plugin](#game-plugin)
+* [GoodyV2 Plugin](#goodyv2-plugin)
 * [Hello Plugin](#hello-plugin)
 * [Ignore Plugin](#ignore-plugin)
 * [Kicker Plugin](#kicker-plugin)
@@ -333,6 +334,22 @@ By clicking **Play Chpocker** button, your telegram will navigate to [the game](
 Configuration options:
 - `trigger` (string, required) - short name of a game, will be used to request game by typing !trigger in private or public chat
 - `url`     (string, required) - URL of a game
+
+## Goody V2 plugin
+
+Interact with Goody AI API
+
+Made with API of [goody2.ai](https://goody2.ai)
+
+```
+!whynot say hello
+```
+
+Bot will answer something like
+
+```
+Greeting someone could initiate a chain of events leading to an unwanted interaction or exchange of personal information, which might compromise privacy or security.
+```
 
 ### Hello Plugin
 
@@ -788,19 +805,9 @@ Music from Vkontakte (in progress...)
 
 ### Whynot Plugin
 
-Generate otmazki why not ...
+Generates otmazki why not ...
 
-Made with API of [goody2.ai](https://goody2.ai)
-
-```
-!whynot say hello
-```
-
-Bot will answer something like
-
-```
-Greeting someone could initiate a chain of events leading to an unwanted interaction or exchange of personal information, which might compromise privacy or security.
-```
+Idea from https://github.com/lgg/excuse-generator
 
 ### Ytmusic Plugin
 
