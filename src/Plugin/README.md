@@ -805,9 +805,19 @@ Music from Vkontakte (in progress...)
 
 ### Whynot Plugin
 
-Generates otmazki why not ...
+Generate otmazki why not ...
 
-Idea from https://github.com/lgg/excuse-generator
+```
+!whynot
+```
+
+Bot will answer something like
+
+```
+Товарищ, привет. Я потерял всё с чем обычно гуляю, поэтому сегодня не пойду. Смогу чуть позже. ;-]]]
+```
+
+Idea from [lgg/excuse-generator](https://github.com/lgg/excuse-generator).
 
 ### Ytmusic Plugin
 

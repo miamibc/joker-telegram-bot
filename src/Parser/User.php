@@ -38,8 +38,6 @@ class User extends Base
 
   public function name()
   {
-    // if ($name = $this->getCustom()->friendly_name)
-    //  return $name;
     if (isset($this->data['first_name'], $this->data['last_name']))
       return trim(implode(' ', [$this->data['first_name'], $this->data['last_name']]));
     if (isset($this->data['first_name']))
