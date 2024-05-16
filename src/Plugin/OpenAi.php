@@ -50,7 +50,7 @@ class OpenAi extends Base
 
   protected $options = [
     // joker options
-    'max_content_length' => 1000, // maximum size of text, passed to the OpenAI api
+    'max_content_length' => 2000, // maximum size of text, passed to the OpenAI api
     'premium_only' => false,      // answeronly to premium users
     'bio' => 'Joker is a chatbot that reluctantly answers questions with sarcastic responses', // bot biography, used in system message for OpenAI
 
@@ -97,6 +97,8 @@ class OpenAi extends Base
         case 'parameters':
         case 'params':
           $update->replyMessage(implode(PHP_EOL, [
+            'max_content_length => '. $this->getOption('max_content_length'),
+            'premium_only => '. $this->getOption('premium_only'),
             "model => " . $this->getOption("model"),
             "temperature => " . $this->getOption("temperature"),
             "max_tokens => " . $this->getOption("max_tokens"),
@@ -145,7 +147,7 @@ class OpenAi extends Base
       // add to conversation
       $messages[] = [
         'role'    => $is_me ? "assistant" : "user",
-        'name'    => $this->prepareName($message->from()->name() ),
+        // 'name'    => $this->prepareName($message->from()->name() ),
         "content" => $text,
       ];
 
@@ -220,7 +222,9 @@ class OpenAi extends Base
 
   private function prepareName( $name ) : string
   {
-    return substr( preg_replace('@[^a-zA-Z0-9_-]@', '', $name), 0, 64);
+    $clean = preg_replace('@[^a-zA-Z0-9_-]@', '', $name);
+    $translit = Strings::transliterate($clean);
+    return substr( $translit, 0, 64);
   }
 
 }
