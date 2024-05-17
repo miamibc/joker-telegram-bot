@@ -145,7 +145,7 @@ class OpenAi extends Base
       // add to conversation
       $messages[] = [
         'role'    => $is_me ? "assistant" : "user",
-        'name'    => $this->prepareName($message->from()->name() ),
+        'name'    => $is_me ? "Joker" : md5("user".$message->from()->id()),
         "content" => $text,
       ];
 
