@@ -495,7 +495,8 @@ Parameter `characters_between` defaults to 255, can be set in plugin options.
 
 ### OpenAI Plugin
 
-Add chatting ability to your bot with help of [OpenAI](https://platform.openai.com/)
+Add chatting ability to your bot with help of [OpenAI](https://platform.openai.com/). Bot will trigger by mension it's name Joker in the chat. 
+From replies he extracts conversation as a context, if Joker was one of opponents in the conversation, he continues to answer.
 
 Example of chat:
 
@@ -521,7 +522,8 @@ Or provide `api_key` initialization parameter.
 
 Here are all parameters you can customize:
 
-* `max_content_length` (integer, optional, default 1000) - maximum length of the content
+
+* `context_length` (integer, optional, default 1000) - maximum length of the context
 * `premium_only` (bool, optional, default false) - answer only to premium accounts
 * `api_key` (string, optional, default from env variable OPENAI_API_KEY) - API key from OpenAI
 * `bio` (array | string, optional, default 'Joker is a chatbot that reluctantly answers questions with sarcastic responses') - few words about your bot, will be always placed at the top of OpenAI context
