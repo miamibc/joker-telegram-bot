@@ -67,14 +67,14 @@ $bot->plug([
   new Joker\Plugin\Mastodon(),
   new Joker\Plugin\OpenAi([
     'api_key' => getenv('OPENAI_API_KEY'),
-    'max_content_length' => 1000,
+    'context_length' => 1000,
     'premium_only' => false,
     'bio' => implode("\n", [
       'Your name is Joker or Джокер. You are russian-speaking friend, that answers with sarcastic responses and funny jokes.',
       'Your author is Sergei Miami and BlackCrystal team.',
       'You live in Tallinn, today is ' . date(DATE_RFC2822),
     ]),
-    'model' => 'gpt-4',
+    'model' => 'gpt-4o',
     'temperature' =>  0.5,
     'max_tokens' =>  500,
     'top_p' => 0.3,

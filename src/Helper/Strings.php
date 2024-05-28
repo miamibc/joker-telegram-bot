@@ -65,4 +65,20 @@ class Strings
     return implode(" ", $result);
   }
 
+  /**
+   * Convert text from one character set to another (transliteration or back from translit to cyrillic).
+   * @param string $text text to translate
+   * @param string $from source character set
+   * @param string $to   destination character set
+   * @return array|string|string[]
+   */
+  public static function transliterate(string $text, string $from = 'cyr', string $to = 'lat' )
+  {
+    $tables = [
+      'cyr' => ['Љ', 'Њ', 'Џ', 'џ', 'ш', 'ђ', 'ч', 'ћ', 'ж', 'љ', 'њ', 'Ш', 'Ђ', 'Ч', 'Ћ', 'Ж','Ц','ц', 'а','б','в','г','д','е','ё','ж','з','и','й','к','л','м','н','о','п', 'р','с','т','у','ф','х','ц','ч','ш','щ','ъ','ы','ь','э','ю','я', 'А','Б','В','Г','Д','Е','Ё','Ж','З','И','Й','К','Л','М','Н','О','П', 'Р','С','Т','У','Ф','Х','Ц','Ч','Ш','Щ','Ъ','Ы','Ь','Э','Ю','Я'],
+      'lat' => ['Lj', 'Nj', 'Dzh', 'dzh', 'sh', 'đ', 'ch', 'ch', 'zh', 'lj', 'nj', 'Sh', 'Đ', 'Ch', 'C', 'Zh','C','c', 'a','b','v','g','d','e','yo','zh','z','i','j','k','l','m','n','o','p', 'r','s','t','u','f','h','ts','ch','sh','sht','a','i','y','e','yu','ya', 'A','B','V','G','D','E','Io','Zh','Z','I','Y','K','L','M','N','O','P', 'R','S','T','U','F','H','Ts','Ch','Sh','Sht','A','I','Y','e','Yu','Ya'],
+    ];
+    return str_replace($tables[$from], $tables[$to], $text);
+  }
+
 }

@@ -12,7 +12,7 @@
  * Or provide `api_key` initialization parameter.
  *
  * Here are all parameters you can customize:
- * - `max_content_length` (integer, optional, default 1000) - maximum length of the content
+ * - `context_length` (integer, optional, default 1000) - maximum length of the context
  * - `premium_only` (bool, optional, default false) - answer only to premium accounts
  * - `api_key` (string, optional, default from env variable OPENAI_API_KEY) - API key from OpenAI
  * - `bio` (array | string, optional, default 'Joker is a chatbot that reluctantly answers questions with sarcastic responses') - few words about your bot, will be always placed at the top of OpenAI context
@@ -50,8 +50,8 @@ class OpenAi extends Base
 
   protected $options = [
     // joker options
-    'max_content_length' => 1000, // maximum size of text, passed to the OpenAI api
-    'premium_only' => false,      // answeronly to premium users
+    'context_length' => 1000, // maximum size of context, passed to the OpenAI api
+    'premium_only' => false,  // answeronly to premium users
     'bio' => 'Joker is a chatbot that reluctantly answers questions with sarcastic responses', // bot biography, used in system message for OpenAI
 
     // OpenAI parameters
@@ -133,10 +133,11 @@ class OpenAi extends Base
     // look up the conversation: start from current message and go up in history
     $reply = false;
     $message = $update->message();
+    $context_length = 0;
     do
     {
       // text has special word -> reply
-      $text = (string) $message->text();
+      $text = (string)$message->text();
       if (preg_match('/\b(joker|джокер|jok|джок)\b/ui', $text)) $reply = true;
 
       // joker is in conversation -> reply
@@ -144,13 +145,28 @@ class OpenAi extends Base
 
       // add to conversation
       $messages[] = [
-        'role'    => $is_me ? "assistant" : "user",
-        'name'    => $is_me ? "Joker" : md5("user".$message->from()->id()),
+        'role' => $is_me ? "assistant" : "user",
+        'name' => $is_me ? "Joker" : $this->prepareName($message->from()->name()),
+        // alternative version, anonymous but some context is present
+        // 'name' => $is_me ? "Joker" : md5("user" . $message->from()->id()),
         "content" => $text,
       ];
 
       // not a reply -> break
       if (!$replied_to = $message->reply_to_message()) break;
+
+      // no more context length -> break
+      $size = mb_strlen($text);
+      if ($size > $this->getOption('context_length'))
+      {
+        $update->replyMessage("Многовато букав, сорян, я скипну :p");
+        // ideas:
+        // Многовато вопросов, сорян, закрываем лавочку :p"
+        // Многобукв! Автор выпей йаду :p
+        return false;
+      }
+      $context_length += $size;
+      if ($context_length >= $this->getOption('context_length')) break;
     }
     while( $message = $this->context[$replied_to->id()] ?? false );
 
@@ -166,19 +182,7 @@ class OpenAi extends Base
     // debug
     $this->bot()->log( $messages );
 
-    // check size of request
-    $size = array_sum(array_map(function ($item){
-      return mb_strlen( $item['content']);
-    }, $messages));
-    if ($size > $this->getOption('max_content_length'))
-    {
-      $update->replyMessage("Многовато вопросов, сорян, закрываем лавочку :p");
-      // ideas:
-      // Многовато вопросов, сорян, закрываем лавочку :p"
-      // Многобукв! Автор выпей йаду :p
-      return false;
-    }
-
+    // send typing... action
     $update->message()->chat()->sendAction(Update::ACTION_TYPING);
 
     $response = $this->client->post('/v1/chat/completions', ['json' => [
@@ -220,7 +224,9 @@ class OpenAi extends Base
 
   private function prepareName( $name ) : string
   {
-    return substr( preg_replace('@[^a-zA-Z0-9_-]@', '', $name), 0, 64);
+    $name = Strings::transliterate($name);
+    $name = preg_replace('@[^a-zA-Z0-9_-]@', '', $name);
+    return substr( $name , 0, 64);
   }
 
 }
