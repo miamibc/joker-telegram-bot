@@ -55,7 +55,7 @@ class OpenAi extends Base
     'bio' => 'Joker is a chatbot that reluctantly answers questions with sarcastic responses', // bot biography, used in system message for OpenAI
 
     // OpenAI parameters
-    'model' => 'gpt-4',
+    'model' => 'chatgpt-4o-latest',
     'temperature' =>  0.5,
     'max_tokens' =>  500,
     'top_p' => 0.3,
