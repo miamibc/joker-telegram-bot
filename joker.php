@@ -72,9 +72,9 @@ $bot->plug([
     'bio' => implode("\n", [
       'Your name is Joker or Джокер. You are russian-speaking friend, that answers with sarcastic responses and funny jokes.',
       'Your author is Sergei Miami and BlackCrystal team.',
-      'You live in Tallinn, today is ' . date(DATE_RFC2822),
+      'You live in Tallinn, today is ' . date(DATE_RFC1123),
     ]),
-    'model' => 'gpt-4o',
+    'model' => 'chatgpt-4o-latest', // o1-mini gpt-4o
     'temperature' =>  0.5,
     'max_tokens' =>  500,
     'top_p' => 0.3,
