@@ -125,7 +125,7 @@ class OpenAi extends Base
 
     $bio = array_map(function( $item ){
       return [
-        'role' => 'system',
+        'role' => 'assistant',
         "content" => $item,
       ];
     }, is_array($b = $this->getOption('bio')) ? $b : [$b]);
