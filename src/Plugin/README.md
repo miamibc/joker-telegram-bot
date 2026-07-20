@@ -18,6 +18,7 @@ Every plugin has default options, that can be visible, if plugin [Privacy](#priv
 * [Beer Plugin](#beer-plugin)
 * [Callback Plugin](#callback-plugin)
 * [Carma Plugin](#carma-plugin)
+* [Claude Plugin](#claude-plugin)
 * [Corona Plugin](#corona-plugin)
 * [Cowsay Plugin](#cowsay-plugin)
 * [Currency Plugin](#currency-plugin)
@@ -163,6 +164,76 @@ Options:
 - `limit` (integer, optional, default 30)  - number of results in carma top
 
 Thanks for help in development to **D0b3rm4nN** and [AL^Raven](https://github.com/alravenbc).
+
+### Claude Plugin
+
+Add chatting ability to your bot with help of [Anthropic Claude API](https://www.anthropic.com/). Triggers on words `claude`, `клод`, `клавдий`, `клавдия` in the chat. From replies he extracts conversation as a context, and if Claude was one of opponents in the conversation, he continues to answer.
+
+Example of chat:
+
+```
+Sergei Miami, [5/22/26 11:53 PM]
+клавдий, расскажи как посадить печень
+
+Joker, [5/22/26 11:53 PM]
+Печень не сажают — это орган. Сажают печёночницу или печёночный мох, если уж про растения. Или ты про блюдо? :)
+
+Sergei Miami, [5/22/26 11:55 PM]
+печёночницу
+
+Joker, [5/22/26 11:55 PM]
+Печёночница (Hepatica) любит полутень и рыхлую, слегка кислую почву...
+```
+
+To start plugin, you need an account at [Anthropic Console](https://console.anthropic.com/). Insert API key to the `.env` file:
+
+- `ANTHROPIC_API_KEY` your api token
+
+Or provide `api_key` initialization parameter.
+
+#### Context modes
+
+To control how much context is sent to the API, plugin supports three modes via `context_mode` option:
+
+- `reply_chain` (default) — walk the Telegram reply chain, like the OpenAI plugin. Each thread is naturally isolated; messages from any participants in the same thread are included for context.
+- `user_only` — walk the reply chain but include only messages of the current author and Claude's own replies. Messages from other participants in the same thread are skipped. Cheapest and most private.
+- `shared` — keep a ring buffer of last N messages of the whole chat. Claude sees the whole conversation when it answers. Most expensive, but understands group context.
+
+#### Commands
+
+- `!claude params` — show current model and parameters
+- `!claude stats` — show requests count, token usage and cache hits
+
+#### Configuration
+
+Plugin options:
+* `context_length` (integer, optional, default 4000) — maximum characters of context to send
+* `context_mode` (string, optional, default `reply_chain`) — `reply_chain`, `user_only` or `shared`
+* `shared_buffer` (integer, optional, default 50) — how many last messages to keep per chat in `shared` mode
+* `triggers` (string, optional, default `claude|клод|клавдий|клавдия`) — pipe-separated regex alternation of trigger words
+* `continue_replies` (bool, optional, default true) — if a message in the reply chain is from the bot, treat it as a trigger so the conversation continues without re-mentioning Claude
+* `premium_only` (bool, optional, default false) — answer only to premium accounts
+
+Anthropic API options:
+* `api_key` (string, optional, default from env `ANTHROPIC_API_KEY`)
+* `system` (string or array, optional) — system prompt(s). Sent in Anthropic's separate `system` field.
+* `model` (string, optional, default `claude-sonnet-4-6`) — also try `claude-opus-4-7` for the most capable model, or `claude-haiku-4-5` for the fastest and cheapest
+* `max_tokens` (integer, optional, default 1024) — maximum length of the answer
+* `effort` (string, optional, default `low`) — `low`, `medium`, `high` or `max`. Controls thinking depth and overall token spend. Not supported by Haiku 4.5.
+* `thinking_mode` (string, optional, default `disabled`) — `disabled` or `adaptive`. Adaptive thinking lets Claude decide when and how much to think, at the cost of latency and tokens.
+* `cache_system` (bool, optional, default true) — adds `cache_control` to the system prompt for [prompt caching](https://platform.claude.com/docs/en/build-with-claude/prompt-caching). Silently does nothing if the system prompt is shorter than the cacheable minimum (~2048 tokens on Sonnet 4.6).
+* `anthropic_version` (string, optional, default `2023-06-01`)
+
+Example wiring in `joker.php`, only required is `api_key`:
+
+```php
+new Joker\Plugin\Claude([
+  'api_key'      => getenv('ANTHROPIC_API_KEY'),
+  'model'        => 'claude-sonnet-4-6',
+  'context_mode' => 'reply_chain',
+  'system'       => 'Тебе 30 лет, ты бот по имени Клавдий, отвечай шутливо и по делу. Сегодня ' . date(DATE_RFC1123),
+]),
+```
 
 ### Corona Plugin
 
