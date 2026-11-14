@@ -1,0 +1,5 @@
+{"update_id": 114, "message": {"message_id": 10, "date": 1763100000,
+  "from": {"id": 42, "is_bot": false, "first_name": "Test"},
+  "chat": {"id": -1001, "type": "supergroup", "title": "Group"},
+  "venue": {"location": {"latitude": 59.43, "longitude": 24.75}, "title": "Office", "address": "Tallinn"},
+  "location": {"latitude": 59.43, "longitude": 24.75}}}

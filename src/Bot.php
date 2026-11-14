@@ -72,7 +72,7 @@ class Bot
    * @return Update|false
    * @throws Exception
    */
-  private function _request($method,$data = [])
+  protected function _request($method,$data = [])
   {
     curl_setopt_array($this->ch, [
       CURLOPT_URL => $url = "https://api.telegram.org/bot{$this->token}/{$method}",
@@ -110,7 +110,7 @@ class Bot
    * @return Update|false
    * @throws Exception
    */
-  private function _requestMultipart($method,$data = [])
+  protected function _requestMultipart($method,$data = [])
   {
     curl_setopt_array($this->ch, [
       CURLOPT_URL => $url = "https://api.telegram.org/bot{$this->token}/{$method}",
@@ -203,6 +203,14 @@ class Bot
       }
     }
 
+    $this->pause();
+  }
+
+  /**
+   * Pause between loop iterations
+   */
+  protected function pause()
+  {
     sleep(3);
   }
 

@@ -1,0 +1,2 @@
+{"update_id": 108, "inline_query": {"id": "iq", "from": {"id": 42, "is_bot": false, "first_name": "Test"}, "query": "tg joke", "offset": "", "chat_type": "sender",
+  "location": {"latitude": 59.43, "longitude": 24.75}}}

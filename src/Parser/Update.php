@@ -126,7 +126,8 @@ class Update extends Base
       'Caption'   => isset($this->data['message']['caption']),
       'Text'      => isset($this->data['message']['text']),
       'Reply'     => isset($this->data['message']['reply_to_message']),
-      'Forward'   => isset($this->data['message']['forward_from'])
+      'Forward'   => isset($this->data['message']['forward_origin'])
+                  || isset($this->data['message']['forward_from'])
                   || isset($this->data['message']['forward_from_chat'])
                   || isset($this->data['message']['forward_from_message_id'])
                   || isset($this->data['message']['forward_date']),

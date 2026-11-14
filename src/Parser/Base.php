@@ -46,7 +46,8 @@ class Base
     $data = $this->data[$key];
 
     // data is sequental array, result will be array of wrapped elements
-    if (is_array( $data ) && array_keys($data) === range(0, count($data) - 1))
+    // note: range(0, -1) is [0, -1], so empty array is checked separately
+    if (is_array( $data ) && ($data === [] || array_keys($data) === range(0, count($data) - 1)))
     {
       $result = array_map(function ( $item ) use ($wrapper){
         return new $wrapper( $item , $this);

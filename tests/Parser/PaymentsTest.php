@@ -32,7 +32,7 @@ class PaymentsTest extends TestCase
       'from' => ['id' => 42, 'first_name' => 'Test'],
       'currency' => 'XTR',
       'total_amount' => 100,
-      'invoice_payload' => 'support:100:42',
+      'invoice_payload' => 'sponsor:100:42',
       'order_info' => ['name' => 'Test', 'shipping_address' => ['country_code' => 'EE']],
     ]], new Bot(false));
 
@@ -53,7 +53,7 @@ class PaymentsTest extends TestCase
     $update = new Update(['update_id' => 2, 'message' => [
       'message_id' => 1, 'chat' => ['id' => 42, 'type' => 'private'],
       'successful_payment' => [
-        'currency' => 'XTR', 'total_amount' => 50, 'invoice_payload' => 'support:50:42',
+        'currency' => 'XTR', 'total_amount' => 50, 'invoice_payload' => 'sponsor:50:42',
         'telegram_payment_charge_id' => 'tg1', 'provider_payment_charge_id' => '',
       ],
     ]]);
@@ -64,7 +64,7 @@ class PaymentsTest extends TestCase
 
     $update = new Update(['update_id' => 3, 'message' => [
       'message_id' => 2, 'chat' => ['id' => 42, 'type' => 'private'],
-      'refunded_payment' => ['currency' => 'XTR', 'total_amount' => 50, 'invoice_payload' => 'support:50:42', 'telegram_payment_charge_id' => 'tg1'],
+      'refunded_payment' => ['currency' => 'XTR', 'total_amount' => 50, 'invoice_payload' => 'sponsor:50:42', 'telegram_payment_charge_id' => 'tg1'],
     ]]);
     $this->assertTrue( $update->hasTag('Refund') );
     $this->assertInstanceOf( RefundedPayment::class, $update->message()->refunded_payment() );

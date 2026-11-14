@@ -1,0 +1,5 @@
+{"update_id": 105, "message": {"message_id": 6, "date": 1763100000,
+  "from": {"id": 42, "is_bot": false, "first_name": "Test"},
+  "chat": {"id": -1001, "type": "supergroup", "title": "Group"},
+  "sticker": {"file_id": "st", "file_unique_id": "st1", "type": "regular", "width": 512, "height": 512, "is_animated": false, "is_video": true, "emoji": "😂", "set_name": "Jokes",
+    "thumbnail": {"file_id": "th", "file_unique_id": "th1", "width": 128, "height": 128}}}}

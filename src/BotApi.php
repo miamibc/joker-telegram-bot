@@ -4,6 +4,7 @@
  *
  * Generated from https://core.telegram.org/bots/api (Bot API 10.4)
  * Required parameters are arguments, optional ones are passed in $options array.
+ * Parameters required in most cases (like chat_id, optional only for ephemeral replies) are arguments too, pass null to skip.
  * Pass \CURLFile as a value to upload a file (request becomes multipart/form-data).
  * Results are wrapped in Joker\Parser classes, false is returned on error.
  * Methods with custom logic are defined in Bot class itself.
@@ -61,6 +62,9 @@ trait BotApi
    */
   protected function apiCall( string $method, array $data, $class = null, bool $array = false )
   {
+    // skip parameters passed as null
+    $data = array_filter($data, function ($value) { return $value !== null; });
+
     $multipart = false;
     foreach ($data as $value) if ($value instanceof \CURLFile) { $multipart = true; break; }
 
@@ -222,11 +226,11 @@ trait BotApi
    * Use this method to send live photos. On success, the sent Message is returned.
    * @see https://core.telegram.org/bots/api#sendlivephoto
    *
+   * @param int|string|null $chat_id Unique identifier for the target chat or username of the target bot, supergroup, or channel in the format @username; required unless the message is sent as an ephemeral reply to a callback query
    * @param \CURLFile|string $live_photo Live photo video to send. The video must be no longer than 10 seconds and must not exceed 10 MB in size. Pass a file_id as String to send a video that exists on the Telegram servers (recommended) or upload a new video using multipart/form-data. More information on Sending Files ». Sending live photos by a URL is currently unsupported.
    * @param \CURLFile|string $photo The static photo to send. Pass a file_id as String to send a photo that exists on the Telegram servers (recommended) or upload a new video using multipart/form-data. More information on Sending Files ». Sending live photos by a URL is currently unsupported.
    * @param array $options Optional parameters:
    *   - business_connection_id (String) Unique identifier of the business connection on behalf of which the message will be sent
-   *   - chat_id (Integer or String) Unique identifier for the target chat or username of the target bot, supergroup, or channel in the format @username; required unless the message is sent as an ephemeral reply to a callback query
    *   - message_thread_id (Integer) Unique identifier for the target message thread (topic) of a forum; for forum supergroups and private chats of bots with forum topic mode enabled only
    *   - direct_messages_topic_id (Integer) Identifier of the direct messages topic to which the message will be sent; required if the message is sent to a direct messages chat
    *   - ephemeral_message_parameters (EphemeralMessageParameters) A JSON-serialized object containing the parameters of the ephemeral message to send
@@ -244,19 +248,19 @@ trait BotApi
    *   - reply_markup (InlineKeyboardMarkup or ReplyKeyboardMarkup or ReplyKeyboardRemove or ForceReply) Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove a reply keyboard or to force a reply from the user.
    * @return Message|false
    */
-  public function sendLivePhoto( $live_photo, $photo, array $options = [] )
+  public function sendLivePhoto( $chat_id, $live_photo, $photo, array $options = [] )
   {
-    return $this->apiCall( 'sendLivePhoto', array_merge( ['live_photo' => $live_photo, 'photo' => $photo], $options ), Message::class );
+    return $this->apiCall( 'sendLivePhoto', array_merge( ['chat_id' => $chat_id, 'live_photo' => $live_photo, 'photo' => $photo], $options ), Message::class );
   }
 
   /**
    * Use this method to send general files. On success, the sent Message is returned. Bots can currently send files of any type of up to 50 MB in size, this limit may be changed in the future.
    * @see https://core.telegram.org/bots/api#senddocument
    *
+   * @param int|string|null $chat_id Unique identifier for the target chat or username of the target bot, supergroup, or channel in the format @username; required unless the message is sent as an ephemeral reply to a callback query
    * @param \CURLFile|string $document File to send. Pass a file_id as String to send a file that exists on the Telegram servers (recommended), pass an HTTP URL as a String for Telegram to get a file from the Internet, or upload a new one using multipart/form-data. More information on Sending Files »
    * @param array $options Optional parameters:
    *   - business_connection_id (String) Unique identifier of the business connection on behalf of which the message will be sent
-   *   - chat_id (Integer or String) Unique identifier for the target chat or username of the target bot, supergroup, or channel in the format @username; required unless the message is sent as an ephemeral reply to a callback query
    *   - message_thread_id (Integer) Unique identifier for the target message thread (topic) of a forum; for forum supergroups and private chats of bots with forum topic mode enabled only
    *   - direct_messages_topic_id (Integer) Identifier of the direct messages topic to which the message will be sent; required if the message is sent to a direct messages chat
    *   - ephemeral_message_parameters (EphemeralMessageParameters) A JSON-serialized object containing the parameters of the ephemeral message to send
@@ -274,19 +278,19 @@ trait BotApi
    *   - reply_markup (InlineKeyboardMarkup or ReplyKeyboardMarkup or ReplyKeyboardRemove or ForceReply) Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove a reply keyboard or to force a reply from the user.
    * @return Message|false
    */
-  public function sendDocument( $document, array $options = [] )
+  public function sendDocument( $chat_id, $document, array $options = [] )
   {
-    return $this->apiCall( 'sendDocument', array_merge( ['document' => $document], $options ), Message::class );
+    return $this->apiCall( 'sendDocument', array_merge( ['chat_id' => $chat_id, 'document' => $document], $options ), Message::class );
   }
 
   /**
    * Use this method to send video files, Telegram clients support MPEG4 videos (other formats may be sent as Document). On success, the sent Message is returned. Bots can currently send video files of up to 50 MB in size, this limit may be changed in the future.
    * @see https://core.telegram.org/bots/api#sendvideo
    *
+   * @param int|string|null $chat_id Unique identifier for the target chat or username of the target bot, supergroup, or channel in the format @username; required unless the message is sent as an ephemeral reply to a callback query
    * @param \CURLFile|string $video Video to send. Pass a file_id as String to send a video that exists on the Telegram servers (recommended), pass an HTTP URL as a String for Telegram to get a video from the Internet, or upload a new video using multipart/form-data. More information on Sending Files »
    * @param array $options Optional parameters:
    *   - business_connection_id (String) Unique identifier of the business connection on behalf of which the message will be sent
-   *   - chat_id (Integer or String) Unique identifier for the target chat or username of the target bot, supergroup, or channel in the format @username; required unless the message is sent as an ephemeral reply to a callback query
    *   - message_thread_id (Integer) Unique identifier for the target message thread (topic) of a forum; for forum supergroups and private chats of bots with forum topic mode enabled only
    *   - direct_messages_topic_id (Integer) Identifier of the direct messages topic to which the message will be sent; required if the message is sent to a direct messages chat
    *   - ephemeral_message_parameters (EphemeralMessageParameters) A JSON-serialized object containing the parameters of the ephemeral message to send
@@ -311,19 +315,19 @@ trait BotApi
    *   - reply_markup (InlineKeyboardMarkup or ReplyKeyboardMarkup or ReplyKeyboardRemove or ForceReply) Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove a reply keyboard or to force a reply from the user.
    * @return Message|false
    */
-  public function sendVideo( $video, array $options = [] )
+  public function sendVideo( $chat_id, $video, array $options = [] )
   {
-    return $this->apiCall( 'sendVideo', array_merge( ['video' => $video], $options ), Message::class );
+    return $this->apiCall( 'sendVideo', array_merge( ['chat_id' => $chat_id, 'video' => $video], $options ), Message::class );
   }
 
   /**
    * Use this method to send animation files (GIF or H.264/MPEG-4 AVC video without sound). On success, the sent Message is returned. Bots can currently send animation files of up to 50 MB in size, this limit may be changed in the future.
    * @see https://core.telegram.org/bots/api#sendanimation
    *
+   * @param int|string|null $chat_id Unique identifier for the target chat or username of the target bot, supergroup, or channel in the format @username; required unless the message is sent as an ephemeral reply to a callback query
    * @param \CURLFile|string $animation Animation to send. Pass a file_id as String to send an animation that exists on the Telegram servers (recommended), pass an HTTP URL as a String for Telegram to get an animation from the Internet, or upload a new animation using multipart/form-data. More information on Sending Files »
    * @param array $options Optional parameters:
    *   - business_connection_id (String) Unique identifier of the business connection on behalf of which the message will be sent
-   *   - chat_id (Integer or String) Unique identifier for the target chat or username of the target bot, supergroup, or channel in the format @username; required unless the message is sent as an ephemeral reply to a callback query
    *   - message_thread_id (Integer) Unique identifier for the target message thread (topic) of a forum; for forum supergroups and private chats of bots with forum topic mode enabled only
    *   - direct_messages_topic_id (Integer) Identifier of the direct messages topic to which the message will be sent; required if the message is sent to a direct messages chat
    *   - ephemeral_message_parameters (EphemeralMessageParameters) A JSON-serialized object containing the parameters of the ephemeral message to send
@@ -345,19 +349,19 @@ trait BotApi
    *   - reply_markup (InlineKeyboardMarkup or ReplyKeyboardMarkup or ReplyKeyboardRemove or ForceReply) Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove a reply keyboard or to force a reply from the user.
    * @return Message|false
    */
-  public function sendAnimation( $animation, array $options = [] )
+  public function sendAnimation( $chat_id, $animation, array $options = [] )
   {
-    return $this->apiCall( 'sendAnimation', array_merge( ['animation' => $animation], $options ), Message::class );
+    return $this->apiCall( 'sendAnimation', array_merge( ['chat_id' => $chat_id, 'animation' => $animation], $options ), Message::class );
   }
 
   /**
    * Use this method to send audio files, if you want Telegram clients to display the file as a playable voice message. For this to work, your audio must be in an .OGG file encoded with OPUS, or in .MP3 format, or in .M4A format (other formats may be sent as Audio or Document). On success, the sent Message is returned. Bots can currently send voice messages of up to 50 MB in size, this limit may be changed in the future.
    * @see https://core.telegram.org/bots/api#sendvoice
    *
+   * @param int|string|null $chat_id Unique identifier for the target chat or username of the target bot, supergroup, or channel in the format @username; required unless the message is sent as an ephemeral reply to a callback query
    * @param \CURLFile|string $voice Audio file to send. Pass a file_id as String to send a file that exists on the Telegram servers (recommended), pass an HTTP URL as a String for Telegram to get a file from the Internet, or upload a new one using multipart/form-data. More information on Sending Files »
    * @param array $options Optional parameters:
    *   - business_connection_id (String) Unique identifier of the business connection on behalf of which the message will be sent
-   *   - chat_id (Integer or String) Unique identifier for the target chat or username of the target bot, supergroup, or channel in the format @username; required unless the message is sent as an ephemeral reply to a callback query
    *   - message_thread_id (Integer) Unique identifier for the target message thread (topic) of a forum; for forum supergroups and private chats of bots with forum topic mode enabled only
    *   - direct_messages_topic_id (Integer) Identifier of the direct messages topic to which the message will be sent; required if the message is sent to a direct messages chat
    *   - ephemeral_message_parameters (EphemeralMessageParameters) A JSON-serialized object containing the parameters of the ephemeral message to send
@@ -374,19 +378,19 @@ trait BotApi
    *   - reply_markup (InlineKeyboardMarkup or ReplyKeyboardMarkup or ReplyKeyboardRemove or ForceReply) Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove a reply keyboard or to force a reply from the user.
    * @return Message|false
    */
-  public function sendVoice( $voice, array $options = [] )
+  public function sendVoice( $chat_id, $voice, array $options = [] )
   {
-    return $this->apiCall( 'sendVoice', array_merge( ['voice' => $voice], $options ), Message::class );
+    return $this->apiCall( 'sendVoice', array_merge( ['chat_id' => $chat_id, 'voice' => $voice], $options ), Message::class );
   }
 
   /**
    * Use this method to send a rounded square MPEG4 video of up to 1 minute long. On success, the sent Message is returned.
    * @see https://core.telegram.org/bots/api#sendvideonote
    *
+   * @param int|string|null $chat_id Unique identifier for the target chat or username of the target bot, supergroup, or channel in the format @username; required unless the message is sent as an ephemeral reply to a callback query
    * @param \CURLFile|string $video_note Video note to send. Pass a file_id as String to send a video note that exists on the Telegram servers (recommended) or upload a new video using multipart/form-data. More information on Sending Files ». Sending video notes by a URL is currently unsupported.
    * @param array $options Optional parameters:
    *   - business_connection_id (String) Unique identifier of the business connection on behalf of which the message will be sent
-   *   - chat_id (Integer or String) Unique identifier for the target chat or username of the target bot, supergroup, or channel in the format @username; required unless the message is sent as an ephemeral reply to a callback query
    *   - message_thread_id (Integer) Unique identifier for the target message thread (topic) of a forum; for forum supergroups and private chats of bots with forum topic mode enabled only
    *   - direct_messages_topic_id (Integer) Identifier of the direct messages topic to which the message will be sent; required if the message is sent to a direct messages chat
    *   - ephemeral_message_parameters (EphemeralMessageParameters) A JSON-serialized object containing the parameters of the ephemeral message to send
@@ -402,9 +406,9 @@ trait BotApi
    *   - reply_markup (InlineKeyboardMarkup or ReplyKeyboardMarkup or ReplyKeyboardRemove or ForceReply) Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove a reply keyboard or to force a reply from the user.
    * @return Message|false
    */
-  public function sendVideoNote( $video_note, array $options = [] )
+  public function sendVideoNote( $chat_id, $video_note, array $options = [] )
   {
-    return $this->apiCall( 'sendVideoNote', array_merge( ['video_note' => $video_note], $options ), Message::class );
+    return $this->apiCall( 'sendVideoNote', array_merge( ['chat_id' => $chat_id, 'video_note' => $video_note], $options ), Message::class );
   }
 
   /**
@@ -519,11 +523,11 @@ trait BotApi
    * Use this method to send point on the map. On success, the sent Message is returned.
    * @see https://core.telegram.org/bots/api#sendlocation
    *
+   * @param int|string|null $chat_id Unique identifier for the target chat or username of the target bot, supergroup, or channel in the format @username; required unless the message is sent as an ephemeral reply to a callback query
    * @param float $latitude Latitude of the location
    * @param float $longitude Longitude of the location
    * @param array $options Optional parameters:
    *   - business_connection_id (String) Unique identifier of the business connection on behalf of which the message will be sent
-   *   - chat_id (Integer or String) Unique identifier for the target chat or username of the target bot, supergroup, or channel in the format @username; required unless the message is sent as an ephemeral reply to a callback query
    *   - message_thread_id (Integer) Unique identifier for the target message thread (topic) of a forum; for forum supergroups and private chats of bots with forum topic mode enabled only
    *   - direct_messages_topic_id (Integer) Identifier of the direct messages topic to which the message will be sent; required if the message is sent to a direct messages chat
    *   - ephemeral_message_parameters (EphemeralMessageParameters) A JSON-serialized object containing the parameters of the ephemeral message to send
@@ -540,22 +544,22 @@ trait BotApi
    *   - reply_markup (InlineKeyboardMarkup or ReplyKeyboardMarkup or ReplyKeyboardRemove or ForceReply) Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove a reply keyboard or to force a reply from the user.
    * @return Message|false
    */
-  public function sendLocation( $latitude, $longitude, array $options = [] )
+  public function sendLocation( $chat_id, $latitude, $longitude, array $options = [] )
   {
-    return $this->apiCall( 'sendLocation', array_merge( ['latitude' => $latitude, 'longitude' => $longitude], $options ), Message::class );
+    return $this->apiCall( 'sendLocation', array_merge( ['chat_id' => $chat_id, 'latitude' => $latitude, 'longitude' => $longitude], $options ), Message::class );
   }
 
   /**
    * Use this method to send information about a venue. On success, the sent Message is returned.
    * @see https://core.telegram.org/bots/api#sendvenue
    *
+   * @param int|string|null $chat_id Unique identifier for the target chat or username of the target bot, supergroup, or channel in the format @username; required unless the message is sent as an ephemeral reply to a callback query
    * @param float $latitude Latitude of the venue
    * @param float $longitude Longitude of the venue
    * @param string $title Name of the venue
    * @param string $address Address of the venue
    * @param array $options Optional parameters:
    *   - business_connection_id (String) Unique identifier of the business connection on behalf of which the message will be sent
-   *   - chat_id (Integer or String) Unique identifier for the target chat or username of the target bot, supergroup, or channel in the format @username; required unless the message is sent as an ephemeral reply to a callback query
    *   - message_thread_id (Integer) Unique identifier for the target message thread (topic) of a forum; for forum supergroups and private chats of bots with forum topic mode enabled only
    *   - direct_messages_topic_id (Integer) Identifier of the direct messages topic to which the message will be sent; required if the message is sent to a direct messages chat
    *   - ephemeral_message_parameters (EphemeralMessageParameters) A JSON-serialized object containing the parameters of the ephemeral message to send
@@ -572,20 +576,20 @@ trait BotApi
    *   - reply_markup (InlineKeyboardMarkup or ReplyKeyboardMarkup or ReplyKeyboardRemove or ForceReply) Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove a reply keyboard or to force a reply from the user.
    * @return Message|false
    */
-  public function sendVenue( $latitude, $longitude, $title, $address, array $options = [] )
+  public function sendVenue( $chat_id, $latitude, $longitude, $title, $address, array $options = [] )
   {
-    return $this->apiCall( 'sendVenue', array_merge( ['latitude' => $latitude, 'longitude' => $longitude, 'title' => $title, 'address' => $address], $options ), Message::class );
+    return $this->apiCall( 'sendVenue', array_merge( ['chat_id' => $chat_id, 'latitude' => $latitude, 'longitude' => $longitude, 'title' => $title, 'address' => $address], $options ), Message::class );
   }
 
   /**
    * Use this method to send phone contacts. On success, the sent Message is returned.
    * @see https://core.telegram.org/bots/api#sendcontact
    *
+   * @param int|string|null $chat_id Unique identifier for the target chat or username of the target bot, supergroup, or channel in the format @username; required unless the message is sent as an ephemeral reply to a callback query
    * @param string $phone_number Contact's phone number
    * @param string $first_name Contact's first name
    * @param array $options Optional parameters:
    *   - business_connection_id (String) Unique identifier of the business connection on behalf of which the message will be sent
-   *   - chat_id (Integer or String) Unique identifier for the target chat or username of the target bot, supergroup, or channel in the format @username; required unless the message is sent as an ephemeral reply to a callback query
    *   - message_thread_id (Integer) Unique identifier for the target message thread (topic) of a forum; for forum supergroups and private chats of bots with forum topic mode enabled only
    *   - direct_messages_topic_id (Integer) Identifier of the direct messages topic to which the message will be sent; required if the message is sent to a direct messages chat
    *   - ephemeral_message_parameters (EphemeralMessageParameters) A JSON-serialized object containing the parameters of the ephemeral message to send
@@ -600,9 +604,9 @@ trait BotApi
    *   - reply_markup (InlineKeyboardMarkup or ReplyKeyboardMarkup or ReplyKeyboardRemove or ForceReply) Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove a reply keyboard or to force a reply from the user.
    * @return Message|false
    */
-  public function sendContact( $phone_number, $first_name, array $options = [] )
+  public function sendContact( $chat_id, $phone_number, $first_name, array $options = [] )
   {
-    return $this->apiCall( 'sendContact', array_merge( ['phone_number' => $phone_number, 'first_name' => $first_name], $options ), Message::class );
+    return $this->apiCall( 'sendContact', array_merge( ['chat_id' => $chat_id, 'phone_number' => $phone_number, 'first_name' => $first_name], $options ), Message::class );
   }
 
   /**
@@ -2829,10 +2833,10 @@ trait BotApi
    * Use this method to send rich messages. If the message contains a block with a media element, then the bot must have the right to send the media to the chat. On success, the sent Message is returned.
    * @see https://core.telegram.org/bots/api#sendrichmessage
    *
+   * @param int|string|null $chat_id Unique identifier for the target chat or username of the target bot, supergroup, or channel in the format @username; required unless the message is sent as an ephemeral reply to a callback query
    * @param array $rich_message The message to be sent
    * @param array $options Optional parameters:
    *   - business_connection_id (String) Unique identifier of the business connection on behalf of which the message will be sent. Bot can send rich messages on behalf of a business account only if the corresponding user can send rich messages.
-   *   - chat_id (Integer or String) Unique identifier for the target chat or username of the target bot, supergroup, or channel in the format @username; required unless the message is sent as an ephemeral reply to a callback query
    *   - message_thread_id (Integer) Unique identifier for the target message thread (topic) of a forum; for forum supergroups and private chats of bots with forum topic mode enabled only
    *   - direct_messages_topic_id (Integer) Identifier of the direct messages topic to which the message will be sent; required if the message is sent to a direct messages chat
    *   - ephemeral_message_parameters (EphemeralMessageParameters) A JSON-serialized object containing the parameters of the ephemeral message to send
@@ -2845,9 +2849,9 @@ trait BotApi
    *   - reply_markup (InlineKeyboardMarkup or ReplyKeyboardMarkup or ReplyKeyboardRemove or ForceReply) Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove a reply keyboard or to force a reply from the user.
    * @return Message|false
    */
-  public function sendRichMessage( $rich_message, array $options = [] )
+  public function sendRichMessage( $chat_id, $rich_message, array $options = [] )
   {
-    return $this->apiCall( 'sendRichMessage', array_merge( ['rich_message' => $rich_message], $options ), Message::class );
+    return $this->apiCall( 'sendRichMessage', array_merge( ['chat_id' => $chat_id, 'rich_message' => $rich_message], $options ), Message::class );
   }
 
   /**

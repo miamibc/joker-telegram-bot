@@ -52,11 +52,11 @@ class ApiTypesTest extends TestCase
   public function testMessageKeepsCustomWrappers()
   {
     $update = new Update(['update_id' => 3, 'message' => [
-      'message_id' => 1, 'chat' => ['id' => 1, 'type' => 'private'], 'text' => '/support',
+      'message_id' => 1, 'chat' => ['id' => 1, 'type' => 'private'], 'text' => '/sponsor',
       'reply_to_message' => ['message_id' => 0, 'chat' => ['id' => 1, 'type' => 'private'], 'caption' => 'hi'],
     ]]);
     $this->assertInstanceOf( Text::class, $update->message()->text() );
-    $this->assertSame( 'support', $update->message()->text()->trigger() );
+    $this->assertSame( 'sponsor', $update->message()->text()->trigger() );
     $this->assertInstanceOf( Message::class, $reply = $update->message()->reply_to_message() );
     $this->assertInstanceOf( Text::class, $reply->caption() );
   }
