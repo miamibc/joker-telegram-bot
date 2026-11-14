@@ -266,8 +266,12 @@ uses = set()
 for m in methods:
     n = m['name']
     if n in existing: continue
-    req = [f for f in m['fields'] if len(f) >= 3 and f[2] == 'Yes']
-    opt = [f for f in m['fields'] if len(f) >= 3 and f[2] != 'Yes']
+    # "required unless ..." (chat_id of send* methods, optional only for ephemeral replies)
+    # is positional too, pass null to skip it
+    def is_req(f):
+        return f[2] == 'Yes' or (len(f) > 3 and 'required unless' in f[3].lower())
+    req = [f for f in m['fields'] if len(f) >= 3 and is_req(f)]
+    opt = [f for f in m['fields'] if len(f) >= 3 and not is_req(f)]
     cls, arr, boolean, scalar = returns(m)
     if cls in union_members: cls = None
     if cls: uses.add(cls)
@@ -282,7 +286,8 @@ for m in methods:
     doc.append('   * @see https://core.telegram.org/bots/api#' + n.lower())
     doc.append('   *')
     for f in req:
-        doc.append('   * @param %s $%s %s' % (ptype(f[1]), f[0], clean(f[3] if len(f) > 3 else '')))
+        nullable = '|null' if f[2] != 'Yes' else ''
+        doc.append('   * @param %s%s $%s %s' % (ptype(f[1]), nullable, f[0], clean(f[3] if len(f) > 3 else '')))
     if opt:
         doc.append('   * @param array $%s Optional parameters:' % ('params' if any(f[0] == 'options' for f in req) else 'options'))
         for f in opt:
@@ -304,6 +309,7 @@ trait = """<?php
  *
  * Generated from https://core.telegram.org/bots/api %s
  * Required parameters are arguments, optional ones are passed in $options array.
+ * Parameters required in most cases (like chat_id, optional only for ephemeral replies) are arguments too, pass null to skip.
  * Pass \\CURLFile as a value to upload a file (request becomes multipart/form-data).
  * Results are wrapped in Joker\\Parser classes, false is returned on error.
  * Methods with custom logic are defined in Bot class itself.
@@ -329,6 +335,9 @@ trait BotApi
    */
   protected function apiCall( string $method, array $data, $class = null, bool $array = false )
   {
+    // skip parameters passed as null
+    $data = array_filter($data, function ($value) { return $value !== null; });
+
     $multipart = false;
     foreach ($data as $value) if ($value instanceof \\CURLFile) { $multipart = true; break; }
 

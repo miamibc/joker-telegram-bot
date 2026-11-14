@@ -16,8 +16,9 @@ what it needs, how to run it.
 Reads [Telegram Bot API documentation](https://core.telegram.org/bots/api) and generates:
 
 - `src/BotApi.php` - trait with all Bot API methods, used by `Joker\Bot`. Methods defined in `src/Bot.php`
-  by hand are skipped. Required parameters become arguments, optional ones go to the last `$options` array,
-  results are wrapped in `Joker\Parser` classes. Passing `\CURLFile` as a value uploads a file (multipart request).
+  by hand are skipped. Required parameters become arguments, optional ones go to the last `$options` array.
+  Parameters marked "required unless ..." (`chat_id` of `send*` methods, optional only for ephemeral replies)
+  are arguments too, `null` skips them. Results are wrapped in `Joker\Parser` classes. Passing `\CURLFile` as a value uploads a file (multipart request).
 - `src/Parser/*.php` - parser classes for all types that can come from Telegram (reachable from `Update`
   and method results). Union types (`ChatMember`, `ReactionType`, `MessageOrigin`...) are parsed by one class
   with fields of all subtypes. Existing classes keep their custom code: only docblock and `$wrapper` list are
@@ -25,7 +26,8 @@ Reads [Telegram Bot API documentation](https://core.telegram.org/bots/api) and g
   Types used only for sending (`InputMedia`, `InlineQueryResult`...) get no classes, pass them as arrays.
 
 Running it again on the same documentation changes nothing, so after a new Bot API release
-just run it and review `git diff`.
+just run it, review `git diff` and run tests: `tests/Bot/IntegrityTest.php` checks that all classes
+used by parsers and methods exist.
 
 Requires Python 3, standard library only.
 
