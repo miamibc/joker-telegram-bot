@@ -29,7 +29,7 @@
     "cheprasov/php-redis-client": "^1.10",
     "mnapoli/silly": "^1.7",
     "guzzlehttp/guzzle": "^7.3",
-    "imangazaliev/didom": "^2.0",
+    "hkvstore/didom": "^2.0",
     "wamania/php-stemmer": "^3.0",
     "nesbot/carbon": "^2.72"
   },
