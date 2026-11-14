@@ -16,7 +16,7 @@ require 'vendor/autoload.php';
 // dotenv
 if (file_exists('.env'))
 {
-  $dotenv = Dotenv\Dotenv::create(dirname(__FILE__));
+  $dotenv = Dotenv\Dotenv::createUnsafeImmutable(dirname(__FILE__));
   $dotenv->load();
 }
 
