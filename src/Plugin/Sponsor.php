@@ -1,11 +1,12 @@
 <?php
 /**
- * Support plugin for Joker
+ * Sponsor plugin for Joker
  *
- * Lets people support the bot with a donation:
- *   /support     show ways to donate: external links (GitHub Sponsors, Stripe, Ko-fi, Patreon, PayPal)
+ * Lets people sponsor the bot with a donation:
+ *   /sponsor     show ways to donate: external links (GitHub Sponsors, Stripe, Ko-fi, Patreon, PayPal)
  *                and buttons to donate Telegram Stars right in the chat
- *   /paysupport  help with payment issues (required by Telegram for bots accepting Stars)
+ *   /paysupport  help with payment issues (required by Telegram for bots accepting Stars),
+ *   /support     the same, Telegram requires bots accepting payments to answer it
  *   /terms       terms of donations (required by Telegram for bots accepting payments)
  *
  * Donations inside Telegram are digital, so they are made in Telegram Stars (XTR) only,
@@ -15,11 +16,17 @@
  * Options:
  * - links       array, title => url of external donation pages, empty urls are skipped
  * - stars       array of integers, amounts of Telegram Stars to offer, empty array disables Stars
- * - text        message shown on /support
+ * - text        message shown on /sponsor
  * - title       invoice title, 1-32 characters
  * - invoice     invoice description, 1-255 characters
- * - thanks      message after successful donation, %d is replaced with the number of Stars
- * - paysupport  message shown on /paysupport
+ * - thanks      message after successful donation, tokens:
+ *                 %name%      name of the donor
+ *                 %username%  @username of the donor, or name if there's no username
+ *                 %amount%    amount of this donation
+ *                 %currency%  ⭐ for Telegram Stars, otherwise currency code
+ *                 %total%     total amount donated by this user, including this donation (needs `file`)
+ *                 %count%     number of donations by this user, including this one (needs `file`)
+ * - paysupport  message shown on /paysupport and /support
  * - terms       message shown on /terms
  * - file        file to log successful donations (with charge id, needed for refunds), false to disable
  *
@@ -30,14 +37,15 @@
 namespace Joker\Plugin;
 
 use Joker\Parser\Update;
+use Joker\Parser\User;
 
-class Support extends Base
+class Sponsor extends Base
 {
 
-  const PAYLOAD = 'support';
+  const PAYLOAD = 'sponsor';
 
   protected $options = [
-    'description' => 'Support Joker with a donation',
+    'description' => 'Sponsor Joker with a donation',
     'risk' => 'LOW. Successful donations are logged with user id and payment id, to be able to refund them',
 
     'links' => [
@@ -49,30 +57,31 @@ class Support extends Base
     ],
     'stars' => [50, 100, 500],
     'text' => "Joker has been entertaining chats since 2001. If you like him, you can support his development. Thank you! 🙏",
-    'title' => 'Support Joker',
+    'title' => 'Sponsor Joker',
     'invoice' => 'Donation to Joker Telegram Bot development. Thank you for your support!',
-    'thanks' => "Thank you for %d ⭐! Joker is grateful 🙏",
+    'thanks' => "Thank you for %amount% %currency%, %name%! Joker is grateful 🙏",
     'paysupport' => "Problems with a donation? Write to the bot owner, we will sort it out and refund if needed.",
     'terms' => "Donations are voluntary and give no goods, services or privileges in return. Donations made by mistake can be refunded via /paysupport.",
-    'file' => 'data/support.log',
+    'file' => 'data/sponsor.log',
   ];
 
   /**
-   * Commands /support, /paysupport and /terms
+   * Commands /sponsor, /paysupport (/support) and /terms
    */
   public function onText( Update $update )
   {
-    // /support@JokerBot → support
+    // /sponsor@JokerBot → sponsor
     $trigger = explode('@', $update->message()->text()->trigger())[0];
 
     switch ($trigger)
     {
-      case 'support':
+      case 'sponsor':
       case 'donate':
         $update->answerMessage( $this->getOption('text'), ['reply_markup' => ['inline_keyboard' => $this->keyboard()]] );
         return false;
 
       case 'paysupport':
+      case 'support':
         $update->answerMessage( $this->getOption('paysupport') );
         return false;
 
@@ -120,7 +129,7 @@ class Support extends Base
     if (!$this->isOurs( $query->invoice_payload() )) return;
 
     $ok = $query->currency() === 'XTR' && in_array( (int) $query->total_amount(), $this->stars(), true);
-    $query->answer( $ok, $ok ? null : 'This donation is not available anymore, please try /support again');
+    $query->answer( $ok, $ok ? null : 'This donation is not available anymore, please try /sponsor again');
     return false;
   }
 
@@ -145,8 +154,53 @@ class Support extends Base
       ], JSON_UNESCAPED_UNICODE) . PHP_EOL, FILE_APPEND);
     }
 
-    $update->answerMessage( sprintf( $this->getOption('thanks'), $payment->total_amount() ) );
+    $update->answerMessage( $this->thanks( $user, $payment->total_amount(), $payment->currency() ) );
     return false;
+  }
+
+  /**
+   * Thanks message with replaced tokens
+   * @param User|false $user
+   * @param int $amount
+   * @param string $currency
+   * @return string
+   */
+  public function thanks( $user, $amount, $currency ): string
+  {
+    $name = $user ? $user->name() : 'Unknown';
+    [$total, $count] = $user ? $this->donations( $user->id(), $currency ) : [0, 0];
+
+    return strtr( $this->getOption('thanks'), [
+      '%name%'     => $name,
+      '%username%' => $user && $user->username() ? '@' . $user->username() : $name,
+      '%amount%'   => $amount,
+      '%currency%' => $currency === 'XTR' ? '⭐' : $currency,
+      // without log file only this donation is known
+      '%total%'    => max( $total, $amount ),
+      '%count%'    => max( $count, 1 ),
+    ]);
+  }
+
+  /**
+   * Sum and number of donations of the user in this currency, from the log file
+   * @param int $user_id
+   * @param string $currency
+   * @return int[] [total, count]
+   */
+  private function donations( $user_id, $currency ): array
+  {
+    $total = $count = 0;
+    if (!($file = $this->getOption('file')) || !is_readable($file)) return [$total, $count];
+
+    foreach (file($file, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES) as $line)
+    {
+      $item = json_decode($line, true);
+      if (!isset($item['user'], $item['amount']) || $item['user'] !== $user_id) continue;
+      if (isset($item['currency']) && $item['currency'] !== $currency) continue;
+      $total += $item['amount'];
+      $count++;
+    }
+    return [$total, $count];
   }
 
   /**

@@ -46,7 +46,7 @@ Every plugin has default options, that can be visible, if plugin [Privacy](#priv
 * [Stats Plugin](#stats-plugin)
 * [Sticker Plugin](#sticker-plugin)
 * [StickerFun Plugin](#stickerfun-plugin)
-* [Support Plugin](#support-plugin)
+* [Sponsor Plugin](#sponsor-plugin)
 * [Temp Plugin](#temp-plugin)
 * [Twitch Plugin](#twitch-plugin)
 * [Uptime Plugin](#uptime-plugin)
@@ -801,12 +801,13 @@ Options:
 - `range` integer, optional, default 300 - defines a time frame (seconds) to search stickers activity in
 - `delay` integer, optional, default 3 - delay before send the answering sticker
 
-### Support Plugin
+### Sponsor Plugin
 
-Lets people support the bot with a donation. Commands:
+Lets people sponsor the bot with a donation. Commands:
 
-    /support     ways to donate: buttons with external links and Telegram Stars buttons
+    /sponsor     ways to donate: buttons with external links and Telegram Stars buttons
     /paysupport  help with payment issues (required by Telegram for bots accepting Stars)
+    /support     the same as /paysupport (Telegram requires bots accepting payments to answer it)
     /terms       terms of donations (required by Telegram for bots accepting payments)
 
 Stars button sends an invoice in Telegram Stars (`XTR`), plugin confirms the pre-checkout query and thanks for the donation.
@@ -818,21 +819,29 @@ Place the plugin above [Ignore Plugin](#ignore-plugin), otherwise payments of ig
 Options:
 - `links` array, optional - title => url of external donation pages, empty urls are skipped (default keys: GitHub Sponsors, Stripe, Ko-fi, Patreon, PayPal)
 - `stars` array of integers, optional, default [50, 100, 500] - amounts of Telegram Stars to offer, empty array disables Stars
-- `text` string, optional - message shown on /support
+- `text` string, optional - message shown on /sponsor
 - `title` string, optional - invoice title, 1-32 characters
 - `invoice` string, optional - invoice description, 1-255 characters
-- `thanks` string, optional - message after successful donation, `%d` is replaced with the number of Stars
-- `paysupport` string, optional - message shown on /paysupport
+- `thanks` string, optional - message after successful donation, tokens are replaced:
+  - `%name%` - name of the donor
+  - `%username%` - @username of the donor, or name if there's no username
+  - `%amount%` - amount of this donation
+  - `%currency%` - ⭐ for Telegram Stars, otherwise currency code
+  - `%total%` - total amount donated by this user, including this donation (counted from `file`)
+  - `%count%` - number of donations by this user, including this one (counted from `file`)
+
+  Example: `"%name%, thank you for %amount% %currency%! In total you've sponsored Joker with %total% %currency%"`
+- `paysupport` string, optional - message shown on /paysupport and /support
 - `terms` string, optional - message shown on /terms
-- `file` string|false, optional, default `data/support.log` - log of successful donations with `telegram_payment_charge_id`, needed for refunds (`$bot->refundStarPayment($user_id, $charge_id)`)
+- `file` string|false, optional, default `data/sponsor.log` - log of successful donations with `telegram_payment_charge_id`, needed for refunds (`$bot->refundStarPayment($user_id, $charge_id)`)
 
 Example:
 
 ```php
-new Joker\Plugin\Support([
+new Joker\Plugin\Sponsor([
   'links' => [
-    'GitHub Sponsors' => getenv('SUPPORT_GITHUB_URL'),
-    'Ko-fi'           => getenv('SUPPORT_KOFI_URL'),
+    'GitHub Sponsors' => getenv('SPONSOR_GITHUB_URL'),
+    'Ko-fi'           => getenv('SPONSOR_KOFI_URL'),
   ],
   'stars' => [50, 100, 500],
 ]),
