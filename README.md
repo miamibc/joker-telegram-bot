@@ -139,13 +139,13 @@ Description and examples can be found in [Helpers documentation](https://github.
 - Reboot counter
 - Restart plugins without lose their state
 - Reload plugins without actual restart
+- Detect `Private`/`Public` tags for all update types, see note below
 - ~~Add onTimer event type, to process events by time~~
-- Add CommandPlugin base class, to simplify adding new commands
 - ~~Database implementations: Redis, Mysql, Simplesql and nosql~~
 - ~~Audio processing with ffmpeg and sending with sendAudio/sendVoice~~
 - ~~CowsayPlugin post image instead of text~~ 
 - ~~Improved admin of jokes~~
-- Implement [Payments](https://core.telegram.org/bots/payments)
+- ~~Implement [Payments](https://core.telegram.org/bots/payments)~~ (Sponsor plugin, Telegram Stars)
 - ~~Currency rates~~ (thanks ʎǝxǝl∀ for ide∀)
 - ~~Corona plugin~~
 - ~~Chpocker HTML5 game~~
@@ -153,12 +153,22 @@ Description and examples can be found in [Helpers documentation](https://github.
 - ~~Mastodon integration~~
 - More cool plugins
 
+## Notes
+
+**Note on `Private` and `Public` tags.** `Private` is detected by `message.chat.type` only, and `Public` is
+simply "not `Private`". So updates without `message` are always `Public`, even if they come from a private chat:
+`callback_query`, `inline_query`, `edited_message`, `pre_checkout_query`, `message_reaction`, `chat_member`, etc.
+Also `Group` is detected by `message` only. Plugins rely on it (for example `onPublicText` methods), so changing it
+requires checking all plugins. A fix would take the chat from any part of update (`callback_query.message.chat`,
+`edited_message.chat`, `message_reaction.chat`...), and for updates without a chat (`inline_query`,
+`pre_checkout_query`) set neither `Private` nor `Public`. Current behaviour is fixed in `tests/Parser/UpdatesTest.php`.
+
 Please send your ideas into the [issues](https://github.com/miamibc/joker-telegram-bot/issues)
 
 ## Project pages
 
 * https://github.com/miamibc/joker-telegram-bot
-* https://blackcrystal.net/project/joker/
+* https://blackcrystal.net/projects/joker/
 
 ## Contributors
 
