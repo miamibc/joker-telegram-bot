@@ -25,6 +25,9 @@ declare(ticks=1);
 class Bot
 {
 
+  // all other Telegram Bot API methods
+  use BotApi;
+
   const PLUGIN_NEXT   = true;
   const PLUGIN_BREAK  = false;
 

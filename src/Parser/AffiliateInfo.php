@@ -16,7 +16,7 @@ namespace Joker\Parser;
  * @method Chat affiliate_chat() Optional. The chat that received an affiliate commission if it was received by a chat
  * @method integer commission_per_mille() The number of Telegram Stars received by the affiliate for each 1000 Telegram Stars received by the bot from referred users
  * @method integer amount() Integer amount of Telegram Stars received by the affiliate from the transaction, rounded to 0; can be negative for refunds
- * @method integer nanostar_amount() Optional. The number of 1/1000000000 shares of Telegram Stars received by the affiliate; can be negative for refunds
+ * @method integer nanostar_amount() Optional. The number of 1/1000000000 shares of Telegram Stars received by the affiliate; from -999999999 to 999999999; can be negative for refunds
  */
 class AffiliateInfo extends Base
 {

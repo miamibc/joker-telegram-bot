@@ -12,10 +12,10 @@ namespace Joker\Parser;
  * This object contains information about an incoming shipping query.
  * @see https://core.telegram.org/bots/api#shippingquery
  *
- * @method string id Unique identifier for this query
- * @method User   from Sender
- * @method string invoice_payload Bot specified invoice payload
- * @method ShippingAddress shipping_address User specified shipping address
+ * @method string id() Unique query identifier
+ * @method User from() User who sent the query
+ * @method string invoice_payload() Bot-specified invoice payload
+ * @method ShippingAddress shipping_address() User specified shipping address
  */
 class ShippingQuery extends Base
 {
