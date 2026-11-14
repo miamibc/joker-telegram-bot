@@ -31,27 +31,47 @@ class Server extends Base
     'risk' => 'LOW. Nothing stored by plugin',
   ];
 
-  private $sock;
+  /** @var \Socket|null listening socket, null if not listening */
+  private $sock = null;
 
   public function init()
   {
-    $sock = socket_create(AF_INET, SOCK_STREAM, SOL_TCP);
-    socket_bind($sock,
-                $this->getOption('address', '127.0.0.1'),
-                $this->getOption('port', 5566));
-    socket_listen($sock, 5);
+    $address = $this->getOption('address', '127.0.0.1');
+    $port    = $this->getOption('port', 5566);
+
+    if (!$sock = socket_create(AF_INET, SOCK_STREAM, SOL_TCP))
+    {
+      $this->bot()->console("Server plugin: can't create socket: " . socket_strerror(socket_last_error()));
+      return;
+    }
+
+    // allow to listen the port again right after restart, when old connections are still in TIME_WAIT
+    socket_set_option($sock, SOL_SOCKET, SO_REUSEADDR, 1);
+
+    if (!@socket_bind($sock, $address, $port) || !@socket_listen($sock, 5))
+    {
+      $this->bot()->console("Server plugin: can't listen $address:$port: " . socket_strerror(socket_last_error($sock)));
+      socket_close($sock);
+      return;
+    }
+
     socket_set_nonblock($sock);
     $this->sock = $sock;
   }
 
   public function onEmpty( Update $update)
   {
+    if (!$this->sock) return;
 
-    $conn = socket_accept($this->sock);
+    $conn = @socket_accept($this->sock);
     if ($conn === false) return;
 
     socket_set_nonblock($conn);
-    socket_recv( $conn, $input, 2048, MSG_DONTWAIT);
+    if (!socket_recv( $conn, $input, 2048, MSG_DONTWAIT))
+    {
+      socket_close($conn);
+      return;
+    }
 
     $input = explode("\r\n\r\n", $input);
 
@@ -79,7 +99,8 @@ class Server extends Base
 
   public function __destruct()
   {
-    socket_close( $this->sock );
+    if ($this->sock) socket_close( $this->sock );
+    $this->sock = null;
   }
 
 }
