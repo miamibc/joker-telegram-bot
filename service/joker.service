@@ -1,0 +1,29 @@
+# Example systemd unit for Joker Telegram Bot.
+# Adjust User/Group/paths with `systemctl edit joker` instead of editing this file.
+
+[Unit]
+Description=Joker Telegram Bot
+After=network-online.target
+Wants=network-online.target
+StartLimitIntervalSec=0
+
+[Service]
+Type=simple
+User=joker
+Group=joker
+WorkingDirectory=/opt/joker-telegram-bot
+# API tokens and keys (KEY=value lines, no "export")
+EnvironmentFile=/opt/joker-telegram-bot/.env
+ExecStart=/usr/bin/php joker.php
+Restart=always
+RestartSec=5
+
+# Hardening
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/opt/joker-telegram-bot/data
+
+[Install]
+WantedBy=multi-user.target

@@ -81,6 +81,22 @@ $bot->plug([
     'frequency_penalty' => 0.5,
     'presence_penalty' => 0.0,
   ]),
+  new Joker\Plugin\Claude([
+    'api_key'      => getenv('ANTHROPIC_API_KEY'),
+    'system'       => 'Тебе 35 лет, ты бот по имени Клод. Отвечай шутливо и по делу, не используй эмоджи. Сегодня %date%',
+    'model'        => 'claude-sonnet-4-6',
+    'max_tokens'   => 1024,
+    'effort'       => 'low', // low|medium|high|max|null
+    'thinking_mode' => 'disabled', // disabled|adaptive
+    'cache_system' => true,
+    'anthropic_version' => '2023-06-01',
+    'context_mode' => 'reply_chain', // reply_chain|user_only|shared
+    'context_length' => 4000,
+    'shared_buffer' => 50,
+    'triggers' => 'claude|клод',
+    'continue_replies' => true,
+    'premium_only' => false,
+  ]),
   new Joker\Plugin\Privacy(),
 
   // *** somethingg wide, without triggers, must stay in the end ***
