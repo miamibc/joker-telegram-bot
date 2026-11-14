@@ -25,6 +25,24 @@ $bot->plug([
     ['from' => -343502518, 'text' => ['*покуп*'], 'to' => -343502518, ],
     ['from' => -343502518, 'text' => ['*прода*', '*сдаё*'], 'to' => -343502518, 'forward' => false ],
   ]),
+  // before Ignore: payments of ignored users must be processed too
+  new Joker\Plugin\Support([
+    'links' => [
+      'GitHub Sponsors' => getenv('SUPPORT_GITHUB_URL'),
+      'Stripe'          => getenv('SUPPORT_STRIPE_URL'),
+      'Ko-fi'           => getenv('SUPPORT_KOFI_URL'),
+      'Patreon'         => getenv('SUPPORT_PATREON_URL'),
+      'PayPal'          => getenv('SUPPORT_PAYPAL_URL'),
+    ],
+    'stars'      => [50, 100, 500],
+    'text'       => "Джокер развлекает чаты с 2001 года. Если он тебе нравится, можешь поддержать его развитие — любым удобным способом ниже, или звёздами Telegram прямо здесь. Спасибо! 🙏",
+    'title'      => 'Поддержать Джокера',
+    'invoice'    => 'Добровольный донат на развитие Joker Telegram Bot. Спасибо за поддержку!',
+    'thanks'     => "Спасибо за %d ⭐! Джокер тронут 🙏",
+    'paysupport' => "Проблема с донатом? Напиши владельцу бота — разберёмся и при необходимости вернём звёзды.",
+    'terms'      => "Донаты добровольные: за них не предоставляются товары, услуги или привилегии. Ошибочный донат можно вернуть через /paysupport.",
+    'file'       => 'data/support.log',
+  ]),
   new Joker\Plugin\Ignore(),
   new Joker\Plugin\UrlCollector(['file' => 'data/urls.txt']),
   // new Joker\Plugin\Viabot(), // TODO: not necessary anymore, will be removed soon

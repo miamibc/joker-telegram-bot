@@ -23,6 +23,8 @@ namespace Joker\Parser;
  * @method CallbackQuery callback_query() Optional. New incoming callback query
  * @method InlineQuery inline_query() Optional. New incoming inline query
  * @method ShippingQuery shipping_query() Optional. New incoming shipping query. Only for invoices with flexible price
+ * @method PreCheckoutQuery pre_checkout_query() Optional. New incoming pre-checkout query. Contains full information about checkout
+ * @method PaidMediaPurchased purchased_paid_media() Optional. A user purchased paid media with a non-empty payload sent by the bot in a non-channel chat
  * ...
  */
 class Update extends Base
@@ -37,6 +39,8 @@ class Update extends Base
     'callback_query' => CallbackQuery::class,
     'inline_query' => InlineQuery::class,
     'shipping_query' => ShippingQuery::class,
+    'pre_checkout_query' => PreCheckoutQuery::class,
+    'purchased_paid_media' => PaidMediaPurchased::class,
   ];
 
   const ACTION_TYPING = 'typing',
@@ -111,6 +115,11 @@ class Update extends Base
       'Callback'  => isset($this->data['callback_query']),
       'Inline'    => isset($this->data['inline_query']),
       'Shipping'  => isset($this->data['shipping_query']),
+      'Checkout'  => isset($this->data['pre_checkout_query']),
+      'Purchase'  => isset($this->data['purchased_paid_media']),
+      'Invoice'   => isset($this->data['message']['invoice']),
+      'Payment'   => isset($this->data['message']['successful_payment']),
+      'Refund'    => isset($this->data['message']['refunded_payment']),
     ];
   }
 

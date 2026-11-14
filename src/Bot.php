@@ -15,6 +15,8 @@
 namespace Joker;
 
 use Joker\Parser\Message;
+use Joker\Parser\StarAmount;
+use Joker\Parser\StarTransactions;
 use Joker\Parser\Update;
 use Joker\Parser\User;
 
@@ -147,6 +149,10 @@ class Bot
         $this->buffer[] = new Update( $item, $this );
         $this->last_update_id = $item['update_id'] + 1;
       }
+      // pre-checkout queries must be answered within 10 seconds, process them first
+      usort($this->buffer, function (Update $a, Update $b) {
+        return $b->hasTag('Checkout') <=> $a->hasTag('Checkout');
+      });
     }
 
     // get top update from buffer, or create empty update
@@ -332,6 +338,92 @@ class Bot
   {
     $result = $this->_request( 'forwardMessage', array_merge( [ 'chat_id'=>$chat_id, 'from_chat_id'=>$from_chat_id, 'message_id' => $message_id ], $options ));
     return new Message( $result );
+  }
+
+  /**
+   * Send invoice
+   * @see https://core.telegram.org/bots/api#sendinvoice
+   * @param int|string $chat_id
+   * @param string $title product name, 1-32 characters
+   * @param string $description product description, 1-255 characters
+   * @param string $payload bot-defined payload, 1-128 bytes, not displayed to the user
+   * @param string $currency ISO 4217 currency code, or XTR for Telegram Stars
+   * @param array $prices array of LabeledPrice arrays [['label'=>..., 'amount'=>...]], exactly one item for Stars
+   * @param array $options other parameters (provider_token, photo_url, reply_markup, etc.)
+   * @return Message
+   */
+  public function sendInvoice( $chat_id, $title, $description, $payload, $currency, array $prices, $options = [] )
+  {
+    $result = $this->_request( 'sendInvoice', array_merge( [
+      'chat_id' => $chat_id, 'title' => $title, 'description' => $description,
+      'payload' => $payload, 'currency' => $currency, 'prices' => $prices,
+    ], $options ));
+    return new Message( $result );
+  }
+
+  /**
+   * Create a link for an invoice
+   * @see https://core.telegram.org/bots/api#createinvoicelink
+   * @return string|false
+   */
+  public function createInvoiceLink( $title, $description, $payload, $currency, array $prices, $options = [] )
+  {
+    return $this->_request( 'createInvoiceLink', array_merge( [
+      'title' => $title, 'description' => $description,
+      'payload' => $payload, 'currency' => $currency, 'prices' => $prices,
+    ], $options ));
+  }
+
+  /**
+   * Answer pre-checkout query, must be done within 10 seconds
+   * @see https://core.telegram.org/bots/api#answerprecheckoutquery
+   */
+  public function answerPreCheckoutQuery( $pre_checkout_query_id, bool $ok = true, $error_message = null )
+  {
+    $data = ['pre_checkout_query_id' => $pre_checkout_query_id, 'ok' => $ok];
+    if (!$ok && $error_message) $data['error_message'] = $error_message;
+    return (bool) $this->_request( 'answerPreCheckoutQuery', $data );
+  }
+
+  /**
+   * Answer shipping query
+   * @see https://core.telegram.org/bots/api#answershippingquery
+   */
+  public function answerShippingQuery( $shipping_query_id, bool $ok = true, array $shipping_options = [], $error_message = null )
+  {
+    $data = ['shipping_query_id' => $shipping_query_id, 'ok' => $ok];
+    if ($ok) $data['shipping_options'] = $shipping_options;
+    elseif ($error_message) $data['error_message'] = $error_message;
+    return (bool) $this->_request( 'answerShippingQuery', $data );
+  }
+
+  /**
+   * Bot's current Telegram Stars balance
+   * @see https://core.telegram.org/bots/api#getmystarbalance
+   * @return StarAmount
+   */
+  public function getMyStarBalance()
+  {
+    return new StarAmount( $this->_request( 'getMyStarBalance' ) );
+  }
+
+  /**
+   * Bot's Telegram Star transactions in chronological order
+   * @see https://core.telegram.org/bots/api#getstartransactions
+   * @return StarTransactions
+   */
+  public function getStarTransactions( $offset = 0, $limit = 100 )
+  {
+    return new StarTransactions( $this->_request( 'getStarTransactions', ['offset' => $offset, 'limit' => $limit] ) );
+  }
+
+  /**
+   * Refund a successful payment in Telegram Stars
+   * @see https://core.telegram.org/bots/api#refundstarpayment
+   */
+  public function refundStarPayment( $user_id, $telegram_payment_charge_id )
+  {
+    return (bool) $this->_request( 'refundStarPayment', ['user_id' => $user_id, 'telegram_payment_charge_id' => $telegram_payment_charge_id] );
   }
 
   public function id()

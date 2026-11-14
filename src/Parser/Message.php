@@ -40,6 +40,9 @@ namespace Joker\Parser;
  * @method Location location() Optional. Message is a shared location, information about the location
  * @method User new_chat_member() Optional. New members that were added to the group or supergroup and information about them (the bot itself may be one of these members)
  * @method User left_chat_member() Optional. A member was removed from the group, information about them (this member may be the bot itself)
+ * @method Invoice invoice() Optional. Message is an invoice for a payment, information about the invoice
+ * @method SuccessfulPayment successful_payment() Optional. Message is a service message about a successful payment, information about the payment
+ * @method RefundedPayment refunded_payment() Optional. Message is a service message about a refunded payment, information about the payment
  * @method Message pinned_message() Optional. Specified message was pinned. Note that the Message object in this field will not contain further reply_to_message fields even if it is itself a reply.
  */
 class Message extends Base
@@ -72,6 +75,9 @@ class Message extends Base
     'new_chat_member' => User::class,
     'left_chat_member' => User::class,
     'pinned_message' => Message::class,
+    'invoice' => Invoice::class,
+    'successful_payment' => SuccessfulPayment::class,
+    'refunded_payment' => RefundedPayment::class,
   ];
 
   public function id()
