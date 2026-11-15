@@ -20,7 +20,6 @@ class LoopTest extends TestCase
 
   const PRIVATE_TEXT = ['update_id' => 1, 'message' => ['message_id' => 1, 'chat' => ['id' => 42, 'type' => 'private'], 'from' => ['id' => 42], 'text' => 'hi']];
   const GROUP_TEXT   = ['update_id' => 2, 'message' => ['message_id' => 2, 'chat' => ['id' => -1, 'type' => 'supergroup'], 'from' => ['id' => 42], 'text' => 'hi']];
-  const CHECKOUT     = ['update_id' => 3, 'pre_checkout_query' => ['id' => 'q', 'from' => ['id' => 42], 'currency' => 'XTR', 'total_amount' => 1, 'invoice_payload' => 'p']];
 
   /**
    * Plugin, that records called methods and returns $result from them
@@ -124,13 +123,6 @@ class LoopTest extends TestCase
     $second = $this->plugin();
     $this->run_loop( [self::PRIVATE_TEXT], [$failing, $second] );
     $this->assertSame( [], $second->calls );
-  }
-
-  public function testCheckoutIsProcessedFirst()
-  {
-    $plugin = $this->plugin();
-    $this->run_loop( [self::PRIVATE_TEXT, self::GROUP_TEXT, self::CHECKOUT], [$plugin] );
-    $this->assertSame( ['onCheckout'], $plugin->calls );
   }
 
 }

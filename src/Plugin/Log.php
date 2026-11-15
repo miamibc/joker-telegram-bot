@@ -8,6 +8,7 @@
 
 namespace Joker\Plugin;
 
+use Joker\Bot;
 use Joker\Parser\Update;
 
 class Log extends Base
@@ -43,5 +44,14 @@ class Log extends Base
       file_put_contents( $this->getOption('file'), $json.PHP_EOL, FILE_APPEND );
     }
 
+    // message sent by bot itself (see Bot::_request), only log it and don't process this update by other plugins
+    if ($update->getData()['update_id'] === null)
+      return Bot::PLUGIN_BREAK;
+  }
+
+  public function onEdit( Update $update )
+  {
+    // message edited by bot itself (see Bot::_request), only log it
+    if ($update->getData()['update_id'] === null) return $this->onMessage( $update );
   }
 }

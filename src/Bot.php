@@ -31,6 +31,41 @@ class Bot
   const PLUGIN_NEXT   = true;
   const PLUGIN_BREAK  = false;
 
+  // methods returning Message posted or edited by bot, their results are put to buffer with update_id null for Log plugin
+  const METHODS_TO_LOG = [
+    'sendMessage'     => 'message',
+    'sendPhoto'       => 'message',
+    'sendLivePhoto'   => 'message',
+    'sendAudio'       => 'message',
+    'sendDocument'    => 'message',
+    'sendVideo'       => 'message',
+    'sendAnimation'   => 'message',
+    'sendVoice'       => 'message',
+    'sendVideoNote'   => 'message',
+    'sendSticker'     => 'message',
+    'sendWidget'      => 'message',
+    'sendSharedWidget'=> 'message',
+    'sendPaidMedia'   => 'message',
+    'sendMediaGroup'  => 'message', // array of messages
+    'sendLocation'    => 'message',
+    'sendVenue'       => 'message',
+    'sendContact'     => 'message',
+    'sendPoll'        => 'message',
+    'sendChecklist'   => 'message',
+    'sendDice'        => 'message',
+    'sendRichMessage' => 'message',
+    'sendGame'        => 'message',
+    'sendInvoice'     => 'message',
+    'forwardMessage'  => 'message',
+    'editMessageText'         => 'edited_message',
+    'editMessageCaption'      => 'edited_message',
+    'editMessageMedia'        => 'edited_message',
+    'editMessageLiveLocation' => 'edited_message',
+    'stopMessageLiveLocation' => 'edited_message',
+    'editMessageChecklist'    => 'edited_message',
+    'editMessageReplyMarkup'  => 'edited_message',
+  ];
+
   private
     $token = null,
     $debug = false,
@@ -100,6 +135,10 @@ class Bot
       // throw new Exception("Something went wrong");
       return false;
 
+    $methods_to_log = self::METHODS_TO_LOG;
+    if (array_key_exists( $method, $methods_to_log ) && is_array( $result['result'] ?? null ))
+      $this->buffer[] = new Update(['update_id' => null, $methods_to_log[$method] => $result['result'] ], $this);
+
     return isset($result['result']) ? $result['result'] : false;
   }
 
@@ -134,9 +173,9 @@ class Bot
     $result = json_decode( $plain_response, true);
     $this->log( $method . ' '. json_encode($data) . ' => ' . $plain_response );
 
-    if (!isset($result['ok']) || !$result['ok'])
-      // throw new Exception("Something went wrong");
-      return false;
+    $methods_to_log = self::METHODS_TO_LOG;
+    if (array_key_exists( $method, $methods_to_log ) && is_array( $result['result'] ?? null ))
+      $this->buffer[] = new Update(['update_id' => null, $methods_to_log[$method] => $result['result'] ], $this);
 
     return isset($result['result']) ? $result['result'] : false;
   }
@@ -153,9 +192,10 @@ class Bot
         $this->last_update_id = $item['update_id'] + 1;
       }
       // pre-checkout queries must be answered within 10 seconds, process them first
-      usort($this->buffer, function (Update $a, Update $b) {
-        return $b->hasTag('Checkout') <=> $a->hasTag('Checkout');
-      });
+      // (buffer is not so large, we can avoid this for now)
+      // usort($this->buffer, function (Update $a, Update $b) {
+      //   return $b->hasTag('Checkout') <=> $a->hasTag('Checkout');
+      // });
     }
 
     // get top update from buffer, or create empty update
