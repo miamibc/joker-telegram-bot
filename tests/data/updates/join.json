@@ -1,0 +1,5 @@
+{"update_id": 103, "message": {"message_id": 4, "date": 1763100000,
+  "from": {"id": 9, "is_bot": false, "first_name": "New"},
+  "chat": {"id": -1001, "type": "supergroup", "title": "Group"},
+  "new_chat_member": {"id": 9, "is_bot": false, "first_name": "New"},
+  "new_chat_members": [{"id": 9, "is_bot": false, "first_name": "New"}]}}

@@ -1,0 +1,2 @@
+{"update_id": 111, "poll": {"id": "p1", "question": "Pizza?", "total_voter_count": 3, "is_closed": true, "is_anonymous": true, "type": "regular", "allows_multiple_answers": false,
+  "options": [{"text": "Yes", "voter_count": 2}, {"text": "No", "voter_count": 1}]}}

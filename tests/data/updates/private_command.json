@@ -1,0 +1,4 @@
+{"update_id": 100, "message": {"message_id": 1, "date": 1763100000,
+  "from": {"id": 42, "is_bot": false, "first_name": "Test", "username": "test", "language_code": "ru"},
+  "chat": {"id": 42, "type": "private", "first_name": "Test", "username": "test"},
+  "text": "/sponsor@JokerBot", "entities": [{"type": "bot_command", "offset": 0, "length": 17}]}}

@@ -1,0 +1,10 @@
+{"update_id": 101, "message": {"message_id": 2, "date": 1763100000, "message_thread_id": 5,
+  "from": {"id": 42, "is_bot": false, "first_name": "Test"},
+  "chat": {"id": -1001, "type": "supergroup", "title": "Group", "is_forum": true},
+  "photo": [{"file_id": "s", "file_unique_id": "s1", "width": 90, "height": 60, "file_size": 1000},
+            {"file_id": "m", "file_unique_id": "m1", "width": 800, "height": 533, "file_size": 50000}],
+  "caption": "look", "caption_entities": [{"type": "spoiler", "offset": 0, "length": 4}], "has_media_spoiler": true,
+  "reply_to_message": {"message_id": 1, "date": 1763099000, "chat": {"id": -1001, "type": "supergroup", "title": "Group"},
+    "from": {"id": 7, "is_bot": true, "first_name": "Joker", "username": "JokerBot"}, "text": "hi"},
+  "quote": {"text": "hi", "position": 0, "is_manual": true},
+  "reactions": []}}

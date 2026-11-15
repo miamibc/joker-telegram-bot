@@ -65,6 +65,27 @@ $bot->plug([
   new Joker\Plugin\Game( [ 'trigger' => 'chpocker', 'url' => 'https://blackcrystal.dev/chpocker/']),
   new Joker\Plugin\Stats( ['file' =>'data/log/log.json'] ),
   new Joker\Plugin\Mastodon(),
+  new Joker\Plugin\Privacy(),
+  new Joker\Plugin\Sponsor([
+    'links' => [
+      'GitHub Sponsors' => getenv('SPONSOR_GITHUB_URL') ?: 'https://github.com/sponsors/miamibc',
+      'Stripe'          => getenv('SPONSOR_STRIPE_URL'),
+      'Ko-fi'           => getenv('SPONSOR_KOFI_URL'),
+      'Patreon'         => getenv('SPONSOR_PATREON_URL'),
+      'PayPal'          => getenv('SPONSOR_PAYPAL_URL'),
+    ],
+    'stars'      => [50, 100, 500],
+    'text'       => "Our own, first and so far only bot named Joker, made for pleasant chat company. He can entertain, report the weather, play games and sympathize. Today it is a full-fledged Telegram bot written in PHP, with an interesting history that starts back in 2001. If you like it, please become a sponsor, donate to one of links below.",
+    'title'      => 'Joker the Bot - become a sponsor',
+    'invoice'    => 'Voluntary donation to support the development of Joker Telegram Bot. Thank you for your support!',
+    'thanks'     => "%name%, спасибо за %amount% %currency%! Джокер тронут 🙏",
+    'paysupport' => "Проблема с донатом? Напиши владельцу бота — разберёмся и при необходимости вернём звёзды.",
+    'terms'      => "Донаты добровольные: за них не предоставляются товары, услуги или привилегии. Ошибочный донат можно вернуть через /paysupport.",
+    'file'       => 'data/sponsor.log',
+  ]),
+
+  // *** somethingg wide, without triggers, must stay in the end ***
+
   new Joker\Plugin\OpenAi([
     'api_key' => getenv('OPENAI_API_KEY'),
     'context_length' => 1000,
@@ -84,8 +105,8 @@ $bot->plug([
   new Joker\Plugin\Claude([
     'api_key'      => getenv('ANTHROPIC_API_KEY'),
     'system'       => 'Тебе 35 лет, ты бот по имени Клод. Отвечай шутливо и по делу, не используй эмоджи. Сегодня %date%',
-    'model'        => 'claude-sonnet-4-6',
-    'max_tokens'   => 1024,
+    'model'        => 'claude-opus-5-5',
+    'max_tokens'   => 4096,  // thinking is always on for Opus 5.5 and uses this limit too
     'effort'       => 'low', // low|medium|high|max|null
     'thinking_mode' => 'disabled', // disabled|adaptive
     'cache_system' => true,
@@ -97,10 +118,6 @@ $bot->plug([
     'continue_replies' => true,
     'premium_only' => false,
   ]),
-  new Joker\Plugin\Privacy(),
-
-  // *** somethingg wide, without triggers, must stay in the end ***
-
   new Joker\Plugin\Quote(),
   new Joker\Plugin\QuoteInline( ['trigger'=> 'tg', 'limit' => 5, 'length' => 80] ),
   new Joker\Plugin\QuoteAdmin(),

@@ -1,0 +1,4 @@
+{"update_id": 106, "callback_query": {"id": "cb1", "from": {"id": 42, "is_bot": false, "first_name": "Test"}, "chat_instance": "ci", "data": "sponsor:50",
+  "message": {"message_id": 7, "date": 1763100000, "chat": {"id": -1001, "type": "supergroup", "title": "Group"},
+    "from": {"id": 7, "is_bot": true, "first_name": "Joker"}, "text": "Sponsor",
+    "reply_markup": {"inline_keyboard": [[{"text": "⭐ 50", "callback_data": "sponsor:50"}]]}}}}

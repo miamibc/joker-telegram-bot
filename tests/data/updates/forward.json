@@ -1,0 +1,5 @@
+{"update_id": 102, "message": {"message_id": 3, "date": 1763100000,
+  "from": {"id": 42, "is_bot": false, "first_name": "Test"},
+  "chat": {"id": -1001, "type": "supergroup", "title": "Group"},
+  "forward_origin": {"type": "channel", "date": 1763000000, "chat": {"id": -100500, "type": "channel", "title": "News"}, "message_id": 77, "author_signature": "Ed"},
+  "is_automatic_forward": true, "text": "news", "link_preview_options": {"is_disabled": true}}}

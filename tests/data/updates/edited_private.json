@@ -1,0 +1,4 @@
+{"update_id": 104, "edited_message": {"message_id": 5, "date": 1763100000, "edit_date": 1763100100,
+  "from": {"id": 42, "is_bot": false, "first_name": "Test"},
+  "chat": {"id": 42, "type": "private", "first_name": "Test"},
+  "text": "fixed"}}

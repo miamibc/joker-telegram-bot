@@ -1,0 +1,2 @@
+{"update_id": 107, "callback_query": {"id": "cb2", "from": {"id": 42, "is_bot": false, "first_name": "Test"}, "chat_instance": "ci", "data": "x",
+  "message": {"message_id": 8, "date": 0, "chat": {"id": -1001, "type": "supergroup", "title": "Group"}}}}

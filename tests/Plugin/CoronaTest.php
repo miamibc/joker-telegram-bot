@@ -10,6 +10,9 @@ namespace Tests\Plugin;
 use Joker\Plugin\Corona;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * @group exclude-from-github-test
+ */
 class CoronaTest extends TestCase
 {
 

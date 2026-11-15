@@ -1,0 +1,1 @@
+{"update_id": 109, "pre_checkout_query": {"id": "pq", "from": {"id": 42, "is_bot": false, "first_name": "Test"}, "currency": "XTR", "total_amount": 50, "invoice_payload": "sponsor:50:42"}}

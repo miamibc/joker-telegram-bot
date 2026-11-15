@@ -1,0 +1,3 @@
+{"update_id": 112, "message_reaction": {"chat": {"id": -1001, "type": "supergroup", "title": "Group"}, "message_id": 2, "date": 1763100000,
+  "user": {"id": 42, "is_bot": false, "first_name": "Test"},
+  "old_reaction": [], "new_reaction": [{"type": "emoji", "emoji": "🔥"}, {"type": "custom_emoji", "custom_emoji_id": "123"}]}}

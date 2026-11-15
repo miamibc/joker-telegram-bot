@@ -1,0 +1,4 @@
+{"update_id": 110, "message": {"message_id": 9, "date": 1763100000,
+  "from": {"id": 42, "is_bot": false, "first_name": "Test"},
+  "chat": {"id": 42, "type": "private", "first_name": "Test"},
+  "successful_payment": {"currency": "XTR", "total_amount": 50, "invoice_payload": "sponsor:50:42", "telegram_payment_charge_id": "tg", "provider_payment_charge_id": ""}}}
