@@ -173,6 +173,10 @@ class Bot
     $result = json_decode( $plain_response, true);
     $this->log( $method . ' '. json_encode($data) . ' => ' . $plain_response );
 
+    if (!isset($result['ok']) || !$result['ok'])
+      // throw new Exception("Something went wrong");
+      return false;
+
     $methods_to_log = self::METHODS_TO_LOG;
     if (array_key_exists( $method, $methods_to_log ) && is_array( $result['result'] ?? null ))
       $this->buffer[] = new Update(['update_id' => null, $methods_to_log[$method] => $result['result'] ], $this);
